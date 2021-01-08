@@ -62,24 +62,12 @@ installBuild() {
 	esac
 }
 
-# "install generateBoard" phase
-installGenerateBoard() {
-	echo 'Installing jinja2...'
-	pip install jinja2
-	echo 'Installing ruamel.yaml...'
-	pip install ruamel.yaml
-}
-
 # "install" phase
 install() {
 	case "${1}" in
 		build)
 			shift
 			installBuild "${@}"
-			;;
-		generateBoard)
-			shift
-			installGenerateBoard "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
@@ -97,34 +85,12 @@ scriptBuild() {
 	"$(dirname "${0}")/buildAllConfigurations.sh" ${@}
 }
 
-# "script generateBoard" phase
-scriptGenerateBoard() {
-	distortosPath="$(cd $(dirname ${0})/.. && pwd)"
-
-	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/board" -name '*.yaml')
-	do
-		${distortosPath}/scripts/generateBoard.py ${yamlFile}
-	done
-
-	git add -N .
-	git diff --exit-code
-
-	for yamlFile in $(/usr/bin/find -L "${distortosPath}/source/chip" -name '*.yaml')
-	do
-		${distortosPath}/scripts/generateBoard.py ${yamlFile} -o /tmp/$(basename ${yamlFile} .yaml)
-	done
-}
-
 # "script" phase
 script() {
 	case "${1}" in
 		build)
 			shift
 			scriptBuild "${@}"
-			;;
-		generateBoard)
-			shift
-			scriptGenerateBoard "${@}"
 			;;
 		*)
 			echo "\"${1}\" is not a valid argument!" >&2
