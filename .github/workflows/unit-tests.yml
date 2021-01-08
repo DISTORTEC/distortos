@@ -1,0 +1,46 @@
+#
+# file: unit-tests.yml
+#
+# author: Copyright (C) 2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+name: Unit Tests
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install gcc-10 g++-10 ninja-build
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/output
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/output
+      env:
+        CC:   gcc-10
+        CXX:  g++-10
+      run: cmake -G Ninja ${GITHUB_WORKSPACE}/unit-test
+    - name: Build
+      shell: bash
+      working-directory: ${{github.workspace}}/output
+      run: cmake --build . --target all
+    - name: Run
+      shell: bash
+      working-directory: ${{github.workspace}}/output
+      run: cmake --build . --target run
