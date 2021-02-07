@@ -1,0 +1,47 @@
+#
+# file: build-test.yml
+#
+# author: Copyright (C) 2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+name: Build Test
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+        - 6.3.0-170821
+        - 7.3.0-180127
+        - 8.3.0-190223
+        - 9.3.0-200323
+        - 10.1.0-200517
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install bleeding-edge-toolchain
+      shell: bash
+      working-directory: /tmp
+      run: |
+        wget --progress=dot:giga https://distortos.org/files/travis-ci/arm-none-eabi-gcc-${{matrix.toolchain}}.tar.xz
+        tar -xf arm-none-eabi-gcc-${{matrix.toolchain}}.tar.xz
+        echo "$(cd arm-none-eabi-gcc-${{matrix.toolchain}}/bin && pwd)" >> $GITHUB_PATH
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install ninja-build
+    - name: Build
+      shell: bash
+      run: ./scripts/buildAllConfigurations.sh configurations distortosTest
