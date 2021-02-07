@@ -1,4 +1,4 @@
-distortos [![Build Status](https://travis-ci.org/DISTORTEC/distortos.svg)](https://travis-ci.org/DISTORTEC/distortos)
+distortos
 =========
 
 object-oriented C++ RTOS for microcontrollers
@@ -7,6 +7,10 @@ object-oriented C++ RTOS for microcontrollers
 [Documentation](https://distortos.org/documentation/)<br/>
 [Source Code @ GitHub](https://github.com/DISTORTEC/distortos)<br/>
 [Forum](https://groups.google.com/d/forum/distortos)<br/>
+
+![Build Test](https://github.com/DISTORTEC/distortos/workflows/Build%20Test/badge.svg)<br/>
+![Test Board Generator](https://github.com/DISTORTEC/distortos/workflows/Test%20Board%20Generator/badge.svg)<br/>
+![Unit Tests](https://github.com/DISTORTEC/distortos/workflows/Unit%20Tests/badge.svg)
 
 Configuration & building
 ------------------------
