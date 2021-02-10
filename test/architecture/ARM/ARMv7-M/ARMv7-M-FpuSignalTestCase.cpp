@@ -23,10 +23,11 @@
 #include "ARMv7-M-setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
-#include "distortos/StaticSoftwareTimer.hpp"
 #include "distortos/statistics.hpp"
 #include "distortos/ThisThread.hpp"
 #include "distortos/ThisThread-Signals.hpp"
+
+#include "estd/ScopeGuard.hpp"
 
 #include <cerrno>
 
@@ -76,8 +77,21 @@ struct Phase
 	decltype(statistics::getContextSwitchCount()) contextSwitchCount;
 };
 
+/// context shared with interrupt
+struct Context
+{
+	/// shared return value
+	int sharedRet;
+
+	/// pointer to test stage
+	const Stage* stage;
+
+	/// pointer to thread to which the signal will be queued
+	Thread* thread;
+};
+
 /*---------------------------------------------------------------------------------------------------------------------+
-| local constants
+| local objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// tested signal number
@@ -85,6 +99,9 @@ constexpr uint8_t testSignalNumber {16};
 
 /// size of stack for test thread, bytes
 constexpr size_t testThreadStackSize {512};
+
+/// pointer to context shared with interrupt
+Context* volatile context;
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | local functions
@@ -150,7 +167,7 @@ void queueSignalWrapper(Thread& thread, const Stage& stage, const bool full, int
 }
 
 /**
- * \brief Queues signal from interrupt (via software timer) to current thread.
+ * \brief Queues signal from interrupt (via manually triggered UsageFault) to current thread.
  *
  * \param [in] thread is a reference to thread to which the signal will be queued
  * \param [in] stage is a reference to test stage
@@ -161,14 +178,25 @@ void queueSignalWrapper(Thread& thread, const Stage& stage, const bool full, int
 
 int queueSignalFromInterrupt(Thread& thread, const Stage& stage)
 {
-	int sharedRet {EINVAL};
-	auto softwareTimer = makeStaticSoftwareTimer(queueSignalWrapper, std::ref(thread), std::ref(stage), false,
-			std::ref(sharedRet));
+	Context localContext {};
+	context = &localContext;
+	const auto contextScopeGuard = estd::makeScopeGuard(
+			[]()
+			{
+				context = {};
+			});
 
-	softwareTimer.start(TickClock::duration{});
-	while (softwareTimer.isRunning() == true);
+	context->thread = &thread;
+	context->stage = &stage;
 
-	return sharedRet;
+	SCB->CCR |= SCB_CCR_DIV_0_TRP_Msk;			// enable trapping of "divide by 0" by UsageFault
+	SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk;	// enable UsageFault
+
+	volatile int a {};
+	volatile int b {};
+	a /= b;	// trigger UsageFault via "divide by 0"
+
+	return context->sharedRet;
 }
 
 /**
@@ -304,3 +332,21 @@ bool FpuSignalTestCase::run_() const
 }	// namespace test
 
 }	// namespace distortos
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * \brief UsageFault_Handler() for ARMv7-M
+ */
+
+extern "C" void UsageFault_Handler()
+{
+	SCB->CFSR = SCB_CFSR_DIVBYZERO_Msk;			// clear "divide by 0" flag
+	SCB->CCR &= ~SCB_CCR_DIV_0_TRP_Msk;			// disable trapping of "divide by 0" by UsageFault
+	SCB->SHCSR &= ~SCB_SHCSR_USGFAULTENA_Msk;	// disable UsageFault
+
+	using namespace distortos::test;
+	queueSignalWrapper(*context->thread, *context->stage, false, context->sharedRet);
+}

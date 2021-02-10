@@ -127,6 +127,12 @@ subdirectory, as this way the files are easier to maintain and also because ther
 overwriting some user-created files.
 - Fixed broken logic in loop inside `distortos::chip::configureVoltageScaling()` for *STM32L0*, which also caused a
 warning for *GCC 9* and *GCC 10*.
+- Fixed `FpuSignalTestCase` for *ARMv7-M* and *GCC 10*. This particular test case was failing on this version of
+compiler, because *GCC 10* may use *FPU* registers for non-*FPU* operations. It was using them mostly in `SoftwareTimer`
+code, which was used to queue signal from interrupt context. As this testcase needs 100% control over every *FPU*
+register, a failure was detected - either because *FPU* was used when it should not be, or because some *FPU* registers
+had unexpected contents. Avoid this problem by using manually triggered *UsageFault* interrupt instead of
+`SoftwareTimer`.
 
 ### Removed
 
