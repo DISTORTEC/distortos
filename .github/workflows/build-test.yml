@@ -34,7 +34,7 @@ jobs:
       shell: bash
       working-directory: /tmp
       run: |
-        wget --progress=dot:giga https://distortos.org/files/travis-ci/arm-none-eabi-gcc-${{matrix.toolchain}}.tar.xz
+        wget --progress=dot:giga https://distortos.org/files/ci/arm-none-eabi-gcc-${{matrix.toolchain}}.tar.xz
         tar -xf arm-none-eabi-gcc-${{matrix.toolchain}}.tar.xz
         echo "$(cd arm-none-eabi-gcc-${{matrix.toolchain}}/bin && pwd)" >> $GITHUB_PATH
     - name: Install Dependencies
