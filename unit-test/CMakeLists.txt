@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2017-2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -76,6 +76,7 @@ add_subdirectory(estd-CircularBuffer-unit-test)
 add_subdirectory(estd-ContiguousRange-unit-test)
 add_subdirectory(estd-RawCircularBuffer-unit-test)
 add_subdirectory(FatFileSystem-unit-test)
+add_subdirectory(MountPoint-unit-test)
 add_subdirectory(SdCard-unit-test)
 add_subdirectory(STM32-DMAv1-DmaChannel-unit-test)
 add_subdirectory(STM32-DMAv2-DmaChannel-unit-test)
