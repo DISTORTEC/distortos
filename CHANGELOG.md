@@ -133,6 +133,10 @@ code, which was used to queue signal from interrupt context. As this testcase ne
 register, a failure was detected - either because *FPU* was used when it should not be, or because some *FPU* registers
 had unexpected contents. Avoid this problem by using manually triggered *UsageFault* interrupt instead of
 `SoftwareTimer`.
+- If `distortos_Checks_00_Context_of_functions` was disabled for the project, the build of
+`source/scheduler/Scheduler.cpp` would fail because `FATAL_ERROR()` macro was not visible - it was provided indirectly
+via `distortos/internal/CHECK_FUNCTION_CONTEXT.hpp`, which gets completely disabled by this *CMake* option. Fix this by
+including `distortos/FATAL_ERROR.h` directly in `source/scheduler/Scheduler.cpp`.
 
 ### Removed
 
