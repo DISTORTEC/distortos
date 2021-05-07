@@ -137,9 +137,9 @@ had unexpected contents. Avoid this problem by using manually triggered *UsageFa
 `source/scheduler/Scheduler.cpp` would fail because `FATAL_ERROR()` macro was not visible - it was provided indirectly
 via `distortos/internal/CHECK_FUNCTION_CONTEXT.hpp`, which gets completely disabled by this *CMake* option. Fix this by
 including `distortos/FATAL_ERROR.h` directly in `source/scheduler/Scheduler.cpp`.
-- Fixed a bug in overrun handling in *STM32's* *USARTv1*. It is possible for overrun to be detected in the middle of
-interrupt handler's loop, which would result in entering this handler endlessly. Fix this by slightly reworking the loop
-and adding explicit check for overrun flag.
+- Fixed a bug in overrun handling in *STM32's* *USARTv1* and (potentially) *USARTv2*. It is possible for overrun to be
+detected in the middle of interrupt handler's loop, which would result in entering this handler endlessly. Fix this by
+slightly reworking the loop and adding explicit check for overrun flag.
 
 ### Removed
 

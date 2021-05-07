@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv2 in STM32
  *
- * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -399,12 +399,13 @@ void ChipUartLowLevel::interruptHandler()
 {
 	auto& uart = parameters_.getUart();
 	const auto characterLength = parameters_.getCharacterLength();
-	uint32_t isr;
-	uint32_t maskedIsr;
-	// loop while there are enabled interrupt sources waiting to be served
-	while (isr = uart.ISR, (maskedIsr = isr & uart.CR1 & (USART_ISR_RXNE | USART_ISR_TXE | USART_ISR_TC)) != 0)
+
+	while (1)	// loop while there are enabled interrupt sources waiting to be served
 	{
-		if ((maskedIsr & USART_ISR_RXNE) != 0)		// read & receive errors
+		const auto cr1 = uart.CR1;
+		const auto isr = uart.ISR;
+
+		if ((cr1 & USART_CR1_RXNEIE) != 0 && (isr & (USART_ISR_RXNE | USART_ISR_ORE)) != 0)		// read & receive errors
 		{
 			const uint16_t characterMask = (1 << characterLength) - 1;
 			const uint16_t character = uart.RDR & characterMask;
@@ -423,7 +424,7 @@ void ChipUartLowLevel::interruptHandler()
 			if (readPosition == readSize_)
 				uartBase_->readCompleteEvent(stopRead());
 		}
-		else if ((maskedIsr & USART_ISR_TXE) != 0)	// write
+		else if ((cr1 & USART_CR1_TXEIE) != 0 && (isr & USART_ISR_TXE) != 0)	// write
 		{
 			const auto writeBuffer = writeBuffer_;
 			auto writePosition = writePosition_;
@@ -434,11 +435,13 @@ void ChipUartLowLevel::interruptHandler()
 			if (writePosition == writeSize_)
 				uartBase_->writeCompleteEvent(stopWrite());
 		}
-		else if ((maskedIsr & USART_ISR_TC) != 0)		// transmit complete
+		else if ((cr1 & USART_CR1_TCIE) != 0 && (isr & USART_ISR_TC) != 0)	// transmit complete
 		{
 			parameters_.enableTcInterrupt(false);
 			uartBase_->transmitCompleteEvent();
 		}
+		else	// nothing more to do
+			return;
 	}
 }
 
