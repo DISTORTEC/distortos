@@ -140,6 +140,8 @@ including `distortos/FATAL_ERROR.h` directly in `source/scheduler/Scheduler.cpp`
 - Fixed a bug in overrun handling in *STM32's* *USARTv1* and (potentially) *USARTv2*. It is possible for overrun to be
 detected in the middle of interrupt handler's loop, which would result in entering this handler endlessly. Fix this by
 slightly reworking the loop and adding explicit check for overrun flag.
+- Fixed a bug in `STM32.cmake.jinja` templates which caused an error while running `generateBoard.py` with *Jinja*
+version 3.
 
 ### Removed
 
