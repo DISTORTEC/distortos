@@ -1,7 +1,7 @@
 #
 # file: ST_STM32L432KB.yaml
 #
-# author: Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: SVC
   - name: DebugMon
-  -
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -74,7 +74,7 @@ NVIC:
   - name: TIM1_CC
   - name: TIM2
   - name: TIM3
-  -
+  - 
   - name: I2C1_EV
   - name: I2C1_ER
   - name: I2C2_EV
@@ -86,18 +86,18 @@ NVIC:
   - name: USART3
   - name: EXTI15_10
   - name: RTC_Alarm
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: SDMMC1
-  -
+  - 
   - name: SPI3
   - name: UART4
-  -
+  - 
   - name: TIM6_DAC
   - name: TIM7
   - name: DMA2_Channel1
@@ -107,7 +107,7 @@ NVIC:
   - name: DMA2_Channel5
   - name: DFSDM1_FLT0
   - name: DFSDM1_FLT1
-  -
+  - 
   - name: COMP
   - name: LPTIM1
   - name: LPTIM2
@@ -119,7 +119,7 @@ NVIC:
   - name: I2C3_EV
   - name: I2C3_ER
   - name: SAI1
-  -
+  - 
   - name: SWPMI1
   - name: TSC
   - name: LCD

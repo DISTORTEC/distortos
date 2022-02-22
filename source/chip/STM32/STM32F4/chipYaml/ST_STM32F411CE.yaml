@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F411CE.yaml
 #
-# author: Copyright (C) 2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: SVC
   - name: DebugMon
-  -
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -63,10 +63,10 @@ NVIC:
   - name: DMA1_Stream5
   - name: DMA1_Stream6
   - name: ADC
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: EXTI9_5
   - name: TIM1_BRK_TIM9
   - name: TIM1_UP_TIM10
@@ -83,34 +83,34 @@ NVIC:
   - name: SPI2
   - name: USART1
   - name: USART2
-  -
+  - 
   - name: EXTI15_10
   - name: RTC_Alarm
   - name: OTG_FS_WKUP
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: DMA1_Stream7
-  -
+  - 
   - name: SDIO
   - name: TIM5
   - name: SPI3
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: DMA2_Stream0
   - name: DMA2_Stream1
   - name: DMA2_Stream2
   - name: DMA2_Stream3
   - name: DMA2_Stream4
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: OTG_FS
   - name: DMA2_Stream5
   - name: DMA2_Stream6
@@ -118,16 +118,16 @@ NVIC:
   - name: USART6
   - name: I2C3_EV
   - name: I2C3_ER
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: FPU
-  -
-  -
+  - 
+  - 
   - name: SPI4
   - name: SPI5
   $labels:

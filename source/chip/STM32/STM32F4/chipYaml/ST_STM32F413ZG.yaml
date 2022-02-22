@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F413ZG.yaml
 #
-# author: Copyright (C) 2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: SVC
   - name: DebugMon
-  -
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -122,7 +122,7 @@ NVIC:
   - name: CAN3_RX0
   - name: CAN3_RX1
   - name: CAN3_SCE
-  -
+  - 
   - name: AES
   - name: RNG
   - name: FPU
@@ -130,15 +130,15 @@ NVIC:
   - name: UART8
   - name: SPI4
   - name: SPI5
-  -
+  - 
   - name: SAI1
   - name: UART9
   - name: UART10
-  -
-  -
+  - 
+  - 
   - name: QUADSPI
-  -
-  -
+  - 
+  - 
   - name: FMPI2C1_EV
   - name: FMPI2C1_ER
   - name: LPTIM1

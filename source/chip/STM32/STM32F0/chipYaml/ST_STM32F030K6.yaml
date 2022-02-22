@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F030K6.yaml
 #
-# author: Copyright (C) 2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -28,28 +28,28 @@ NVIC:
   - name: Reset
   - name: NMI
   - name: HardFault
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: SVC
-  -
-  -
+  - 
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
   - name: WWDG
-  -
+  - 
   - name: RTC
   - name: FLASH
   - name: RCC
   - name: EXTI0_1
   - name: EXTI2_3
   - name: EXTI4_15
-  -
+  - 
   - name: DMA1_Ch1
   - name: DMA1_Ch2_3
     subvectors:
@@ -62,10 +62,10 @@ NVIC:
   - name: ADC1
   - name: TIM1_BRK_UP_TRG_COM
   - name: TIM1_CC
-  -
+  - 
   - name: TIM3
   - name: TIM6
-  -
+  - 
   - name: TIM14
   - name: TIM15
   - name: TIM16
@@ -82,7 +82,7 @@ NVIC:
     - USART4
     - USART5
     - USART6
-  -
+  - 
   - name: USB
   $labels:
   - NVIC
