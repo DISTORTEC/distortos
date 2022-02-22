@@ -82,6 +82,10 @@ NVIC:
   - name: USART1
   - name: USART2
   - name: AES_RNG_LPUART1
+    subvectors:
+    - AES
+    - RNG
+    - LPUART1
   - name: LCD
   - name: USB
   $labels:

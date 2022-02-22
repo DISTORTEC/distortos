@@ -82,6 +82,9 @@ NVIC:
   - name: USART1
   - name: USART2
   - name: AES_LPUART1
+    subvectors:
+    - AES
+    - LPUART1
   $labels:
   - NVIC
 clocks:
