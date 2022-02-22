@@ -185,6 +185,15 @@ UARTs:
   compatible:
   - ST,STM32-USARTs-v2-group
   has-CR-M1-bit: true
+  LPUART1:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: LPUART1
+    $labels:
+    - LPUART1
   USART1:
     compatible:
     - ST,STM32-USART-v2
