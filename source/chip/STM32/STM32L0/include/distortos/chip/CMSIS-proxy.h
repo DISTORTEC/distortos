@@ -3,6 +3,7 @@
  * \brief CMSIS proxy header for STM32L0
  *
  * \author Copyright (C) 2017-2019 Cezary Gapinski cezary.gapinski@gmail.com
+ * \author Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -54,5 +55,44 @@
 #define SVC_IRQn							SVCall_IRQn
 
 #include "stm32l0xx.h"
+
+/* undefine all IRQHandler aliases, as these conflict with functions defined in vector table */
+
+#ifdef ADC1_COMP_IRQHandler
+	#undef ADC1_COMP_IRQHandler
+#endif
+#ifdef ADC1_IRQHandler
+	#undef ADC1_IRQHandler
+#endif
+#ifdef AES_LPUART1_IRQHandler
+	#undef AES_LPUART1_IRQHandler
+#endif
+#ifdef AES_RNG_LPUART1_IRQHandler
+	#undef AES_RNG_LPUART1_IRQHandler
+#endif
+#ifdef DMA1_Channel4_5_6_7_IRQHandler
+	#undef DMA1_Channel4_5_6_7_IRQHandler
+#endif
+#ifdef DMA1_Channel4_5_IRQHandler
+	#undef DMA1_Channel4_5_IRQHandler
+#endif
+#ifdef LPUART1_IRQHandler
+	#undef LPUART1_IRQHandler
+#endif
+#ifdef RCC_CRS_IRQHandler
+	#undef RCC_CRS_IRQHandler
+#endif
+#ifdef RCC_IRQHandler
+	#undef RCC_IRQHandler
+#endif
+#ifdef RNG_LPUART1_IRQHandler
+	#undef RNG_LPUART1_IRQHandler
+#endif
+#ifdef TIM6_DAC_IRQHandler
+	#undef TIM6_DAC_IRQHandler
+#endif
+#ifdef TIM6_IRQHandler
+	#undef TIM6_IRQHandler
+#endif
 
 #endif	/* SOURCE_CHIP_STM32_STM32L0_INCLUDE_DISTORTOS_CHIP_CMSIS_PROXY_H_ */
