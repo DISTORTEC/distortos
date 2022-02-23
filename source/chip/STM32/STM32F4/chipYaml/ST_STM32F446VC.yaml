@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F446VC.yaml
 #
-# author: Copyright (C) 2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: SVC
   - name: DebugMon
-  -
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -105,8 +105,8 @@ NVIC:
   - name: DMA2_Stream2
   - name: DMA2_Stream3
   - name: DMA2_Stream4
-  -
-  -
+  - 
+  - 
   - name: CAN2_TX
   - name: CAN2_RX0
   - name: CAN2_RX1
@@ -123,18 +123,18 @@ NVIC:
   - name: OTG_HS_WKUP
   - name: OTG_HS
   - name: DCMI
-  -
-  -
+  - 
+  - 
   - name: FPU
-  -
-  -
+  - 
+  - 
   - name: SPI4
-  -
-  -
+  - 
+  - 
   - name: SAI1
-  -
-  -
-  -
+  - 
+  - 
+  - 
   - name: SAI2
   - name: QUADSPI
   - name: CEC

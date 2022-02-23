@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F722RE.yaml
 #
-# author: Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -34,13 +34,13 @@ NVIC:
   - name: MemManage
   - name: BusFault
   - name: UsageFault
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
   - name: SVC
   - name: DebugMon
-  -
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -105,12 +105,12 @@ NVIC:
   - name: DMA2_Stream2
   - name: DMA2_Stream3
   - name: DMA2_Stream4
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: OTG_FS
   - name: DMA2_Stream5
   - name: DMA2_Stream6
@@ -122,7 +122,7 @@ NVIC:
   - name: OTG_HS_EP1_IN
   - name: OTG_HS_WKUP
   - name: OTG_HS
-  -
+  - 
   - name: AES
   - name: RNG
   - name: FPU
@@ -130,23 +130,23 @@ NVIC:
   - name: UART8
   - name: SPI4
   - name: SPI5
-  -
+  - 
   - name: SAI1
-  -
-  -
-  -
+  - 
+  - 
+  - 
   - name: SAI2
   - name: QUADSPI
   - name: LPTIM1
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: SDMMC2
   $labels:
   - NVIC

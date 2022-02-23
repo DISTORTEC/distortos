@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv2 in STM32
  *
- * \author Copyright (C) 2016-2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -320,6 +320,11 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE
 
 #else	// !def DISTORTOS_BITBANDING_SUPPORTED
 
+#ifdef DISTORTOS_CHIP_LPUART1_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APB1ENR),
+		RCC_APB1ENR_LPUART1EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_LPUART1RST};
+#endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
+
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
 		RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
@@ -453,13 +458,35 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 		return {EBADF, {}};
 
 	const auto peripheralFrequency = parameters_.getPeripheralFrequency();
-	const auto divider = (peripheralFrequency + baudRate / 2) / baudRate;
-	const auto over8 = divider < 16;
-	const auto mantissa = divider / (over8 == false ? 16 : 8);
-	const auto fraction = divider % (over8 == false ? 16 : 8);
+	uint32_t brr;
+	bool over8;
+	uint32_t realBaudRate;
+#ifdef IS_LPUART_INSTANCE
+	if (IS_LPUART_INSTANCE(&parameters_.getUart()) == false)
+#endif	// def IS_LPUART_INSTANCE
+	{
+		const auto divider = (peripheralFrequency + baudRate / 2) / baudRate;
+		over8 = divider < 16;
+		const auto mantissa = divider / (over8 == false ? 16 : 8);
+		const auto fraction = divider % (over8 == false ? 16 : 8);
 
-	if (mantissa == 0 || mantissa > (USART_BRR_DIV_MANTISSA >> USART_BRR_DIV_MANTISSA_Pos))
-		return {EINVAL, {}};
+		if (mantissa == 0 || mantissa > (USART_BRR_DIV_MANTISSA >> USART_BRR_DIV_MANTISSA_Pos))
+			return {EINVAL, {}};
+
+		brr = mantissa << USART_BRR_DIV_MANTISSA_Pos | fraction << USART_BRR_DIV_FRACTION_Pos;
+		realBaudRate = peripheralFrequency / divider;
+	}
+#ifdef IS_LPUART_INSTANCE
+	else
+	{
+		over8 = {};	// LPUART doesn't have OVER8 bit
+		brr = (256ull * peripheralFrequency + baudRate / 2) / baudRate;
+		if (brr < 0x300 || brr >= (1 << 20))
+			return {EINVAL, {}};
+
+		realBaudRate = 256 * peripheralFrequency / brr;
+	}
+#endif	// def IS_LPUART_INSTANCE
 
 	const auto realCharacterLength = characterLength + (parity != devices::UartParity::none);
 	if (realCharacterLength < minCharacterLength + 1 || realCharacterLength > maxCharacterLength)
@@ -470,7 +497,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 
 	uartBase_ = &uartBase;
 	auto& uart = parameters_.getUart();
-	uart.BRR = mantissa << USART_BRR_DIV_MANTISSA_Pos | fraction << USART_BRR_DIV_FRACTION_Pos;
+	uart.BRR = brr;
 	uart.CR2 = _2StopBits << (USART_CR2_STOP_Pos + 1);
 	if (hardwareFlowControl == true)
 		uart.CR3 = USART_CR3_CTSE | USART_CR3_RTSE;
@@ -481,7 +508,7 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 #endif	// def DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
 			(parity != devices::UartParity::none) << USART_CR1_PCE_Pos |
 			(parity == devices::UartParity::odd) << USART_CR1_PS_Pos;
-	return {{}, peripheralFrequency / divider};
+	return {{}, realBaudRate};
 }
 
 int ChipUartLowLevel::startRead(void* const buffer, const size_t size)

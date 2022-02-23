@@ -25,6 +25,25 @@ namespace distortos
 namespace chip
 {
 
+#ifdef DISTORTOS_CHIP_LPUART1_ENABLE
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| LPUART1
++---------------------------------------------------------------------------------------------------------------------*/
+
+ChipUartLowLevel lpuart1 {ChipUartLowLevel::lpuart1Parameters};
+
+/**
+ * \brief LPUART1 interrupt handler
+ */
+
+extern "C" void LPUART1_IRQHandler()
+{
+	lpuart1.interruptHandler();
+}
+
+#endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
+
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 /*---------------------------------------------------------------------------------------------------------------------+

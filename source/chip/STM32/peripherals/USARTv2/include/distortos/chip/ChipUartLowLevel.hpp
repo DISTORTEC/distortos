@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class header for USARTv2 in STM32
  *
- * \author Copyright (C) 2016-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -43,6 +43,13 @@ public:
 	constexpr static uint8_t maxCharacterLength {9};
 
 	class Parameters;
+
+#ifdef DISTORTOS_CHIP_LPUART1_ENABLE
+
+	/// parameters for construction of UART low-level driver for LPUART1
+	static const Parameters lpuart1Parameters;
+
+#endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 

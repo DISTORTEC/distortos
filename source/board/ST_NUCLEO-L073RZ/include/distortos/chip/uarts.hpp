@@ -29,6 +29,13 @@ class ChipUartLowLevel;
 | global objects
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifdef DISTORTOS_CHIP_LPUART1_ENABLE
+
+/// UART low-level driver for LPUART1
+extern ChipUartLowLevel lpuart1;
+
+#endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
+
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 
 /// UART low-level driver for USART1

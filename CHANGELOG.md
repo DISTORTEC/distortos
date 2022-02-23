@@ -71,6 +71,7 @@ was tested only with *Cypress* *S25FL127S*.
 - Added `estd::DynamicCircularBuffer` and `estd::StaticCircularBuffer` template classes, which implement a circular
 buffer suitable for use with objects (i.e. types that have non-trivial constructors and destructors). These classes are
 thread-safe and lock-free for a single-producer and single-consumer scenario.
+- Extended *STM32's* *USARTv2* with support for *LPUART*, currently available only for *STM32L0* chip family.
 
 ### Changed
 

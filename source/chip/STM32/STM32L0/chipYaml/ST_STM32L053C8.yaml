@@ -1,7 +1,7 @@
 #
 # file: ST_STM32L053C8.yaml
 #
-# author: Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -28,16 +28,16 @@ NVIC:
   - name: Reset
   - name: NMI
   - name: HardFault
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - name: SVC
-  -
-  -
+  - 
+  - 
   - name: PendSV
   - name: SysTick
   chip-vectors:
@@ -71,7 +71,7 @@ NVIC:
   - name: TIM3
   - name: TIM6_DAC
   - name: TIM7
-  -
+  - 
   - name: TIM21
   - name: I2C3
   - name: TIM22
@@ -82,6 +82,10 @@ NVIC:
   - name: USART1
   - name: USART2
   - name: AES_RNG_LPUART1
+    subvectors:
+    - AES
+    - RNG
+    - LPUART1
   - name: LCD
   - name: USB
   $labels:
@@ -222,6 +226,15 @@ UARTs:
   compatible:
   - ST,STM32-USARTs-v2-group
   has-CR-M1-bit: true
+  LPUART1:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: LPUART1
+    $labels:
+    - LPUART1
   USART1:
     compatible:
     - ST,STM32-USART-v2

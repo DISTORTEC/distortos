@@ -14,6 +14,18 @@ distortosSetFixedConfiguration(BOOLEAN
 		ON)
 
 distortosSetConfiguration(BOOLEAN
+		distortos_Peripherals_LPUART1
+		OFF
+		HELP "Enable LPUART1 low-level driver."
+		OUTPUT_NAME DISTORTOS_CHIP_LPUART1_ENABLE)
+
+if(distortos_Peripherals_LPUART1)
+
+	set(ARCHITECTURE_NVIC_LPUART1_ENABLE ON)
+
+endif()
+
+distortosSetConfiguration(BOOLEAN
 		distortos_Peripherals_USART1
 		OFF
 		HELP "Enable USART1 low-level driver."

@@ -397,9 +397,15 @@ __attribute__ ((weak)) void USART2_IRQHandler()
 }
 
 // AES_RNG_LPUART1, address 0xb4, exception number 45, IRQ number 29
-__attribute__ ((weak)) void AES_RNG_LPUART1_IRQHandler()
+void AES_RNG_LPUART1_IRQHandler()
 {
-	while (1);
+	__attribute__ ((weak)) void AES_IRQHandler();
+	__attribute__ ((weak)) void RNG_IRQHandler();
+	__attribute__ ((weak)) void LPUART1_IRQHandler();
+
+	AES_IRQHandler();
+	RNG_IRQHandler();
+	LPUART1_IRQHandler();
 }
 
 // LCD, address 0xb8, exception number 46, IRQ number 30
