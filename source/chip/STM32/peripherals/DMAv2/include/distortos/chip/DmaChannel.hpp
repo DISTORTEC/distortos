@@ -31,6 +31,11 @@ namespace chip
 /// DMA transfer configuration flags
 enum class DmaChannelFlags : uint32_t
 {
+	/// "half transfer" interrupt is disabled
+	halfTransferInterruptDisable = 0 << 3,
+	/// "half transfer" interrupt is enabled
+	halfTransferInterruptEnable = 1 << 3,
+
 	/// "transfer complete" interrupt is disabled
 	transferCompleteInterruptDisable = 0 << 4,
 	/// "transfer complete" interrupt is enabled

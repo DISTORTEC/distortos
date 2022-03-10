@@ -36,6 +36,11 @@ enum class DmaChannelFlags : uint16_t
 	/// "transfer complete" interrupt is enabled
 	transferCompleteInterruptEnable = 1 << 1,
 
+	/// "half transfer" interrupt is disabled
+	halfTransferInterruptDisable = 0 << 2,
+	/// "half transfer" interrupt is enabled
+	halfTransferInterruptEnable = 1 << 2,
+
 	/// transfer from peripheral to memory
 	peripheralToMemory = 0 << 4,
 	/// transfer from memory to peripheral

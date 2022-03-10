@@ -31,6 +31,11 @@ static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterrupt
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_CCR_TCIE,
 		"DmaChannel::Flags::transferCompleteInterruptEnable doesn't match expected value of DMA_CCR_TCIE field!");
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptDisable) == 0,
+		"DmaChannel::Flags::halfTransferInterruptDisable doesn't match expected value of DMA_CCR_HTIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptEnable) == DMA_CCR_HTIE,
+		"DmaChannel::Flags::halfTransferInterruptEnable doesn't match expected value of DMA_CCR_HTIE field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_CCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_CCR_DIR,

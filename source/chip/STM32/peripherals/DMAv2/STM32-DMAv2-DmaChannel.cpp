@@ -28,6 +28,11 @@ namespace chip
 namespace
 {
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptDisable) == 0,
+		"DmaChannel::Flags::halfTransferInterruptDisable doesn't match expected value of DMA_SxCR_HTIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptEnable) == DMA_SxCR_HTIE,
+		"DmaChannel::Flags::halfTransferInterruptEnable doesn't match expected value of DMA_SxCR_HTIE field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptDisable) == 0,
 		"DmaChannel::Flags::transferCompleteInterruptDisable doesn't match expected value of DMA_SxCR_TCIE field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_SxCR_TCIE,
