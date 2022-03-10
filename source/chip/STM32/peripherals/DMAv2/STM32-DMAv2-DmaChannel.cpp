@@ -198,8 +198,9 @@ void DmaChannel::interruptHandler()
 	const auto channelId = dmaChannelPeripheral_.getChannelId();
 	const auto channelShift = getChannelShift(channelId);
 	const auto tcFlag = DMA_LISR_TCIF0 << channelShift;
+	const auto htFlag = DMA_LISR_HTIF0 << channelShift;
 	const auto teFlag = DMA_LISR_TEIF0 << channelShift;
-	const auto flags = readIsr(dmaPeripheral_, channelId) & (tcFlag | teFlag);
+	const auto flags = readIsr(dmaPeripheral_, channelId) & (tcFlag | htFlag | teFlag);
 	if (flags == 0)
 		return;
 
@@ -211,6 +212,8 @@ void DmaChannel::interruptHandler()
 
 	if ((enabledFlags & tcFlag) != 0)
 		functor_->transferCompleteEvent();
+	if ((enabledFlags & htFlag) != 0)
+		functor_->halfTransferEvent();
 	if ((enabledFlags & teFlag) != 0)
 		functor_->transferErrorEvent(getTransactionsLeft());
 }
