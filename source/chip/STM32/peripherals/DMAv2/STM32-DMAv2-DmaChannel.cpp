@@ -250,6 +250,9 @@ void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t pe
 {
 	assert(functor_ != nullptr);
 
+	assert((flags & Flags::peripheralFlowController) == Flags::dmaFlowController ||
+			(flags & Flags::circularModeEnable) == Flags::circularModeDisable);
+
 	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
 	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;
 	const auto memoryDataSize = memoryDataSizeFlags == Flags::memoryDataSize1 ? 1 :
