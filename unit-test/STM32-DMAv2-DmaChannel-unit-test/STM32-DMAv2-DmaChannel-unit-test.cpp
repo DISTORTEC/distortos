@@ -4,7 +4,7 @@
  *
  * This test checks whether STM32 DMAv2's DmaChannel performs all h/w operations properly and in correct order.
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -32,6 +32,7 @@ class DmaChannelFunctor : public distortos::chip::DmaChannelFunctor
 {
 public:
 
+	MAKE_MOCK0(halfTransferEvent, void());
 	MAKE_MOCK0(transferCompleteEvent, void());
 	MAKE_MOCK1(transferErrorEvent, void(size_t));
 };
