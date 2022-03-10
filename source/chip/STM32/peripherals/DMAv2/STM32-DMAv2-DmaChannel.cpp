@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class implementation for DMAv2 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -42,6 +42,11 @@ static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_SxCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_SxCR_DIR_0,
 		"DmaChannel::Flags::memoryToPeripheral doesn't match expected value of DMA_SxCR_DIR field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeDisable) == 0,
+		"DmaChannel::Flags::circularModeDisable doesn't match expected value of DMA_SxCR_CIRC field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeEnable) == DMA_SxCR_CIRC,
+		"DmaChannel::Flags::circularModeEnable doesn't match expected value of DMA_SxCR_CIRC field!");
 
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFixed) == 0,
 		"DmaChannel::Flags::peripheralFixed doesn't match expected value of DMA_SxCR_PINC field!");

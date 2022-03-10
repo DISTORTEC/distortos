@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class header for DMAv2 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -45,6 +45,11 @@ enum class DmaChannelFlags : uint32_t
 	peripheralToMemory = 0 << 6,
 	/// transfer from memory to peripheral
 	memoryToPeripheral = 1 << 6,
+
+	/// circular mode is disabled
+	circularModeDisable = 0 << 8,
+	/// circular mode is enabled
+	circularModeEnable = 1 << 8,
 
 	/// peripheral address is fixed
 	peripheralFixed = 0 << 9,
