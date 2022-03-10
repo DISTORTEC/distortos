@@ -2,7 +2,7 @@
  * \file
  * \brief SpiMasterLowLevelDmaBased class header for SPIv1 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -140,8 +140,8 @@ public:
 
 private:
 
-	/// RxDmaChannelFunctor class is a DmaChannelFunctor for DMA channel used for reception
-	class RxDmaChannelFunctor : public DmaChannelFunctor
+	/// RxDmaChannelFunctor class is a DmaChannelFunctorCommon for DMA channel used for reception
+	class RxDmaChannelFunctor : public DmaChannelFunctorCommon
 	{
 	public:
 

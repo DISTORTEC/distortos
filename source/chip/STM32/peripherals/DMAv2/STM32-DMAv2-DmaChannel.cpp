@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class implementation for DMAv2 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -28,6 +28,11 @@ namespace chip
 namespace
 {
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptDisable) == 0,
+		"DmaChannel::Flags::halfTransferInterruptDisable doesn't match expected value of DMA_SxCR_HTIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptEnable) == DMA_SxCR_HTIE,
+		"DmaChannel::Flags::halfTransferInterruptEnable doesn't match expected value of DMA_SxCR_HTIE field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptDisable) == 0,
 		"DmaChannel::Flags::transferCompleteInterruptDisable doesn't match expected value of DMA_SxCR_TCIE field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_SxCR_TCIE,
@@ -42,6 +47,11 @@ static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_SxCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_SxCR_DIR_0,
 		"DmaChannel::Flags::memoryToPeripheral doesn't match expected value of DMA_SxCR_DIR field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeDisable) == 0,
+		"DmaChannel::Flags::circularModeDisable doesn't match expected value of DMA_SxCR_CIRC field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeEnable) == DMA_SxCR_CIRC,
+		"DmaChannel::Flags::circularModeEnable doesn't match expected value of DMA_SxCR_CIRC field!");
 
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFixed) == 0,
 		"DmaChannel::Flags::peripheralFixed doesn't match expected value of DMA_SxCR_PINC field!");
@@ -193,8 +203,9 @@ void DmaChannel::interruptHandler()
 	const auto channelId = dmaChannelPeripheral_.getChannelId();
 	const auto channelShift = getChannelShift(channelId);
 	const auto tcFlag = DMA_LISR_TCIF0 << channelShift;
+	const auto htFlag = DMA_LISR_HTIF0 << channelShift;
 	const auto teFlag = DMA_LISR_TEIF0 << channelShift;
-	const auto flags = readIsr(dmaPeripheral_, channelId) & (tcFlag | teFlag);
+	const auto flags = readIsr(dmaPeripheral_, channelId) & (tcFlag | htFlag | teFlag);
 	if (flags == 0)
 		return;
 
@@ -206,6 +217,8 @@ void DmaChannel::interruptHandler()
 
 	if ((enabledFlags & tcFlag) != 0)
 		functor_->transferCompleteEvent();
+	if ((enabledFlags & htFlag) != 0)
+		functor_->halfTransferEvent();
 	if ((enabledFlags & teFlag) != 0)
 		functor_->transferErrorEvent(getTransactionsLeft());
 }
@@ -244,6 +257,9 @@ void DmaChannel::startTransfer(const uintptr_t memoryAddress, const uintptr_t pe
 		const size_t transactions, const Flags flags) const
 {
 	assert(functor_ != nullptr);
+
+	assert((flags & Flags::peripheralFlowController) == Flags::dmaFlowController ||
+			(flags & Flags::circularModeEnable) == Flags::circularModeDisable);
 
 	constexpr auto memoryDataSizeMask = Flags::memoryDataSize1 | Flags::memoryDataSize2 | Flags::memoryDataSize4;
 	const auto memoryDataSizeFlags = flags & memoryDataSizeMask;

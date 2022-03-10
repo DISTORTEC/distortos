@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannelFunctorCommon class header for DMA in STM32
  *
- * \author Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2019-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -29,6 +29,19 @@ namespace chip
 class DmaChannelFunctorCommon : public DmaChannelFunctor
 {
 public:
+
+	/**
+	 * \brief "Half transfer" event
+	 *
+	 * Called by low-level DMA channel driver when half of the transfer is physically finished.
+	 *
+	 * Empty default implementation - does nothing.
+	 */
+
+	void halfTransferEvent() override
+	{
+
+	}
 
 	/**
 	 * \brief "Transfer complete" event

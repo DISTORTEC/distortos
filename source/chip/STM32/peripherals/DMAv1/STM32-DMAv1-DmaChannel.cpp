@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class implementation for DMAv1 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -31,10 +31,20 @@ static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterrupt
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::transferCompleteInterruptEnable) == DMA_CCR_TCIE,
 		"DmaChannel::Flags::transferCompleteInterruptEnable doesn't match expected value of DMA_CCR_TCIE field!");
 
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptDisable) == 0,
+		"DmaChannel::Flags::halfTransferInterruptDisable doesn't match expected value of DMA_CCR_HTIE field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::halfTransferInterruptEnable) == DMA_CCR_HTIE,
+		"DmaChannel::Flags::halfTransferInterruptEnable doesn't match expected value of DMA_CCR_HTIE field!");
+
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralToMemory) == 0,
 		"DmaChannel::Flags::peripheralToMemory doesn't match expected value of DMA_CCR_DIR field!");
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::memoryToPeripheral) == DMA_CCR_DIR,
 		"DmaChannel::Flags::memoryToPeripheral doesn't match expected value of DMA_CCR_DIR field!");
+
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeDisable) == 0,
+		"DmaChannel::Flags::circularModeDisable doesn't match expected value of DMA_CCR_CIRC field!");
+static_assert(static_cast<uint32_t>(DmaChannel::Flags::circularModeEnable) == DMA_CCR_CIRC,
+		"DmaChannel::Flags::circularModeEnable doesn't match expected value of DMA_CCR_CIRC field!");
 
 static_assert(static_cast<uint32_t>(DmaChannel::Flags::peripheralFixed) == 0,
 		"DmaChannel::Flags::peripheralFixed doesn't match expected value of DMA_CCR_PINC field!");
@@ -148,8 +158,9 @@ void DmaChannel::interruptHandler()
 
 	const auto channelShift = getChannelShift(dmaChannelPeripheral_.getChannelId());
 	const auto teFlag = DMA_ISR_TEIF1 << channelShift;
+	const auto htFlag = DMA_ISR_HTIF1 << channelShift;
 	const auto tcFlag = DMA_ISR_TCIF1 << channelShift;
-	const auto flags = dmaPeripheral_.readIsr() & (teFlag | tcFlag);
+	const auto flags = dmaPeripheral_.readIsr() & (teFlag | htFlag | tcFlag);
 	if (flags == 0)
 		return;
 
@@ -161,6 +172,8 @@ void DmaChannel::interruptHandler()
 
 	if ((enabledFlags & teFlag) != 0)
 		functor_->transferErrorEvent(getTransactionsLeft());
+	if ((enabledFlags & htFlag) != 0)
+		functor_->halfTransferEvent();
 	if ((enabledFlags & tcFlag) != 0)
 		functor_->transferCompleteEvent();
 }

@@ -2,7 +2,7 @@
  * \file
  * \brief DmaChannel class header for DMAv1 in STM32
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -36,10 +36,20 @@ enum class DmaChannelFlags : uint16_t
 	/// "transfer complete" interrupt is enabled
 	transferCompleteInterruptEnable = 1 << 1,
 
+	/// "half transfer" interrupt is disabled
+	halfTransferInterruptDisable = 0 << 2,
+	/// "half transfer" interrupt is enabled
+	halfTransferInterruptEnable = 1 << 2,
+
 	/// transfer from peripheral to memory
 	peripheralToMemory = 0 << 4,
 	/// transfer from memory to peripheral
 	memoryToPeripheral = 1 << 4,
+
+	/// circular mode is disabled
+	circularModeDisable = 0 << 5,
+	/// circular mode is enabled
+	circularModeEnable = 1 << 5,
 
 	/// peripheral address is fixed
 	peripheralFixed = 0 << 6,
