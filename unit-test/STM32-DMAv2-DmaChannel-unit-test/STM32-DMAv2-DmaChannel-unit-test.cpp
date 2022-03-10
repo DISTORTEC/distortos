@@ -145,14 +145,18 @@ TEST_CASE("Testing transfer configuration", "[configuration]")
 	{
 		const Flags flagsArray[]
 		{
-			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
-					Flags::peripheralFixed | Flags::memoryFixed | Flags::lowPriority,
-			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
-					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::mediumPriority,
-			Flags::transferCompleteInterruptDisable | Flags::dmaFlowController | Flags::peripheralToMemory |
-					Flags::peripheralFixed | Flags::memoryFixed | Flags::highPriority,
-			Flags::transferCompleteInterruptEnable | Flags::peripheralFlowController | Flags::memoryToPeripheral |
-					Flags::peripheralIncrement | Flags::memoryIncrement | Flags::veryHighPriority,
+				Flags:: halfTransferInterruptDisable | Flags::transferCompleteInterruptDisable |
+						Flags::dmaFlowController | Flags::peripheralToMemory | Flags::circularModeDisable |
+						Flags::peripheralFixed | Flags::memoryFixed | Flags::lowPriority,
+				Flags:: halfTransferInterruptDisable | Flags::transferCompleteInterruptEnable |
+						Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::circularModeDisable |
+						Flags::peripheralIncrement | Flags::memoryIncrement | Flags::mediumPriority,
+				Flags:: halfTransferInterruptEnable | Flags::transferCompleteInterruptDisable |
+						Flags::dmaFlowController | Flags::peripheralToMemory | Flags::circularModeEnable |
+						Flags::peripheralFixed | Flags::memoryFixed | Flags::highPriority,
+				Flags:: halfTransferInterruptEnable | Flags::transferCompleteInterruptEnable |
+						Flags::peripheralFlowController | Flags::memoryToPeripheral | Flags::circularModeDisable |
+						Flags::peripheralIncrement | Flags::memoryIncrement | Flags::veryHighPriority,
 		};
 		const Flags peripheralDataSizes[]
 		{
@@ -228,6 +232,8 @@ TEST_CASE("Testing transfers", "[transfers]")
 
 	const auto channelId = getNextChannelId();
 	const auto channelShift = getChannelShift(channelId);
+	constexpr uint32_t crMask {DMA_SxCR_TCIE | DMA_SxCR_HTIE | DMA_SxCR_TEIE};
+	constexpr uint32_t isrMask {DMA_LISR_TCIF0 | DMA_LISR_HTIF0 | DMA_LISR_TEIF0};
 
 	distortos::chip::DmaChannel channel {peripheralMock, channelPeripheralMock};
 
@@ -262,9 +268,9 @@ TEST_CASE("Testing transfers", "[transfers]")
 		handle.stopTransfer();
 	}
 
-	SECTION("Testing interruptHandler() - both TCIF and TEIF flags cleared")
+	SECTION("Testing interruptHandler() - all ...IF flags cleared")
 	{
-		const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift);
+		const auto isr = UINT32_MAX & ~(isrMask << channelShift);
 		if (channelId <= 3)
 			expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
 					readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
@@ -278,85 +284,100 @@ TEST_CASE("Testing transfers", "[transfers]")
 			false,
 			true,
 	};
-	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set but corresponding interrupts disabled")
+	SECTION("Testing interruptHandler() - TCIF and/or HTIF and/or TEIF flags set but corresponding interrupts disabled")
 	{
 		for (const auto tcif : falseTrue)
-			for (const auto teif : falseTrue)
-			{
-				if (tcif == false && teif == false)
-					continue;
+			for (const auto htif : falseTrue)
+				for (const auto teif : falseTrue)
+				{
+					if (tcif == false && htif == false && teif == false)
+						continue;
 
-				const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
-						tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
-						teif << (DMA_LISR_TEIF0_Pos + channelShift);
-				if (channelId <= 3)
-					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-							readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-				else
-					expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-							readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-				const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
-						!tcif << DMA_SxCR_TCIE_Pos |
-						!teif << DMA_SxCR_TEIE_Pos;
-				REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
-				channel.interruptHandler();
-			}
+					const auto isr = UINT32_MAX & ~(isrMask << channelShift) |
+							tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
+							htif << (DMA_LISR_HTIF0_Pos + channelShift) |
+							teif << (DMA_LISR_TEIF0_Pos + channelShift);
+					if (channelId <= 3)
+						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+								readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+					else
+						expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+								readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+					const auto cr = UINT32_MAX & ~crMask |
+							!tcif << DMA_SxCR_TCIE_Pos |
+							!htif << DMA_SxCR_HTIE_Pos |
+							!teif << DMA_SxCR_TEIE_Pos;
+					REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
+					channel.interruptHandler();
+				}
 	}
-	SECTION("Testing interruptHandler() - TCIF and/or TEIF flags set and corresponding interrupts enabled")
+	SECTION("Testing interruptHandler() - TCIF and/or HTIF and/or TEIF flags set and corresponding interrupts enabled")
 	{
 		for (const auto tcif : falseTrue)
-			for (const auto teif : falseTrue)
-				for (const auto tcie : falseTrue)
-					for (const auto teie : falseTrue)
-					{
-						if ((tcif && tcie) == false && (teif && teie) == false)
-							continue;
-
-						DYNAMIC_SECTION("Testing interruptHandler() - "
-								"TCIF flag " << (tcif == false ? "cleared" : "set") <<
-								", TEIF flag " << (teif == false ? "cleared" : "set") <<
-								", TC interrupt " << (tcie == false ? "disabled" : "enabled") <<
-								" and TE interrupt " << (teie == false ? "disabled" : "enabled"))
-						{
-							const auto isr = UINT32_MAX & ~((DMA_LISR_TCIF0 | DMA_LISR_TEIF0) << channelShift) |
-									tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
-									teif << (DMA_LISR_TEIF0_Pos + channelShift);
-							if (channelId <= 3)
-								expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-										readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
-							else
-								expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-										readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
-							const auto cr = UINT32_MAX & ~(DMA_SxCR_TCIE | DMA_SxCR_TEIE) |
-									tcie << DMA_SxCR_TCIE_Pos |
-									teie << DMA_SxCR_TEIE_Pos;
-							REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
-							const uint32_t ifcr = (tcif && tcie) << (DMA_LIFCR_CTCIF0_Pos + channelShift) |
-									(teif && teie) << (DMA_LIFCR_CTEIF0_Pos + channelShift);
-							if (channelId <= 3)
-								expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-										writeLifcr(ifcr)).IN_SEQUENCE(sequence));
-							else
-								expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
-										writeHifcr(ifcr)).IN_SEQUENCE(sequence));
-
-							if ((tcif && tcie) == true)
+			for (const auto htif : falseTrue)
+				for (const auto teif : falseTrue)
+					for (const auto tcie : falseTrue)
+						for (const auto htie : falseTrue)
+							for (const auto teie : falseTrue)
 							{
-								expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
-										transferCompleteEvent()).IN_SEQUENCE(sequence));
-							}
-							if ((teif && teie) == true)
-							{
-								constexpr uint16_t transactionsLeft {0xba61};
-								expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
-										readNdtr()).IN_SEQUENCE(sequence).RETURN(transactionsLeft));
-								expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
-										transferErrorEvent(transactionsLeft)).IN_SEQUENCE(sequence));
-							}
+								if ((tcif && tcie) == false && (htif && htie) == false && (teif && teie) == false)
+									continue;
 
-							channel.interruptHandler();
-						}
-					}
+								DYNAMIC_SECTION("Testing interruptHandler() - "
+										"TCIF flag " << (tcif == false ? "cleared" : "set") <<
+										", HTIF flag " << (htif == false ? "cleared" : "set") <<
+										", TEIF flag " << (teif == false ? "cleared" : "set") <<
+										", TC interrupt " << (tcie == false ? "disabled" : "enabled") <<
+										", HT interrupt " << (htie == false ? "disabled" : "enabled") <<
+										" and TE interrupt " << (teie == false ? "disabled" : "enabled"))
+								{
+									const auto isr = UINT32_MAX & ~(isrMask << channelShift) |
+											tcif << (DMA_LISR_TCIF0_Pos + channelShift) |
+											htif << (DMA_LISR_HTIF0_Pos + channelShift) |
+											teif << (DMA_LISR_TEIF0_Pos + channelShift);
+									if (channelId <= 3)
+										expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+												readLisr()).IN_SEQUENCE(sequence).RETURN(isr));
+									else
+										expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+												readHisr()).IN_SEQUENCE(sequence).RETURN(isr));
+									const auto cr = UINT32_MAX & ~crMask |
+											tcie << DMA_SxCR_TCIE_Pos |
+											htie << DMA_SxCR_HTIE_Pos |
+											teie << DMA_SxCR_TEIE_Pos;
+									REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(cr);
+									const uint32_t ifcr = (tcif && tcie) << (DMA_LIFCR_CTCIF0_Pos + channelShift) |
+											(htif && htie) << (DMA_LIFCR_CHTIF0_Pos + channelShift) |
+											(teif && teie) << (DMA_LIFCR_CTEIF0_Pos + channelShift);
+									if (channelId <= 3)
+										expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+												writeLifcr(ifcr)).IN_SEQUENCE(sequence));
+									else
+										expectations.emplace_back(NAMED_REQUIRE_CALL(peripheralMock,
+												writeHifcr(ifcr)).IN_SEQUENCE(sequence));
+
+									if ((tcif && tcie) == true)
+									{
+										expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
+												transferCompleteEvent()).IN_SEQUENCE(sequence));
+									}
+									if ((htif && htie) == true)
+									{
+										expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
+												halfTransferEvent()).IN_SEQUENCE(sequence));
+									}
+									if ((teif && teie) == true)
+									{
+										constexpr uint16_t transactionsLeft {0xba61};
+										expectations.emplace_back(NAMED_REQUIRE_CALL(channelPeripheralMock,
+												readNdtr()).IN_SEQUENCE(sequence).RETURN(transactionsLeft));
+										expectations.emplace_back(NAMED_REQUIRE_CALL(functorMock,
+												transferErrorEvent(transactionsLeft)).IN_SEQUENCE(sequence));
+									}
+
+									channel.interruptHandler();
+								}
+							}
 	}
 
 	REQUIRE_CALL(channelPeripheralMock, readCr()).IN_SEQUENCE(sequence).RETURN(0);
