@@ -2,7 +2,7 @@
  * \file
  * \brief Littlefs1File class implementation
  *
- * \author Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,11 +15,11 @@
 
 #include "distortos/FileSystem/Littlefs1FileSystem.hpp"
 
-#include "distortos/assert.h"
-
 #include <mutex>
 
 #include <fcntl.h>
+
+#include <cassert>
 
 namespace distortos
 {

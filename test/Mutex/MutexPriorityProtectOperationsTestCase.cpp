@@ -2,7 +2,7 @@
  * \file
  * \brief MutexPriorityProtectOperationsTestCase class implementation
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2014-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,12 +13,12 @@
 
 #include "waitForNextTick.hpp"
 
-#include "distortos/assert.h"
 #include "distortos/Mutex.hpp"
 #include "distortos/ThisThread.hpp"
 
 #include <tuple>
 
+#include <cassert>
 #include <cerrno>
 
 namespace distortos

@@ -2,7 +2,7 @@
  * \file
  * \brief VirtualFile class implementation
  *
- * \author Copyright (C) 2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2020-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,7 +13,7 @@
 
 #if DISTORTOS_FILESYSTEMS_STANDARD_LIBRARY_INTEGRATION_ENABLE == 1
 
-#include "distortos/assert.h"
+#include <cassert>
 
 namespace distortos
 {
