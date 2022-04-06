@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017-2018 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2017-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,7 +13,6 @@ add_executable(C-API-Semaphore-compile-link-test
 		${MAIN_CPP})
 
 target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC
-		DISTORTOS_UNIT_TEST
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
 target_include_directories(C-API-Semaphore-compile-link-test BEFORE PUBLIC
 		${INCLUDE_MOCKS}/distortosConfiguration.h
@@ -26,7 +25,6 @@ add_executable(C-API-Semaphore-unit-test-0
 		${MAIN_CPP})
 
 target_compile_definitions(C-API-Semaphore-unit-test-0 PUBLIC
-		DISTORTOS_UNIT_TEST
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
 target_include_directories(C-API-Semaphore-unit-test-0 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/distortosConfiguration.h
