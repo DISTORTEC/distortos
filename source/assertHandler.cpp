@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief __assert_func() system call implementation
+ * \brief assertHandler() implementation
  *
  * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
@@ -11,6 +11,12 @@
 
 #include "distortos/internal/assertHandler.h"
 
+#include "distortos/assertHook.h"
+#include "distortos/InterruptMaskingLock.hpp"
+
+#include <cassert>
+#include <cstdlib>
+
 extern "C"
 {
 
@@ -18,11 +24,14 @@ extern "C"
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
-__attribute__ ((noreturn))
-void __assert_func(const char* const file, const int line, const char* const function,
+void assertHandler(const char* const file, const int line, const char* const function,
 		const char* const failedExpression)
 {
-	assertHandler(file, line, function, failedExpression);
+	if (assertHook != nullptr)
+		assertHook(file, line, function, failedExpression);
+
+	const distortos::InterruptMaskingLock interruptMaskingLock;
+	abort();
 }
 
 }	// extern "C"
