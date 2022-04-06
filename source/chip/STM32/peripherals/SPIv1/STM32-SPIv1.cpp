@@ -2,7 +2,7 @@
  * \file
  * \brief Implementation of SPIv1 functions for STM32
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,9 +13,9 @@
 
 #include "distortos/chip/STM32-SPIv1-SpiPeripheral.hpp"
 
-#include "distortos/assert.h"
-
 #include "estd/log2u.hpp"
+
+#include <cassert>
 
 namespace distortos
 {

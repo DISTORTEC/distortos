@@ -2,7 +2,7 @@
  * \file
  * \brief SpiEeprom class implementation
  *
- * \author Copyright (C) 2016-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -15,10 +15,11 @@
 #include "distortos/devices/communication/SpiMasterHandle.hpp"
 #include "distortos/devices/communication/SpiMasterTransfer.hpp"
 
-#include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
 #include <mutex>
+
+#include <cassert>
 
 namespace distortos
 {

@@ -1,7 +1,7 @@
 #
 # file: CMakeLists.txt
 #
-# author: Copyright (C) 2017-2021 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2017-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -35,6 +35,8 @@ include_directories(
 		external/Catch2
 		external/Trompeloeil
 		${DISTORTOS_PATH}/include)
+
+add_compile_definitions(DISTORTOS_UNIT_TEST)
 
 add_compile_options(-Wall -Wextra -Wshadow)
 

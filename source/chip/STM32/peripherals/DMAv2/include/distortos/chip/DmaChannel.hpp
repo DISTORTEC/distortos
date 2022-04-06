@@ -12,12 +12,12 @@
 #ifndef SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 #define SOURCE_CHIP_STM32_PERIPHERALS_DMAV2_INCLUDE_DISTORTOS_CHIP_DMACHANNEL_HPP_
 
-#include "distortos/assert.h"
 
 #include "estd/EnumClassFlags.hpp"
 
 #include <utility>
 
+#include <cassert>
 #include <cerrno>
 #include <cstddef>
 #include <cstdint>

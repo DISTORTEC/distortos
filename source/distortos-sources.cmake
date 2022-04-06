@@ -1,7 +1,7 @@
 #
 # file: distortos-sources.cmake
 #
-# author: Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -36,6 +36,7 @@ distortosSetFixedConfiguration(INTEGER
 		${DISTORTOS_MEMORYTECHNOLOGYDEVICE_BUFFER_ALIGNMENT})
 
 target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/assertHandler.cpp
 		${CMAKE_CURRENT_LIST_DIR}/fatalErrorHandler.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR}/fatalErrorHandler.cpp

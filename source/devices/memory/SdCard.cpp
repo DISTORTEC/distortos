@@ -2,7 +2,7 @@
  * \file
  * \brief SdCard class implementation
  *
- * \author Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,7 +11,6 @@
 
 #include "distortos/devices/memory/SdCard.hpp"
 
-#include "distortos/assert.h"
 #include "distortos/ThisThread.hpp"
 
 #include "estd/EnumClassFlags.hpp"
@@ -19,6 +18,8 @@
 #include "estd/ScopeGuard.hpp"
 
 #include <mutex>
+
+#include <cassert>
 
 namespace distortos
 {
