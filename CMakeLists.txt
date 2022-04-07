@@ -243,6 +243,22 @@ if(distortos_Checks_06_Asserts)
 
 endif()
 
+distortosSetConfiguration(BOOLEAN
+		distortos_Checks_08_Lightweight_FATAL_ERROR
+		OFF
+		HELP "Use lightweigth FATAL_ERROR instead of the regular one.
+
+		In case of fatal error, regular FATAL_ERROR does the following:
+		- calls optional fatalErrorHook(), passing the information about error location (strings with file and function
+		names, line number) and message (string);
+		- blocks interrupts;
+		- calls abort();
+
+		Lightweight FATAL_ERROR doesn't pass any arguments to fatalErrorHook() (declaration of this function is
+		different with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is
+		probably only usable with a debugger or as a method to just reset/halt the chip."
+		OUTPUT_NAME DISTORTOS_LIGHTWEIGHT_FATAL_ERROR)
+
 if(NOT CMAKE_BUILD_TYPE)
 	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
 	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
