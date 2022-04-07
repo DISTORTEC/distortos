@@ -12,15 +12,19 @@
 #ifndef INCLUDE_DISTORTOS_INTERNAL_ASSERTHANDLER_H_
 #define INCLUDE_DISTORTOS_INTERNAL_ASSERTHANDLER_H_
 
+#ifndef NDEBUG
+
+#include "distortos/distortosConfiguration.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif	/* def __cplusplus */
 
-#ifndef NDEBUG
+#ifndef DISTORTOS_LIGHTWEIGHT_ASSERT
 
 /**
- * \brief Handler of failed asserts.
+ * \brief Handler of failed asserts, regular version.
  *
  * This function is called via failed assert() macro, which is used to supply some of the arguments. It calls weak
  * assertHook() (only if it is defined) and halts the system by calling abort() with masked interrupts.
@@ -34,10 +38,23 @@ extern "C"
 void assertHandler(const char* file, int line, const char* function,
 		const char* failedExpression) __attribute__ ((noreturn));
 
-#endif	/* !def NDEBUG */
+#else	/* def DISTORTOS_LIGHTWEIGHT_ASSERT */
+
+/**
+ * \brief Handler of failed asserts, lightweight version.
+ *
+ * This function is called via failed assert() macro. It calls weak assertHook() (only if it is defined) and halts the
+ * system by masking interrupts and executing an infinite loop.
+ */
+
+void assertHandler() __attribute__ ((noreturn));
+
+#endif	/* def DISTORTOS_LIGHTWEIGHT_ASSERT */
 
 #ifdef __cplusplus
 }	/* extern "C" */
 #endif	/* def __cplusplus */
+
+#endif	/* !def NDEBUG */
 
 #endif /* INCLUDE_DISTORTOS_INTERNAL_ASSERTHANDLER_H_ */

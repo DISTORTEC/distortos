@@ -3,7 +3,7 @@
 #
 # This is the main CMakeLists.txt for distortos
 #
-# author: Copyright (C) 2018-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -222,6 +222,26 @@ distortosSetConfiguration(BOOLEAN
 
 		It is highly recommended to keep this option enabled until the application is thoroughly tested."
 		NO_OUTPUT)
+
+if(distortos_Checks_06_Asserts)
+
+	distortosSetConfiguration(BOOLEAN
+			distortos_Checks_07_Lightweight_assert
+			OFF
+			HELP "Use lightweigth assert instead of the regular one.
+
+			If assertion fails, regular assert does the following:
+			- calls optional assertHook(), passing the information about error location (strings with file and function
+			names, line number) and failed expression (string);
+			- blocks interrupts;
+			- calls abort();
+
+			Lightweight assert doesn't pass any arguments to assertHook() (declaration of this function is different
+			with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is
+			probably only usable with a debugger or as a method to just reset/halt the chip."
+			OUTPUT_NAME DISTORTOS_LIGHTWEIGHT_ASSERT)
+
+endif()
 
 if(NOT CMAKE_BUILD_TYPE)
 	message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to RelWithDebInfo")
