@@ -102,6 +102,16 @@ set("distortos_Checks_06_Asserts"
 		CACHE
 		"BOOL"
 		"Enable asserts.\n\nSome errors, which are clearly program bugs, are never reported using error codes. When this option is enabled, these preconditions, postconditions, invariants and assertions are checked with assert() macro. On the other hand - with this option disabled, they are completely ignored.\n\nIt is highly recommended to keep this option enabled until the application is thoroughly tested.")
+set("distortos_Checks_07_Lightweight_assert"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Use lightweigth assert instead of the regular one.\n\nIf assertion fails, regular assert does the following:\n- calls optional assertHook(), passing the information about error location (strings with file and function names, line number) and failed expression (string);\n- blocks interrupts;\n- calls abort();\n\nLightweight assert doesn't pass any arguments to assertHook() (declaration of this function is different with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is probably only usable with a debugger or as a method to just reset/halt the chip.")
+set("distortos_Checks_08_Lightweight_FATAL_ERROR"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Use lightweigth FATAL_ERROR instead of the regular one.\n\nIn case of fatal error, regular FATAL_ERROR does the following:\n- calls optional fatalErrorHook(), passing the information about error location (strings with file and function names, line number) and message (string);\n- blocks interrupts;\n- calls abort();\n\nLightweight FATAL_ERROR doesn't pass any arguments to fatalErrorHook() (declaration of this function is different with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is probably only usable with a debugger or as a method to just reset/halt the chip.")
 set("distortos_leds"
 		"ON"
 		CACHE
