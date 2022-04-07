@@ -9,6 +9,8 @@
  * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#ifndef NDEBUG
+
 #include "distortos/internal/assertHandler.h"
 
 #include "distortos/assertHook.h"
@@ -24,6 +26,8 @@ extern "C"
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+#ifndef DISTORTOS_LIGHTWEIGHT_ASSERT
+
 void assertHandler(const char* const file, const int line, const char* const function,
 		const char* const failedExpression)
 {
@@ -34,4 +38,19 @@ void assertHandler(const char* const file, const int line, const char* const fun
 	abort();
 }
 
+#else	// def DISTORTOS_LIGHTWEIGHT_ASSERT
+
+void assertHandler()
+{
+	if (assertHook != nullptr)
+		assertHook();
+
+	const distortos::InterruptMaskingLock interruptMaskingLock;
+	while (1);
+}
+
+#endif	// def DISTORTOS_LIGHTWEIGHT_ASSERT
+
 }	// extern "C"
+
+#endif	// !def NDEBUG

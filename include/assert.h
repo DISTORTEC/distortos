@@ -20,6 +20,8 @@
 
 #ifndef NDEBUG
 
+#ifndef DISTORTOS_LIGHTWEIGHT_ASSERT
+
 #ifndef ASSERT_FUNCTION
 
 /**
@@ -42,7 +44,7 @@
 #endif	/* !def ASSERT_FUNCTION */
 
 /**
- * \brief assert() macro for "asserts enabled" configuration
+ * \brief assert() macro for "regular asserts enabled" configuration
  *
  * Does nothing is \a expression is true, otherwise calls assertHandler() with location of the failed assertion.
  *
@@ -50,6 +52,20 @@
  */
 
 #define assert(expression) ((expression) ? (void)0 : assertHandler(__FILE__, __LINE__, ASSERT_FUNCTION, #expression))
+
+#else	/* def DISTORTOS_LIGHTWEIGHT_ASSERT */
+
+/**
+ * \brief assert() macro for "lightweight asserts enabled" configuration
+ *
+ * Does nothing is \a expression is true, otherwise calls assertHandler().
+ *
+ * \param [in] expression is the expression that is checked
+ */
+
+#define assert(expression) ((expression) ? (void)0 : assertHandler())
+
+#endif	/* def DISTORTOS_LIGHTWEIGHT_ASSERT */
 
 #else	/* def NDEBUG */
 
