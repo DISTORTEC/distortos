@@ -73,6 +73,9 @@ buffer suitable for use with objects (i.e. types that have non-trivial construct
 thread-safe and lock-free for a single-producer and single-consumer scenario.
 - Extended *STM32's* *USARTv2* with support for *LPUART*, currently available only for *STM32L0* chip family.
 - Added support for "half transfer" event and "circular mode" to *STM32's* *DMAv1* and *DMAv2*.
+- Added two *CMake* options to reduce size of executable: `distortos_Checks_07_Lightweight_assert` and
+`distortos_Checks_08_Lightweight_FATAL_ERROR`. Lightweight versions of these macros don't pass any parameters about
+error location, failed expression or message (3 strings + 1 number) and replace `abort()` with a simple infinite loop.
 
 ### Changed
 
