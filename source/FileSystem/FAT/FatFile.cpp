@@ -67,7 +67,7 @@ std::pair<int, off_t> FatFile::getSize()
 
 	assert(opened_ == true);
 
-	return {{}, file_.file_size};
+	return {{}, static_cast<off_t>(file_.file_size)};
 }
 
 int FatFile::getStatus(struct stat& status)
@@ -174,7 +174,7 @@ std::pair<int, size_t> FatFile::read(void* const buffer, const size_t size)
 	if (ret < 0)
 		return {ufatErrorToErrorCode(ret), {}};
 
-	return {{}, ret};
+	return {{}, static_cast<size_t>(ret)};
 }
 
 int FatFile::rewind()
@@ -285,7 +285,7 @@ std::pair<int, size_t> FatFile::write(const void* const buffer, const size_t siz
 	if (ret < 0)
 		return {ufatErrorToErrorCode(ret), {}};
 
-	return {{}, ret};
+	return {{}, static_cast<size_t>(ret)};
 }
 
 }	// namespace distortos

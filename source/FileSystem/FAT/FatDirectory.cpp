@@ -47,7 +47,7 @@ std::pair<int, off_t> FatDirectory::getPosition()
 
 	assert(opened_ == true);
 
-	return {{}, directory_.cur_pos};
+	return {{}, static_cast<off_t>(directory_.cur_pos)};
 }
 
 void FatDirectory::lock()

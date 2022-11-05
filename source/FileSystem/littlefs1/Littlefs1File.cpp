@@ -147,7 +147,7 @@ std::pair<int, size_t> Littlefs1File::read(void* const buffer, const size_t size
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
-	return {{}, ret};
+	return {{}, static_cast<size_t>(ret)};
 }
 
 int Littlefs1File::rewind()
@@ -204,7 +204,7 @@ std::pair<int, size_t> Littlefs1File::write(const void* const buffer, const size
 	if (ret < 0)
 		return {littlefs1ErrorToErrorCode(ret), {}};
 
-	return {{}, ret};
+	return {{}, static_cast<size_t>(ret)};
 }
 
 }	// namespace distortos
