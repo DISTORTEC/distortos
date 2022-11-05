@@ -264,7 +264,7 @@ std::pair<int, std::unique_ptr<Directory>> FatFileSystem::openDirectory(const ch
 	if (ret != 0)
 		return {ret, std::unique_ptr<FatDirectory>{}};
 
-	return {{}, std::move(directory)};
+	return {int{}, std::move(directory)};
 }
 
 std::pair<int, std::unique_ptr<File>> FatFileSystem::openFile(const char* const path, const int flags)
@@ -281,7 +281,7 @@ std::pair<int, std::unique_ptr<File>> FatFileSystem::openFile(const char* const 
 	if (ret != 0)
 		return {ret, std::unique_ptr<FatFile>{}};
 
-	return {{}, std::move(file)};
+	return {int{}, std::move(file)};
 }
 
 int FatFileSystem::remove(const char* const path)

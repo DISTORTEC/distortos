@@ -333,7 +333,7 @@ std::pair<int, std::unique_ptr<Directory>> Littlefs2FileSystem::openDirectory(co
 	if (ret != 0)
 		return {ret, std::unique_ptr<Littlefs2Directory>{}};
 
-	return {{}, std::move(directory)};
+	return {int{}, std::move(directory)};
 }
 
 std::pair<int, std::unique_ptr<File>> Littlefs2FileSystem::openFile(const char* const path, const int flags)
@@ -350,7 +350,7 @@ std::pair<int, std::unique_ptr<File>> Littlefs2FileSystem::openFile(const char* 
 	if (ret != 0)
 		return {ret, std::unique_ptr<Littlefs2File>{}};
 
-	return {{}, std::move(file)};
+	return {int{}, std::move(file)};
 }
 
 int Littlefs2FileSystem::remove(const char* const path)

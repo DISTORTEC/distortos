@@ -193,7 +193,7 @@ std::pair<int, std::unique_ptr<Directory>> VirtualFileSystem::openDirectory(cons
 	if (virtualDirectory2 == nullptr)
 		return {ENOMEM, std::unique_ptr<Directory>{}};
 
-	return {{}, std::move(virtualDirectory2)};
+	return {int{}, std::move(virtualDirectory2)};
 }
 
 std::pair<int, std::unique_ptr<File>> VirtualFileSystem::openFile(const char* const path, const int flags)
@@ -222,7 +222,7 @@ std::pair<int, std::unique_ptr<File>> VirtualFileSystem::openFile(const char* co
 	if (virtualFile == nullptr)
 		return {ENOMEM, std::unique_ptr<File>{}};
 
-	return {{}, std::move(virtualFile)};
+	return {int{}, std::move(virtualFile)};
 }
 
 int VirtualFileSystem::remove(const char* const path)
