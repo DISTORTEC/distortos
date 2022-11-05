@@ -67,7 +67,7 @@ std::pair<int, off_t> FatFile::getSize()
 
 	assert(opened_ == true);
 
-	return {{}, file_.file_size};
+	return {{}, static_cast<off_t>(file_.file_size)};
 }
 
 int FatFile::getStatus(struct stat& status)
