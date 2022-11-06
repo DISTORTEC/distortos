@@ -29,6 +29,7 @@ jobs:
         - 9.3.0-200323
         - 10.3.0-221009
         - 11.3.0-221023
+        - 12.1.0-221106
     steps:
     - uses: actions/checkout@v2
     - name: Install bleeding-edge-toolchain
