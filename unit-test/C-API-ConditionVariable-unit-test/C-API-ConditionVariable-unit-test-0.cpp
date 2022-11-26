@@ -5,7 +5,7 @@
  * This test checks whether condition variable C-API functions properly call appropriate functions from
  * distortos::ConditionVariable class.
  *
- * \author Copyright (C) 2017 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2017-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -41,7 +41,10 @@ TEST_CASE("Testing distortos_ConditionVariable_construct()", "[construct]")
 TEST_CASE("Testing distortos_ConditionVariable_destruct()", "[destruct]")
 {
 	distortos::FromCApiMock fromCApiMock;
-	trompeloeil::deathwatched<distortos::ConditionVariable> conditionVariableMock
+	using Storage = std::aligned_storage<sizeof(trompeloeil::deathwatched<distortos::ConditionVariable>),
+			alignof(trompeloeil::deathwatched<distortos::ConditionVariable>)>::type;
+	Storage storage;
+	auto& conditionVariableMock = *new (&storage) trompeloeil::deathwatched<distortos::ConditionVariable>
 	{
 			distortos::ConditionVariable::UnitTestTag{}
 	};

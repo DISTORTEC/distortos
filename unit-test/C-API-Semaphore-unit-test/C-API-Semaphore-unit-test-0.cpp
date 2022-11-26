@@ -5,7 +5,7 @@
  * This test checks whether semaphore C-API functions properly call appropriate functions from distortos::Semaphore
  * class.
  *
- * \author Copyright (C) 2017-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2017-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -106,7 +106,10 @@ TEST_CASE("Testing distortos_Semaphore_construct()", "[construct]")
 TEST_CASE("Testing distortos_Semaphore_destruct()", "[destruct]")
 {
 	distortos::FromCApiMock fromCApiMock;
-	trompeloeil::deathwatched<distortos::Semaphore> semaphoreMock;
+	using Storage = std::aligned_storage<sizeof(trompeloeil::deathwatched<distortos::Semaphore>),
+			alignof(trompeloeil::deathwatched<distortos::Semaphore>)>::type;
+	Storage storage;
+	auto& semaphoreMock = *new (&storage) trompeloeil::deathwatched<distortos::Semaphore>;
 	distortos_Semaphore semaphore;
 
 	REQUIRE(distortos_Semaphore_destruct(nullptr) == EINVAL);
