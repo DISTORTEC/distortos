@@ -4,7 +4,7 @@
  *
  * This test checks whether FatFileSystem perform all operations properly and in correct order.
  *
- * \author Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2019-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -1389,7 +1389,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 				{false, O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC, true,
 						"O_RDWR | O_APPEND | O_CREAT | O_EXCL | O_TRUNC"},
 		};
-		for (const auto [existing, flags, even, description] : associations)
+		for (const auto& [existing, flags, even, description] : associations)
 			DYNAMIC_SECTION("Testing successful open() of " << (existing == true ? "" : "non-") <<
 					"existing file with \"" << description << "\" flags")
 			{
@@ -1649,7 +1649,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 						{Whence::current, "Whence::current"},
 						{Whence::end, "Whence::end"},
 				};
-				for (const auto [whence, whenceDescription] : whenceAssociations)
+				for (const auto& [whence, whenceDescription] : whenceAssociations)
 					DYNAMIC_SECTION("Testing seek(" << whenceDescription << ", ...)")
 					{
 						SECTION("seek() which ends at negative position should fail with EINVAL")
