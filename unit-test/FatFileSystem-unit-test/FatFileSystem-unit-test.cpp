@@ -1630,7 +1630,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 							REQUIRE(bytesWritten == expectedBytesWritten);
 						}
 						{
-							const auto expectedPosition =
+							const off_t expectedPosition =
 									(appendMode == true ? fileSize : initialPosition) + expectedBytesWritten;
 
 							REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
@@ -1793,7 +1793,7 @@ TEST_CASE("Testing openFile()", "[openFile]")
 											REQUIRE(bytesWritten == expectedBytesWritten);
 										}
 										{
-											const auto expectedPosition = fileSize +
+											const off_t expectedPosition = fileSize +
 													pastTheEnd * (appendMode == false) + expectedBytesWritten;
 
 											REQUIRE_CALL(mutexMock, lock()).IN_SEQUENCE(sequence).RETURN(0);
