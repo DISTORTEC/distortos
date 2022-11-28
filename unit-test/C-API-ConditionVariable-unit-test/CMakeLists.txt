@@ -10,7 +10,7 @@
 add_executable(C-API-ConditionVariable-compile-link-test
 		C-API-ConditionVariable-compile-link-test.c
 		${DISTORTOS_PATH}/source/C-API/C-API-ConditionVariable.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-ConditionVariable-compile-link-test PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
@@ -24,7 +24,7 @@ target_include_directories(C-API-ConditionVariable-compile-link-test BEFORE PUBL
 add_executable(C-API-ConditionVariable-unit-test-0
 		C-API-ConditionVariable-unit-test-0.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-ConditionVariable.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-ConditionVariable-unit-test-0 PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_CONDITIONVARIABLE
@@ -46,7 +46,7 @@ add_executable(C-API-ConditionVariable-unit-test-1
 		C-API-ConditionVariable-unit-test-1.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-ConditionVariable.cpp
 		${DISTORTOS_PATH}/source/synchronization/ConditionVariable.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_include_directories(C-API-ConditionVariable-unit-test-1 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp
