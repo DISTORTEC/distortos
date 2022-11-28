@@ -10,7 +10,7 @@
 add_executable(C-API-Mutex-compile-link-test
 		C-API-Mutex-compile-link-test.c
 		${DISTORTOS_PATH}/source/C-API/C-API-Mutex.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-Mutex-compile-link-test PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX)
@@ -22,7 +22,7 @@ target_include_directories(C-API-Mutex-compile-link-test BEFORE PUBLIC
 add_executable(C-API-Mutex-unit-test-0
 		C-API-Mutex-unit-test-0.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-Mutex.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-Mutex-unit-test-0 PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_MUTEX)
@@ -42,7 +42,7 @@ add_executable(C-API-Mutex-unit-test-1
 		${DISTORTOS_PATH}/source/C-API/C-API-Mutex.cpp
 		${DISTORTOS_PATH}/source/synchronization/Mutex.cpp
 		${DISTORTOS_PATH}/source/synchronization/MutexControlBlock.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_include_directories(C-API-Mutex-unit-test-1 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp

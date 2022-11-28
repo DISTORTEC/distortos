@@ -10,7 +10,7 @@
 add_executable(C-API-Semaphore-compile-link-test
 		C-API-Semaphore-compile-link-test.c
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-Semaphore-compile-link-test PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
@@ -22,7 +22,7 @@ target_include_directories(C-API-Semaphore-compile-link-test BEFORE PUBLIC
 add_executable(C-API-Semaphore-unit-test-0
 		C-API-Semaphore-unit-test-0.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(C-API-Semaphore-unit-test-0 PUBLIC
 		DISTORTOS_UNIT_TEST_FROMCAPIMOCK_SEMAPHORE)
@@ -41,7 +41,7 @@ add_executable(C-API-Semaphore-unit-test-1
 		C-API-Semaphore-unit-test-1.cpp
 		${DISTORTOS_PATH}/source/C-API/C-API-Semaphore.cpp
 		${DISTORTOS_PATH}/source/synchronization/Semaphore.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_include_directories(C-API-Semaphore-unit-test-1 BEFORE PUBLIC
 		${INCLUDE_MOCKS}/internal/scheduler/getScheduler.hpp

@@ -17,9 +17,6 @@ project(distortos-unit-test)
 # path to distortos
 set(DISTORTOS_PATH ${CMAKE_SOURCE_DIR}/..)
 
-# path to common main.cpp
-set(MAIN_CPP ${CMAKE_SOURCE_DIR}/main.cpp)
-
 # include path with mocks
 set(INCLUDE_MOCKS ${CMAKE_SOURCE_DIR}/include-mocks)
 
@@ -39,6 +36,10 @@ include_directories(
 add_compile_definitions(DISTORTOS_UNIT_TEST)
 
 add_compile_options(-Wall -Wextra -Wshadow)
+
+# object library with compiled main.cpp
+add_library(main.cpp-object-library OBJECT
+		${CMAKE_SOURCE_DIR}/main.cpp)
 
 if(CMAKE_GENERATOR STREQUAL "Ninja")
 	if (CMAKE_C_COMPILER_ID STREQUAL GNU OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)

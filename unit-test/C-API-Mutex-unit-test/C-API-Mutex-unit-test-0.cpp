@@ -4,7 +4,7 @@
  *
  * This test checks whether mutex C-API functions properly call appropriate functions from distortos::Mutex class.
  *
- * \author Copyright (C) 2017-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2017-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -292,7 +292,10 @@ TEST_CASE("Testing distortos_Mutex_construct()", "[construct]")
 TEST_CASE("Testing distortos_Mutex_destruct()", "[destruct]")
 {
 	distortos::FromCApiMock fromCApiMock;
-	trompeloeil::deathwatched<distortos::Mutex> mutexMock {distortos::Mutex::UnitTestTag{}};
+	using Storage = std::aligned_storage<sizeof(trompeloeil::deathwatched<distortos::Mutex>),
+			alignof(trompeloeil::deathwatched<distortos::Mutex>)>::type;
+	Storage storage;
+	auto& mutexMock = *new (&storage) trompeloeil::deathwatched<distortos::Mutex> {distortos::Mutex::UnitTestTag{}};
 	distortos_Mutex mutex;
 
 	REQUIRE(distortos_Mutex_destruct(nullptr) == EINVAL);

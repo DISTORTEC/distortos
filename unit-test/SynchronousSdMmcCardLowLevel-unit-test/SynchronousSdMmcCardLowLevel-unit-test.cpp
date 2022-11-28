@@ -4,7 +4,7 @@
  *
  * This test checks whether SynchronousSdMmcCardLowLevel perform all operations properly and in correct order.
  *
- * \author Copyright (C) 2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2019-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -52,6 +52,23 @@ public:
 | local functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
+void notify(SdMmcCardBase& sdMmcCardBase, const Result result)
+{
+	sdMmcCardBase.transactionCompleteEvent(result);
+}
+
+}	// namespace
+
+namespace distortos
+{
+
+namespace devices
+{
+
+/*---------------------------------------------------------------------------------------------------------------------+
+| global functions
++---------------------------------------------------------------------------------------------------------------------*/
+
 bool operator==(const Response& left, const Response& right)
 {
 	if (left.size() != right.size())
@@ -78,12 +95,9 @@ bool operator==(const Transfer& left, const Transfer& right)
 	return true;
 }
 
-void notify(SdMmcCardBase& sdMmcCardBase, const Result result)
-{
-	sdMmcCardBase.transactionCompleteEvent(result);
-}
+}	// namespace devices
 
-}	// namespace
+}	// namespace distortos
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global test cases

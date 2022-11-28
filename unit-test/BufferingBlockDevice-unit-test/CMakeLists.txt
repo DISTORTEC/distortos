@@ -10,7 +10,7 @@
 add_executable(BufferingBlockDevice-unit-test
 		BufferingBlockDevice-unit-test.cpp
 		${DISTORTOS_PATH}/source/devices/memory/BufferingBlockDevice.cpp
-		${MAIN_CPP})
+		$<TARGET_OBJECTS:main.cpp-object-library>)
 
 target_compile_definitions(BufferingBlockDevice-unit-test PUBLIC
 		DISTORTOS_BLOCKDEVICE_BUFFER_ALIGNMENT=8)
