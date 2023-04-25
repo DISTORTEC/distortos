@@ -125,7 +125,7 @@ static int read_block_fragment(struct ufat_file *f, char *buf, ufat_size_t size)
 	if (!UFAT_CLUSTER_IS_PTR(f->cur_cluster))
 		return -UFAT_ERR_INVALID_CLUSTER;
 
-	i = ufat_cache_open(f->uf, cur_block);
+	i = ufat_cache_open(f->uf, cur_block, 0);
 	if (i < 0)
 		return i;
 
@@ -223,7 +223,7 @@ int ufat_file_read(struct ufat_file *f, void *buf, ufat_size_t size)
 
 static int set_size(struct ufat_file *f, ufat_size_t s)
 {
-	int idx = ufat_cache_open(f->uf, f->dirent_block);
+	int idx = ufat_cache_open(f->uf, f->dirent_block, 0);
 
 	if (idx < 0)
 		return idx;
@@ -238,7 +238,7 @@ static int set_size(struct ufat_file *f, ufat_size_t s)
 
 static int set_start(struct ufat_file *f, ufat_cluster_t s)
 {
-	int idx = ufat_cache_open(f->uf, f->dirent_block);
+	int idx = ufat_cache_open(f->uf, f->dirent_block, 0);
 	uint8_t *data;
 
 	if (idx < 0)
@@ -305,7 +305,7 @@ static int write_block_fragment(struct ufat_file *f, const char *buf,
 		((f->cur_pos >> log2_block_size) &
 		 ((1 << bpb->log2_blocks_per_cluster) - 1));
 
-	i = ufat_cache_open(f->uf, cur_block);
+	i = ufat_cache_open(f->uf, cur_block, 0);
 	if (i < 0)
 		return i;
 
@@ -347,9 +347,7 @@ static int write_blocks(struct ufat_file *f, const char *buf, ufat_size_t size)
 	 * cache and perform a single large write.
 	 */
 	starting_block = cluster_to_block(bpb, f->cur_cluster) + block_offset;
-	i = ufat_cache_evict(uf, starting_block, requested_blocks);
-	if (i < 0)
-		return i;
+	ufat_cache_invalidate(uf, starting_block, requested_blocks);
 
 	i = uf->dev->write(uf->dev, starting_block, requested_blocks, buf);
 	if (i < 0)

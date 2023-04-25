@@ -35,6 +35,8 @@
 #include "ufat.h"
 #include "ufat_internal.h"
 
+#define BACKUP_SECTOR	6
+#define FSINFO_SECTOR	1
 #define MEDIA_DISK	0xf8
 
 struct fs_layout {
@@ -94,10 +96,6 @@ static int calculate_layout(struct fs_layout *fl,
 	/* Calculate total logical sector count. */
 	nsect = nblk >> log2_bps;
 
-	/* Calculate the number of reserved blocks. */
-	fl->reserved_blocks = bytes_to_blocks(log2_block_size,
-					      2 << fl->log2_sector_size) << 1;
-
 	/* Threshold values taken from "fatgen103.pdf" -
 	 * https://staff.washington.edu/dittrich/misc/fatgen103.pdf - "FAT
 	 * Volume Initialization" chapter.
@@ -129,6 +127,19 @@ static int calculate_layout(struct fs_layout *fl,
 		++log2_spc;
 
 	fl->log2_bpc = log2_bps + log2_spc;
+
+	/* Calculate the number of reserved blocks.
+	 *
+	 * "fatgen103.pdf" -
+	 * https://staff.washington.edu/dittrich/misc/fatgen103.pdf - "Boot
+	 * Sector and BPB" chapter.
+	 *
+	 * FAT12 and FAT16 should have 1 reserved sector. Typical number of
+	 * reserved sectors for FAT32 is 32.
+	 */
+	const ufat_block_t reserved_sectors =
+		fl->type == UFAT_TYPE_FAT32 ? 32 : 1;
+	fl->reserved_blocks = reserved_sectors << log2_bps;
 
 	/* Estimate an upper bound on the cluster count and allocate blocks
 	 * for the FAT.
@@ -168,6 +179,26 @@ static int calculate_layout(struct fs_layout *fl,
 	return 0;
 }
 
+static int erase_blocks(struct ufat_device *dev, ufat_block_t start,
+			ufat_block_t count)
+{
+	const unsigned int block_size = 1 << dev->log2_block_size;
+	uint8_t buf[block_size];
+
+	memset(buf, 0, sizeof(buf));
+	for (ufat_block_t i = 0; i < count; i++)
+		if (dev->write(dev, start + i, 1, buf) < 0)
+			return -UFAT_ERR_IO;
+
+	return 0;
+}
+
+static int erase_reserved_blocks(struct ufat_device *dev,
+				 const struct fs_layout *fl)
+{
+	return erase_blocks(dev, 0, fl->reserved_blocks);
+}
+
 static int write_bpb(struct ufat_device *dev, const struct fs_layout *fl)
 {
 	static const uint8_t boot_header[11] = {
@@ -176,12 +207,10 @@ static int write_bpb(struct ufat_device *dev, const struct fs_layout *fl)
 		'u', 'f', 'a', 't', ' ', ' ', ' ', ' '
 	};
 	const char *type_name = "FAT     ";
-	const unsigned int log2_spb =
-		dev->log2_block_size - fl->log2_sector_size;
+	const unsigned int log2_bps =
+		fl->log2_sector_size - dev->log2_block_size;
 	const unsigned int block_size = 1 << dev->log2_block_size;
-	const ufat_block_t backup = fl->reserved_blocks >> 1;
 	uint8_t buf[block_size];
-	ufat_block_t i;
 
 	switch (fl->type) {
 	case UFAT_TYPE_FAT12:
@@ -197,14 +226,7 @@ static int write_bpb(struct ufat_device *dev, const struct fs_layout *fl)
 		break;
 	}
 
-	/* All reserved blocks are zeroed except for the one containing the
-	 * boot sector.
-	 */
 	memset(buf, 0, sizeof(buf));
-	for (i = 1; i < backup; i++)
-		if (dev->write(dev, i, 1, buf) < 0 ||
-		    dev->write(dev, i + backup, 1, buf) < 0)
-			return -UFAT_ERR_IO;
 
 	/* Boot sector signature */
 	memcpy(buf, boot_header, sizeof(boot_header));
@@ -213,34 +235,63 @@ static int write_bpb(struct ufat_device *dev, const struct fs_layout *fl)
 
 	/* BIOS Parameter Block */
 	w16(buf + 0x00b, 1 << fl->log2_sector_size);
-	buf[0x00d] = 1 << (fl->log2_bpc - log2_spb);
-	w16(buf + 0x00e, fl->reserved_blocks << log2_spb);
+	buf[0x00d] = 1 << (fl->log2_bpc - log2_bps);
+	w16(buf + 0x00e, fl->reserved_blocks << log2_bps);
 	buf[0x010] = 2; /* 2 FATs */
 	w16(buf + 0x011, fl->root_blocks << (dev->log2_block_size - 5));
 	if (fl->type != UFAT_TYPE_FAT32 && fl->logical_blocks <= UINT16_MAX)
-		w16(buf + 0x013, fl->logical_blocks << log2_spb);
+		w16(buf + 0x013, fl->logical_blocks << log2_bps);
 	else
-		w32(buf + 0x020, fl->logical_blocks << log2_spb);
+		w32(buf + 0x020, fl->logical_blocks << log2_bps);
 	buf[0x015] = MEDIA_DISK;
 
 	if (fl->type != UFAT_TYPE_FAT32) {
-		w16(buf + 0x016, fl->fat_blocks << log2_spb);
+		w16(buf + 0x016, fl->fat_blocks << log2_bps);
 		buf[0x026] = 0x29; /* Extended boot signature */
 		memset(buf + 0x02b, ' ', 11); /* Volume label */
 		memcpy(buf + 0x036, type_name, 8);
 	} else {
-		w32(buf + 0x024, fl->fat_blocks << log2_spb);
+		w32(buf + 0x024, fl->fat_blocks << log2_bps);
 		w32(buf + 0x02c, 2); /* Root directory cluster */
 		w16(buf + 0x030, 1); /* FS informations sector */
-		w16(buf + 0x032, backup << log2_spb);
+		w16(buf + 0x032, BACKUP_SECTOR);
 		buf[0x042] = 0x29; /* Extended boot signature */
 		memset(buf + 0x047, ' ', 11); /* Volume label */
 		memcpy(buf + 0x052, type_name, 8);
 	}
 
-	/* Write boot sector and backup */
-	if (dev->write(dev, 0, 1, buf) < 0 ||
-	    dev->write(dev, backup, 1, buf) < 0)
+	/* Write boot sector */
+	if (dev->write(dev, 0, 1, buf) < 0)
+		return -UFAT_ERR_IO;
+
+	/* Write backup of boot sector in case of FAT32 */
+	if (fl->type == UFAT_TYPE_FAT32 &&
+	    dev->write(dev, BACKUP_SECTOR >> log2_bps, 1, buf) < 0)
+		return -UFAT_ERR_IO;
+
+	return 0;
+}
+
+static int write_fsinfo(struct ufat_device *dev, const struct fs_layout *fl)
+{
+	const unsigned int log2_bps =
+		fl->log2_sector_size - dev->log2_block_size;
+	const unsigned int block_size = 1 << dev->log2_block_size;
+	uint8_t buf[block_size];
+
+	memset(buf, 0, sizeof(buf));
+	w32(buf + 0x000, 0x41615252); /* FSI_LeadSig */
+	w32(buf + 0x1e4, 0x61417272); /* FSI_StrucSig */
+	w32(buf + 0x1e8, fl->clusters - 3); /* FSI_Free_Count */
+	w32(buf + 0x1ec, 2); /* FSI_Nxt_Free */
+	w32(buf + 0x1fc, 0xaa550000); /* FSI_TrailSig */
+
+	/* Write FSInfo and its backup */
+	const ufat_block_t fsinfo_block = FSINFO_SECTOR >> log2_bps;
+	const ufat_block_t fsinfo_backup_block =
+		(FSINFO_SECTOR + BACKUP_SECTOR) >> log2_bps;
+	if (dev->write(dev, fsinfo_block, 1, buf) < 0 ||
+	    dev->write(dev, fsinfo_backup_block, 1, buf) < 0)
 		return -UFAT_ERR_IO;
 
 	return 0;
@@ -374,16 +425,8 @@ static int init_root_blocks(struct ufat_device *dev, const struct fs_layout *fl)
 {
 	const ufat_block_t root_start =
 		fl->fat_blocks * 2 + fl->reserved_blocks;
-	const unsigned int block_size = 1 << dev->log2_block_size;
-	uint8_t buf[block_size];
-	ufat_block_t i;
 
-	memset(buf, 0, block_size);
-	for (i = 0; i < fl->root_blocks; i++)
-		if (dev->write(dev, root_start + i, 1, buf) < 0)
-			return -UFAT_ERR_IO;
-
-	return 0;
+	return erase_blocks(dev, root_start, fl->root_blocks);
 }
 
 static int init_root_cluster(struct ufat_device *dev,
@@ -391,17 +434,9 @@ static int init_root_cluster(struct ufat_device *dev,
 {
 	const ufat_block_t cluster_start =
 		fl->fat_blocks * 2 + fl->reserved_blocks + fl->root_blocks;
-	const unsigned int block_size = 1 << dev->log2_block_size;
 	const unsigned int cluster_blocks = 1 << fl->log2_bpc;
-	uint8_t buf[block_size];
-	ufat_block_t i;
 
-	memset(buf, 0, block_size);
-	for (i = 0; i < cluster_blocks; i++)
-		if (dev->write(dev, cluster_start + i, 1, buf) < 0)
-			return -UFAT_ERR_IO;
-
-	return 0;
+	return erase_blocks(dev, cluster_start, cluster_blocks);
 }
 
 int ufat_mkfs(struct ufat_device *dev, ufat_block_t nblk)
@@ -413,7 +448,7 @@ int ufat_mkfs(struct ufat_device *dev, ufat_block_t nblk)
 	if (err < 0)
 		return err;
 
-	err = write_bpb(dev, &fl);
+	err = erase_reserved_blocks(dev, &fl);
 	if (err < 0)
 		return err;
 
@@ -435,7 +470,18 @@ int ufat_mkfs(struct ufat_device *dev, ufat_block_t nblk)
 		return err;
 
 	if (fl.type == UFAT_TYPE_FAT32)
-		return init_root_cluster(dev, &fl);
+		err = init_root_cluster(dev, &fl);
+	else
+		err = init_root_blocks(dev, &fl);
 
-	return init_root_blocks(dev, &fl);
+	if (err < 0)
+		return err;
+
+	if (fl.type == UFAT_TYPE_FAT32) {
+		err = write_fsinfo(dev, &fl);
+		if (err < 0)
+			return err;
+	}
+
+	return write_bpb(dev, &fl);
 }

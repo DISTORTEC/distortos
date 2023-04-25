@@ -45,7 +45,7 @@ int ufat_write_raw_dirent(struct ufat_directory *dir,
 	if (dir->cur_block == UFAT_BLOCK_NONE)
 		return -UFAT_ERR_IO;
 
-	idx = ufat_cache_open(dir->uf, dir->cur_block);
+	idx = ufat_cache_open(dir->uf, dir->cur_block, 0);
 	if (idx < 0)
 		return idx;
 
@@ -140,7 +140,7 @@ int ufat_read_raw_dirent(struct ufat_directory *dir, uint8_t *data)
 	if (dir->cur_block == UFAT_BLOCK_NONE)
 		return 1;
 
-	idx = ufat_cache_open(dir->uf, dir->cur_block);
+	idx = ufat_cache_open(dir->uf, dir->cur_block, 0);
 	if (idx < 0)
 		return idx;
 
@@ -210,7 +210,7 @@ int ufat_init_dirent_cluster(struct ufat *uf, ufat_cluster_t c)
 	int i;
 
 	for (i = count - 1; i >= 0; i--) {
-		int idx = ufat_cache_open(uf, start + i);
+		int idx = ufat_cache_open(uf, start + i, 1);
 
 		if (idx < 0)
 			return idx;
@@ -644,7 +644,7 @@ int ufat_compare_name(const char *search_name, const char *dir_name,
 
 int ufat_update_attributes(struct ufat *uf, struct ufat_dirent *ent)
 {
-	int idx = ufat_cache_open(uf, ent->dirent_block);
+	int idx = ufat_cache_open(uf, ent->dirent_block, 0);
 	uint8_t *data;
 	struct ufat_dirent old;
 

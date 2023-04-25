@@ -2,6 +2,6 @@ uFAT
 ====
 
 - link: [uFAT](https://github.com/FreddieChopin/ufat)
-- branch: mkfs-improvements
-- commit hash: aaa1e13a994890dcf84df21fcc5b7f5b1e209d5d
-- download date: 2019-08-30
+- branch: fix-unhandled-io-error-infinite-loop
+- commit hash: ddd7cfe1c77f1df88ffbfd405b84c64ee774950e
+- download date: 2023-04-25

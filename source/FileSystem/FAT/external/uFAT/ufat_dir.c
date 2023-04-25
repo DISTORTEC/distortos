@@ -246,7 +246,7 @@ static int create_empty_dir(struct ufat_directory *parent,
 
 	/* Get the first block of the dirent */
 	idx = ufat_cache_open(parent->uf,
-			      cluster_to_block(&parent->uf->bpb, c));
+			      cluster_to_block(&parent->uf->bpb, c), 0);
 	if (idx < 0) {
 		ufat_free_chain(parent->uf, c);
 		return idx;
