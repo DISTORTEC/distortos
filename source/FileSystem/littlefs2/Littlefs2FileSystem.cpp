@@ -226,7 +226,7 @@ int Littlefs2FileSystem::getFileStatus(const char* const path, struct stat& stat
 	lfs2_info info;
 	const auto ret = lfs2_stat(&fileSystem_, path, &info);
 	if (ret != LFS2_ERR_OK)
-		littlefs2ErrorToErrorCode(ret);
+		return littlefs2ErrorToErrorCode(ret);
 
 	status = {};
 	status.st_mode = info.type == LFS2_TYPE_DIR ? S_IFDIR : S_IFREG;
