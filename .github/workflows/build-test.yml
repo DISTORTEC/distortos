@@ -31,7 +31,7 @@ jobs:
         - 11.3.0-221023
         - 12.3.0-240408
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install bleeding-edge-toolchain
       shell: bash
       working-directory: /tmp
