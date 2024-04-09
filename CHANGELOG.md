@@ -147,7 +147,7 @@ detected in the middle of interrupt handler's loop, which would result in enteri
 slightly reworking the loop and adding explicit check for overrun flag.
 - Fixed a bug in `STM32.cmake.jinja` templates which caused an error while running `generateBoard.py` with *Jinja*
 version 3.
-- Fixes necessary for compilation with *GCC 12*.
+- Fixes necessary for compilation with *GCC 12* and *GCC 13*.
 
 ### Removed
 
