@@ -2,7 +2,7 @@
  * \file
  * \brief ThreadListNode class header
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2015-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,6 +13,8 @@
 #define INCLUDE_DISTORTOS_INTERNAL_SCHEDULER_THREADLISTNODE_HPP_
 
 #include "estd/IntrusiveList.hpp"
+
+#include <cstdint>
 
 namespace distortos
 {
