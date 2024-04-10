@@ -2,7 +2,7 @@
  * \file
  * \brief ChipUartLowLevel class implementation for USARTv2 in STM32
  *
- * \author Copyright (C) 2016-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2016-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -33,6 +33,27 @@
 #if defined(DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT) && !defined(USART_CR1_M1_Pos)
 #define USART_CR1_M1_Pos					__builtin_ctzl(USART_CR1_M1)
 #endif	// defined(DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT) && !defined(USART_CR1_M1_Pos)
+#if !defined(USART_CR1_RXNEIE) && defined(USART_CR1_RXNEIE_RXFNEIE)
+#define USART_CR1_RXNEIE					USART_CR1_RXNEIE_RXFNEIE
+#endif	// !defined(USART_CR1_RXNEIE) && define(USART_CR1_RXNEIE_RXFNEIE)
+#if !defined(USART_CR1_TXEIE) && defined(USART_CR1_TXEIE_TXFNFIE)
+#define USART_CR1_TXEIE						USART_CR1_TXEIE_TXFNFIE
+#endif	// !defined(USART_CR1_TXEIE) && defined(USART_CR1_TXEIE_TXFNFIE)
+#if !defined(USART_ISR_RXNE) && defined(USART_ISR_RXNE_RXFNE)
+#define USART_ISR_RXNE						USART_ISR_RXNE_RXFNE
+#endif	// !defined(USART_ISR_RXNE) && defined(USART_ISR_RXNE_RXFNE)
+#if !defined(USART_ISR_TXE) && defined(USART_ISR_TXE_TXFNF)
+#define USART_ISR_TXE						USART_ISR_TXE_TXFNF
+#endif	// !defined(USART_ISR_TXE) && defined(USART_ISR_TXE_TXFNF)
+#if !defined(USART_BRR_DIV_FRACTION_Pos)
+#define USART_BRR_DIV_FRACTION_Pos			0
+#endif	// !defined(USART_BRR_DIV_FRACTION_Pos)
+#if !defined(USART_BRR_DIV_MANTISSA_Pos)
+#define USART_BRR_DIV_MANTISSA_Pos			4
+#endif	// !defined(USART_BRR_DIV_MANTISSA_Pos)
+#if !defined(USART_BRR_DIV_MANTISSA)
+#define USART_BRR_DIV_MANTISSA				(0xFFF << USART_BRR_DIV_MANTISSA_Pos)
+#endif	// !defined(USART_BRR_DIV_MANTISSA)
 
 namespace distortos
 {
