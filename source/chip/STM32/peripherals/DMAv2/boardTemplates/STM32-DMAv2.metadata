@@ -1,4 +1,4 @@
-{% if 'ST,STM32-DMAs-v2-group' in dictionary['DMAs']['compatible'] %}
+{% if 'DMAs' in dictionary and 'ST,STM32-DMAs-v2-group' in dictionary['DMAs']['compatible'] %}
 ('source/chip/STM32/peripherals/DMAv2/boardTemplates/STM32-DMAv2-dmas.cpp.jinja',
 		{},
 		'{{ sanitizedBoard }}-dmas.cpp'),
