@@ -1,4 +1,4 @@
-{% if 'ST,STM32-SPIs-v1-group' in dictionary['SPIs']['compatible'] %}
+{% if 'SPIs' in dictionary and 'ST,STM32-SPIs-v1-group' in dictionary['SPIs']['compatible'] %}
 {% set gpioVersion = dictionary['pin-controller']['compatible'][0].split(',')[1].split('-')[2] %}
 ('source/chip/STM32/peripherals/SPIv1/boardTemplates/STM32-SPIv1-spis.cpp.jinja',
 		{'pinInitializerImport':

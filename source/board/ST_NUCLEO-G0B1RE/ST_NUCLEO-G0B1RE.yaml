@@ -1,0 +1,49 @@
+#
+# file: ST_NUCLEO-G0B1RE.yaml
+#
+# author: Copyright (C) 2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32G0/chipYaml/ST_STM32G0B1RE.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-G0B1RE
+  model: STMicroelectronics NUCLEO-G0B1RE
+buttons:
+  compatible:
+  - GPIO-inputs
+  B1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+      active-low: true
+    alternative-names:
+    - User
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld4:
+    GPIO:
+      port: !Reference {label: GPIOA}
+      pin: 5
+    alternative-names:
+    - Green
+    - User
+!Reference {label: USART2}:
+  RX:
+    port: !Reference {label: GPIOA}
+    pin: 3
+    mode: alternate-function
+    alternate-function: 1
+    output-speed: very-high
+    pull: up
+  TX:
+    port: !Reference {label: GPIOA}
+    pin: 2
+    mode: alternate-function
+    alternate-function: 1
+    output-speed: very-high

@@ -1,0 +1,198 @@
+#
+# file: ST_STM32G0B0KE.yaml
+#
+# author: Copyright (C) 2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Automatically generated file - do not edit!
+#
+
+chip:
+  compatible:
+  - ST,STM32G0B0KE
+  - ST,STM32G0
+  - ST,STM32
+CPUs:
+  0:
+    compatible:
+    - ARM,Cortex-M0+
+    - ARM,ARMv6-M
+    revision: r0p1
+NVIC:
+  compatible:
+  - ARM,NVIC
+  - interrupt-controller
+  core-vectors:
+  - name: Reset
+  - name: NMI
+  - name: HardFault
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - name: SVC
+  - 
+  - 
+  - name: PendSV
+  - name: SysTick
+  chip-vectors:
+  - name: WWDG
+  - 
+  - name: RTC_TAMP
+  - name: FLASH
+  - name: RCC
+  - name: EXTI0_1
+  - name: EXTI2_3
+  - name: EXTI4_15
+  - name: USB
+  - name: DMA1_Channel1
+  - name: DMA1_Channel2_3
+    subvectors:
+    - DMA1_Channel2
+    - DMA1_Channel3
+  - name: DMA1_Ch4_7_DMA2_Ch1_5_DMAMUX1_OVR
+    subvectors:
+    - DMA1_Channel4
+    - DMA1_Channel5
+    - DMA1_Channel6
+    - DMA1_Channel7
+    - DMA2_Channel1
+    - DMA2_Channel2
+    - DMA2_Channel3
+    - DMA2_Channel4
+    - DMA2_Channel5
+    - DMAMUX1_OVR
+  - name: ADC1
+  - name: TIM1_BRK_UP_TRG_COM
+  - name: TIM1_CC
+  - 
+  - name: TIM3_TIM4
+  - name: TIM6
+  - name: TIM7
+  - name: TIM14
+  - name: TIM15
+  - name: TIM16
+  - name: TIM17
+  - name: I2C1
+  - name: I2C2_3
+  - name: SPI1
+  - name: SPI2_3
+    subvectors:
+    - SPI2
+    - SPI3
+  - name: USART1
+  - name: USART2
+  - name: USART3_4_5_6
+    subvectors:
+    - USART3
+    - USART4
+    - USART5
+    - USART6
+  $labels:
+  - NVIC
+memories:
+  flash:
+    compatible:
+    - on-chip-flash
+    address: 134217728
+    size: 524288
+    $labels:
+    - flash
+  SRAM:
+    compatible:
+    - on-chip-RAM
+    address: 536870912
+    size: 147456
+    $labels:
+    - SRAM
+device-electronic-signature:
+  compatible:
+  - ST,STM32-device-electronic-signature
+  unique-device-ID:
+    fragmented: false
+pin-controller:
+  compatible:
+  - ST,STM32-GPIO-v2-pin-controller
+  AF-bits: 4
+  has-high-speed: true
+GPIOs:
+  compatible:
+  - ST,STM32-GPIOs-v2-group
+  GPIOA:
+    compatible:
+    - ST,STM32-GPIO-v2
+    $labels:
+    - GPIOA
+  GPIOB:
+    compatible:
+    - ST,STM32-GPIO-v2
+    $labels:
+    - GPIOB
+  GPIOC:
+    compatible:
+    - ST,STM32-GPIO-v2
+    $labels:
+    - GPIOC
+UARTs:
+  compatible:
+  - ST,STM32-USARTs-v2-group
+  has-CR-M1-bit: true
+  USART1:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART1
+    $labels:
+    - USART1
+  USART2:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART2
+    $labels:
+    - USART2
+  USART3:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART3
+    $labels:
+    - USART3
+  USART4:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART4
+    $labels:
+    - USART4
+  USART5:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART5
+    $labels:
+    - USART5
+  USART6:
+    compatible:
+    - ST,STM32-USART-v2
+    interrupt:
+      controller: !Reference
+        label: NVIC
+      vector: USART6
+    $labels:
+    - USART6
