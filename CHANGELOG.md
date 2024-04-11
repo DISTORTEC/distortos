@@ -36,6 +36,9 @@ enabled:
     - most of the functions will fail to operate at the root of file system (e.g. currently it is not possible to do
     `opendir("/")` or `stat("/someMountPoint", &status)`);
     - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled automatically;
+- Basic support for whole [STM32G0](https://www.st.com/stm32g0) chip family.
+- Support and test configuration for [NUCLEO-G0B1RE](https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html) board
+with *STM32G0* chip.
 - Added support and test configuration for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html)
 board with *STM32F7* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
