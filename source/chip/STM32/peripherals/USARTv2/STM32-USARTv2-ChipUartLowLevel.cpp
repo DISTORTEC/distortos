@@ -353,6 +353,11 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_
 #endif
 #endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
 
+#ifdef DISTORTOS_CHIP_LPUART2_ENABLE
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart2Parameters {LPUART2_BASE, offsetof(RCC_TypeDef, APBENR1),
+		RCC_APBENR1_LPUART2EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_LPUART2RST};
+#endif	// def DISTORTOS_CHIP_LPUART2_ENABLE
+
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 #if defined(RCC_APB2ENR_USART1EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
