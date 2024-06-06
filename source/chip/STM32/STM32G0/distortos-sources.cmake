@@ -53,7 +53,8 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/external/CMSIS-STM32G0)
 
 target_sources(distortos PRIVATE
-		${CMAKE_CURRENT_LIST_DIR}/STM32G0-chipLowLevelInitializer.cpp)
+		${CMAKE_CURRENT_LIST_DIR}/STM32G0-chipLowLevelInitializer.cpp
+		${CMAKE_CURRENT_LIST_DIR}/STM32G0-FLASH.cpp)
 
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../include
 		INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include ${CMAKE_CURRENT_LIST_DIR}/external/CMSIS-STM32G0
