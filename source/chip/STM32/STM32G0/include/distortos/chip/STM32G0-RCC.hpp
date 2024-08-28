@@ -16,6 +16,13 @@
 
 #include <cstdint>
 
+#if !defined(DISTORTOS_CHIP_STM32G030) && !defined(DISTORTOS_CHIP_STM32G050) && !defined(DISTORTOS_CHIP_STM32G070)
+
+#define STM32G0_RCC_HAS_PLLQ
+
+#endif	// !defined(DISTORTOS_CHIP_STM32G030) && !defined(DISTORTOS_CHIP_STM32G050) &&
+		// !defined(DISTORTOS_CHIP_STM32G070)
+
 namespace distortos
 {
 
@@ -55,8 +62,10 @@ enum class PllOutput : uint8_t
 {
 	/// PLLP output of main PLL
 	p,
+#ifdef STM32G0_RCC_HAS_PLLQ
 	/// PLLQ output of main PLL
 	q,
+#endif	// def STM32G0_RCC_HAS_PLLQ
 	/// PLLR output of main PLL
 	r,
 };
@@ -98,11 +107,15 @@ constexpr uint16_t minPllp {2};
 /// maximum allowed value for PLLP
 constexpr uint16_t maxPllp {32};
 
+#ifdef STM32G0_RCC_HAS_PLLQ
+
 /// minimum allowed value for PLLQ
 constexpr uint16_t minPllq {2};
 
 /// maximum allowed value for PLLQ
 constexpr uint16_t maxPllq {8};
+
+#endif	// def STM32G0_RCC_HAS_PLLQ
 
 /// minimum allowed value for PLLR
 constexpr uint16_t minPllr {2};
@@ -296,6 +309,8 @@ void enableHsi16();
 
 void enableLse(bool bypass, LseDriveCapability lseDriveCapability);
 
+#ifdef STM32G0_RCC_HAS_PLLQ
+
 /**
  * \brief Enables main PLL.
  *
@@ -316,6 +331,30 @@ void enableLse(bool bypass, LseDriveCapability lseDriveCapability);
  */
 
 int enablePll(PllClockSource pllClockSource, uint8_t pllm, uint16_t plln, uint8_t pllp, uint8_t pllq, uint8_t pllr);
+
+#else	// !def STM32G0_RCC_HAS_PLLQ
+
+/**
+ * \brief Enables main PLL.
+ *
+ * Enables main PLL using selected parameters and waits until it is stable.
+ *
+ * \warning Before changing configuration of main PLL make sure that it is not used in any way (as core clock or as
+ * source of peripheral clocks) and that it is disabled.
+ *
+ * \param [in] pllClockSource selects clock source of PLL
+ * \param [in] pllm is the PLLM value for main PLL, [1; 8] or [minPllm; maxPllm]
+ * \param [in] plln is the PLLN value for main PLL, [8; 86] or [minPlln; maxPlln]
+ * \param [in] pllp is the PLLP value for main PLL, [2; 32] or [minPllp; maxPllp]
+ * \param [in] pllr is the PLLR value for main PLL, [2; 8] or [minPllr; maxPllr]
+ *
+ * \return 0 on success, error code otherwise:
+ * - EINVAL - \a pllm or \a plln or \a pllp or \a pllr value is invalid;
+ */
+
+int enablePll(PllClockSource pllClockSource, uint8_t pllm, uint16_t plln, uint8_t pllp, uint8_t pllr);
+
+#endif	// !def STM32G0_RCC_HAS_PLLQ
 
 /**
  * \brief Enables or disables selected output of main PLL.

@@ -138,8 +138,13 @@ void enableLse(const bool bypass, const LseDriveCapability lseDriveCapability)
 	while ((RCC->BDCR & RCC_BDCR_LSERDY) == 0);	// wait until LSE oscillator is stable
 }
 
+#ifdef STM32G0_RCC_HAS_PLLQ
 int enablePll(const PllClockSource pllClockSource, const uint8_t pllm, const uint16_t plln, const uint8_t pllp,
 		const uint8_t pllq, const uint8_t pllr)
+#else	// !def STM32G0_RCC_HAS_PLLQ
+int enablePll(const PllClockSource pllClockSource, const uint8_t pllm, const uint16_t plln, const uint8_t pllp,
+		const uint8_t pllr)
+#endif	// !def STM32G0_RCC_HAS_PLLQ
 {
 	if (pllm < minPllm || pllm > maxPllm)
 		return EINVAL;
@@ -147,15 +152,27 @@ int enablePll(const PllClockSource pllClockSource, const uint8_t pllm, const uin
 		return EINVAL;
 	if (pllp < minPllp || pllp > maxPllp)
 		return EINVAL;
-	if (pllq < minPllq || pllq > maxPllq)
-		return EINVAL;
 	if (pllr < minPllr || pllr > maxPllr)
+		return EINVAL;
+
+#ifdef STM32G0_RCC_HAS_PLLQ
+
+	if (pllq < minPllq || pllq > maxPllq)
 		return EINVAL;
 
 	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLSRC | RCC_PLLCFGR_PLLM | RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP |
 			RCC_PLLCFGR_PLLQ | RCC_PLLCFGR_PLLR)) | static_cast<uint8_t>(pllClockSource) << RCC_PLLCFGR_PLLSRC_Pos |
 			(pllm - 1) << RCC_PLLCFGR_PLLM_Pos | plln << RCC_PLLCFGR_PLLN_Pos | (pllp - 1) << RCC_PLLCFGR_PLLP_Pos |
 			(pllq - 1) << RCC_PLLCFGR_PLLQ_Pos | (pllr - 1) << RCC_PLLCFGR_PLLR_Pos;
+
+#else	// !def STM32G0_RCC_HAS_PLLQ
+
+	RCC->PLLCFGR = (RCC->PLLCFGR & ~(RCC_PLLCFGR_PLLSRC | RCC_PLLCFGR_PLLM | RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP |
+			RCC_PLLCFGR_PLLR)) | static_cast<uint8_t>(pllClockSource) << RCC_PLLCFGR_PLLSRC_Pos |
+			(pllm - 1) << RCC_PLLCFGR_PLLM_Pos | plln << RCC_PLLCFGR_PLLN_Pos | (pllp - 1) << RCC_PLLCFGR_PLLP_Pos |
+			(pllr - 1) << RCC_PLLCFGR_PLLR_Pos;
+
+#endif	// !def STM32G0_RCC_HAS_PLLQ
 
 	RCC->CR |= RCC_CR_PLLON;
 	while ((RCC->CR & RCC_CR_PLLRDY) == 0);	// wait until PLL is stable
@@ -165,7 +182,10 @@ int enablePll(const PllClockSource pllClockSource, const uint8_t pllm, const uin
 void enablePllOutput(const PllOutput pllOutput, const bool enable)
 {
 	const auto mask = pllOutput == PllOutput::p ? RCC_PLLCFGR_PLLPEN :
-			pllOutput == PllOutput::q ? RCC_PLLCFGR_PLLQEN : /* pllOutput == PllOutput::r ? */ RCC_PLLCFGR_PLLREN;
+#ifdef STM32G0_RCC_HAS_PLLQ
+			pllOutput == PllOutput::q ? RCC_PLLCFGR_PLLQEN :
+#endif	// def STM32G0_RCC_HAS_PLLQ
+			/* pllOutput == PllOutput::r ? */ RCC_PLLCFGR_PLLREN;
 	if (enable == false)
 		RCC->PLLCFGR &= ~mask;
 	else
