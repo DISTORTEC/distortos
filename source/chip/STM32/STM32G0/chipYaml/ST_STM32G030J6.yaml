@@ -95,6 +95,15 @@ NVIC:
     - USART6
   $labels:
   - NVIC
+clocks:
+  LSE:
+    compatible:
+    - ST,STM32-LSE
+    - fixed-clock
+    frequency: 0
+    bypass: true
+    $labels:
+    - LSE
 memories:
   flash:
     compatible:

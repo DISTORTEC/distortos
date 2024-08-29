@@ -108,6 +108,14 @@ clocks:
     frequency: 0
     $labels:
     - HSE
+  LSE:
+    compatible:
+    - ST,STM32-LSE
+    - fixed-clock
+    frequency: 0
+    bypass: false
+    $labels:
+    - LSE
 memories:
   flash:
     compatible:

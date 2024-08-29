@@ -3,7 +3,7 @@
 #
 # file: generateChipYaml.py
 #
-# author: Copyright (C) 2018 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -99,9 +99,9 @@ def parseString(string):
 	"""
 	tree = ast.parse(string)
 	try:
-		# Python 3 has `ast.NameConstant`...
-		whitelist = (ast.Dict, ast.Expr, ast.keyword, ast.List, ast.Load, ast.Module, ast.Name, ast.NameConstant,
-				ast.Num, ast.Str)
+		# Python 3 has `ast.Constant`...
+		whitelist = (ast.Dict, ast.Expr, ast.keyword, ast.List, ast.Load, ast.Module, ast.Name, ast.Constant,
+				ast.Constant, ast.Constant)
 	except AttributeError:
 		# ... while Python 2 does not
 		whitelist = (ast.Dict, ast.Expr, ast.keyword, ast.List, ast.Load, ast.Module, ast.Name, ast.Num, ast.Str)

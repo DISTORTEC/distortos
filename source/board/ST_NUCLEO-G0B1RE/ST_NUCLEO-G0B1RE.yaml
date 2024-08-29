@@ -33,6 +33,8 @@ leds:
     alternative-names:
     - Green
     - User
+!Reference {label: LSE}:
+  frequency: 32768
 !Reference {label: USART2}:
   RX:
     port: !Reference {label: GPIOA}
