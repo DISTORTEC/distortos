@@ -100,6 +100,15 @@ NVIC:
   - name: CEC
   $labels:
   - NVIC
+clocks:
+  LSE:
+    compatible:
+    - ST,STM32-LSE
+    - fixed-clock
+    frequency: 0
+    bypass: false
+    $labels:
+    - LSE
 memories:
   flash:
     compatible:
