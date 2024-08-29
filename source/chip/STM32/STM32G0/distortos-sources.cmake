@@ -47,6 +47,18 @@ distortosSetConfiguration(STRING
 		OUTPUT_NAME DISTORTOS_CHIP_RCC_PPRE
 		OUTPUT_TYPES INTEGER)
 
+distortosSetConfiguration(BOOLEAN
+		distortos_Memory_00_Flash_prefetch
+		ON
+		HELP "Enable flash prefetch option in FLASH->ACR register."
+		OUTPUT_NAME DISTORTOS_CHIP_FLASH_PREFETCH_ENABLE)
+
+distortosSetConfiguration(BOOLEAN
+		distortos_Memory_01_Flash_instruction_cache
+		ON
+		HELP "Enable flash instruction cache option in FLASH->ACR register."
+		OUTPUT_NAME DISTORTOS_CHIP_FLASH_INSTRUCTION_CACHE_ENABLE)
+
 target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/../include
 		${CMAKE_CURRENT_LIST_DIR}/include

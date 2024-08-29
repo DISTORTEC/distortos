@@ -207,6 +207,16 @@ set("distortos_Clocks_02_PPRE"
 		CACHE
 		"STRING"
 		"APB clock division factor.\n\nAPBclk = AHBclk / APBdivider")
+set("distortos_Memory_00_Flash_prefetch"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable flash prefetch option in FLASH->ACR register.")
+set("distortos_Memory_01_Flash_instruction_cache"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable flash instruction cache option in FLASH->ACR register.")
 set("distortos_Architecture_00_Interrupt_stack_size"
 		"1024"
 		CACHE
