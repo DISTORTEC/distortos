@@ -192,17 +192,92 @@ set("distortos_Peripherals_GPIOF"
 		CACHE
 		"BOOL"
 		"Enable GPIOF.")
-set("distortos_Clocks_00_SYSCLK_frequency"
-		"16000000"
+set("distortos_Clocks_00_Standard_configuration_of_clocks"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable standard configuration of clocks.\n\nThis will set values selected below and additionally configure appropriate FLASH latency before switching system clock to selected source.\n\nIf disabled, no clock configuration will be done during chip initialization. The values entered below (frequencies, dividers, ...) will only be used to determine chip clocks. The user must configure the chip manually to match these settings.")
+set("distortos_Clocks_01_Voltage_scaling_range"
+		"1"
 		CACHE
 		"STRING"
-		"Frequency of SYSCLK, Hz.\n\nRCC must be configured by user to achieve that frequency.\n\nAllowed range: [1; 64000000]")
-set("distortos_Clocks_01_HPRE"
+		"Select voltage scaling range.\n\nAllowed range: [1; 2]")
+set("distortos_Clocks_03_HSI16"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable HSI16.")
+set("distortos_Clocks_04_HSIDIV"
+		"1"
+		CACHE
+		"STRING"
+		"HSIDIV value for HSI16.\n\nIt is used to divide HSI16 frequency to produce HSISYS clock.\n\nHSISYS = HSI16 / HSIDIV")
+set("distortos_Clocks_05_LSE"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable LSE crystal/ceramic resonator, 32768 Hz.")
+set("distortos_Clocks_07_PLL"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable PLL.")
+set("distortos_Clocks_08_Clock_source_of_PLL"
+		"HSI16"
+		CACHE
+		"STRING"
+		"Select clock source of PLL.")
+set("distortos_Clocks_09_PLLM"
+		"2"
+		CACHE
+		"STRING"
+		"PLLM value for PLLs.\n\nIt is used to divide PLL input clock (PLLin) before it is fed to VCO. VCO input frequency (VCOin) must be in the range [2.66 MHz; 16 MHz].\n\nVCOin = PLLin / PLLM\n\nAllowed range: [1; 8]")
+set("distortos_Clocks_10_PLLN"
+		"16"
+		CACHE
+		"STRING"
+		"PLLN value for main PLL.\n\nIt is used to multiply VCO input frequency (VCOin). Resulting VCO output frequency (VCOout) must be in the range [96 MHz; 344 MHz] in voltage scaling range 1 or [96 MHz; 128 MHz] in voltage scaling range 2.\n\nVCOout = VCOin * PLLN = PLLin / PLLM * PLLN\n\nAllowed range: [8; 86]")
+set("distortos_Clocks_11_PLLP"
+		"2"
+		CACHE
+		"STRING"
+		"PLLP value for main PLL.\n\nIt is used to divide VCO output frequency (VCOout) to produce clock for ADC and I2S (PLLPout). PLL \"P\" output frequency (PLLPout) must be in the range [3.09 MHz; 122 MHz] in voltage scaling range 1 or [3.09 MHz; 40 MHz] in voltage scaling range 2.\n\nPLLPout = VCOout / PLLP = PLLin / PLLM * PLLN / PLLP\n\nAllowed range: [2; 32]")
+set("distortos_Clocks_12_PLLQ"
+		"2"
+		CACHE
+		"STRING"
+		"PLLQ value for main PLL.\n\nIt is used to divide VCO output frequency (VCOout) to produce clock for FDCAN, RNG, timers and USB (PLLQout). PLL \"Q\" output frequency (PLLQout) must be in the range [12 MHz; 128 MHz] in voltage scaling range 1 or [12 MHz; 33 MHz] in voltage scaling range 2.\n\nPLLQout = VCOout / PLLQ = PLLin / PLLM * PLLN / PLLQ\n\nAllowed range: [2; 8]")
+set("distortos_Clocks_13_PLLR"
+		"2"
+		CACHE
+		"STRING"
+		"PLLR value for main PLL.\n\nIt is used to divide VCO output frequency (VCOout) to produce system clock (PLLRout). PLL \"R\" output frequency (PLLRout) must be in the range [12 MHz; 64 MHz] in voltage scaling range 1 or [12 MHz; 16 MHz] in voltage scaling range 2.\n\nPLLRout = VCOout / PLLR = PLLin / PLLM * PLLN / PLLR\n\nAllowed range: [2; 8]")
+set("distortos_Clocks_14_PLLP_output"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable PLL's \"P\" output.")
+set("distortos_Clocks_15_PLLQ_output"
+		"OFF"
+		CACHE
+		"BOOL"
+		"Enable PLL's \"Q\" output.")
+set("distortos_Clocks_16_PLLR_output"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable PLL's \"R\" output.")
+set("distortos_Clocks_17_System_clock_source"
+		"PLLR"
+		CACHE
+		"STRING"
+		"Select system clock source.")
+set("distortos_Clocks_18_HPRE"
 		"1"
 		CACHE
 		"STRING"
 		"AHB clock division factor\n\nAHBclk = SYSclk / AHBdivider")
-set("distortos_Clocks_02_PPRE"
+set("distortos_Clocks_19_PPRE"
 		"1"
 		CACHE
 		"STRING"
