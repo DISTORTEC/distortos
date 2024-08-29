@@ -44,17 +44,19 @@ distortosSetFixedConfiguration(INTEGER
 		{{ (dictionary['chip']['VDD']['output-voltage'] * 1000) | int }})
 {% endif %}
 {% if 'clocks' in dictionary %}
-{% for key, clock in dictionary['clocks'].items() if clock is mapping and 'ST,STM32-HSE' in clock['compatible'] %}
+{% for key, clock in dictionary['clocks'].items() if clock is mapping and
+		('ST,STM32-HSE' in clock['compatible'] or 'ST,STM32-LSE' in clock['compatible']) %}
+{% set clockType = clock['compatible'][0].rpartition('-')[2]  %}
 {% if clock['frequency'] != 0 or clock.get('bypass', False) == True %}
 
 distortosSetFixedConfiguration(BOOLEAN
-		DISTORTOS_CHIP_RCC_HSE_CLOCK_BYPASS
+		DISTORTOS_CHIP_RCC_{{ clockType }}_CLOCK_BYPASS
 {{ '\t\t' }}{% if clock.get('bypass', False) == True %}ON{% else %}OFF{% endif %})
 {% endif %}
 {% if clock['frequency'] != 0 %}
 
 distortosSetFixedConfiguration(INTEGER
-		DISTORTOS_CHIP_RCC_HSE_FREQUENCY
+		DISTORTOS_CHIP_RCC_{{ clockType }}_FREQUENCY
 		{{ clock['frequency'] }})
 {% endif %}
 {% endfor %}
