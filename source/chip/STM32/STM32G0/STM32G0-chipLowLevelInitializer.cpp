@@ -10,6 +10,7 @@
  */
 
 #include "distortos/chip/CMSIS-proxy.h"
+#include "distortos/chip/STM32G0-FLASH.hpp"
 
 #include "distortos/BIND_LOW_LEVEL_INITIALIZER.h"
 
@@ -34,6 +35,18 @@ namespace
 
 void chipLowLevelInitializer()
 {
+#ifdef DISTORTOS_CHIP_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(true);
+#else	// !def DISTORTOS_CHIP_FLASH_PREFETCH_ENABLE
+	configureInstructionPrefetch(false);
+#endif	// !def DISTORTOS_CHIP_FLASH_PREFETCH_ENABLE
+
+#ifdef DISTORTOS_CHIP_FLASH_INSTRUCTION_CACHE_ENABLE
+	enableInstructionCache();
+#else	// !def DISTORTOS_CHIP_FLASH_INSTRUCTION_CACHE_ENABLE
+	disableInstructionCache();
+#endif	// !def DISTORTOS_CHIP_FLASH_INSTRUCTION_CACHE_ENABLE
+
 	RCC->IOPENR |=
 #ifdef DISTORTOS_CHIP_GPIOA_ENABLE
 			RCC_IOPENR_GPIOAEN |
