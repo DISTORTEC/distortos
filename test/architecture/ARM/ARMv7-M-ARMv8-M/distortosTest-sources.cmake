@@ -7,7 +7,7 @@
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 #
 
-if(DISTORTOS_ARCHITECTURE_ARMV7_M)
+if(DISTORTOS_ARCHITECTURE_ARMV7_M OR DISTORTOS_ARCHITECTURE_ARMV8_M)
 
 	target_sources(distortosTest PRIVATE
 			${CMAKE_CURRENT_LIST_DIR}/ARMv7-M-ARMv8-M-architectureTestCases.cpp
