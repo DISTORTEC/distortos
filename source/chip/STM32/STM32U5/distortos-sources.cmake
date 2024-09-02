@@ -78,6 +78,9 @@ target_include_directories(distortos PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include
 		${CMAKE_CURRENT_LIST_DIR}/external/CMSIS-STM32U5)
 
+target_sources(distortos PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/STM32U5-chipLowLevelInitializer.cpp)
+
 doxygen(INPUT ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../include
 		INCLUDE_PATH ${CMAKE_CURRENT_LIST_DIR}/include ${CMAKE_CURRENT_LIST_DIR}/external/CMSIS-STM32U5
 		EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/external)
