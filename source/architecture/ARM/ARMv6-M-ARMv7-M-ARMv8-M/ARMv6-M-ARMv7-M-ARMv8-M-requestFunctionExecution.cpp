@@ -2,7 +2,7 @@
  * \file
  * \brief requestFunctionExecution() implementation for ARMv6-M and ARMv7-M
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2015-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -16,11 +16,11 @@
 #include "distortos/chip/CMSIS-proxy.h"
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
-#include "ARMv7-M-ExceptionFpuStackFrame.hpp"
+#include "ARMv7-M-ARMv8-M-ExceptionFpuStackFrame.hpp"
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
-#include "ARMv6-M-ARMv7-M-StackFrame.hpp"
-#include "ARMv6-M-ARMv7-M-supervisorCall.hpp"
+#include "ARMv6-M-ARMv7-M-ARMv8-M-StackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-ARMv8-M-supervisorCall.hpp"
 
 #include "distortos/internal/scheduler/Scheduler.hpp"
 #include "distortos/internal/scheduler/getScheduler.hpp"

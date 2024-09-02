@@ -1,5 +1,5 @@
 #
-# file: cmake/90-ARMv6-M-ARMv7-M.cmake
+# file: cmake/90-ARMv6-M-ARMv7-M-ARMv8-M.cmake
 #
 # author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #

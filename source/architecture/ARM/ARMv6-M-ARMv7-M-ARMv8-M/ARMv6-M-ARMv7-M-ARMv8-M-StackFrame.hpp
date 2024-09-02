@@ -9,11 +9,11 @@
  * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
-#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
+#ifndef SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_ARMV8_M_STACKFRAME_HPP_
+#define SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_ARMV8_M_STACKFRAME_HPP_
 
-#include "ARMv6-M-ARMv7-M-ExceptionStackFrame.hpp"
-#include "ARMv6-M-ARMv7-M-SoftwareStackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-ARMv8-M-ExceptionStackFrame.hpp"
+#include "ARMv6-M-ARMv7-M-ARMv8-M-SoftwareStackFrame.hpp"
 
 namespace distortos
 {
@@ -34,4 +34,4 @@ struct StackFrame
 
 }	// namespace distortos
 
-#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_STACKFRAME_HPP_
+#endif	// SOURCE_ARCHITECTURE_ARM_ARMV6_M_ARMV7_M_ARMV8_M_ARMV6_M_ARMV7_M_ARMV8_M_STACKFRAME_HPP_

@@ -1,5 +1,5 @@
 #
-# file: cmake/90-ARMv6-M-ARMv7-M.cmake
+# file: cmake/90-ARMv6-M-ARMv7-M-ARMv8-M.cmake
 #
 # author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
@@ -9,7 +9,7 @@
 # Automatically generated file - do not edit!
 #
 
-set(DISTORTOS_RAW_LINKER_SCRIPT "source/board/ST_NUCLEO-F091RC/ST_NUCLEO-F091RC.ld")
+set(DISTORTOS_RAW_LINKER_SCRIPT "source/board/ST_STM32F0DISCOVERY/ST_STM32F0DISCOVERY.ld")
 
 distortosSetFixedConfiguration(BOOLEAN
 		DISTORTOS_ARCHITECTURE_ASCENDING_STACK
