@@ -21,7 +21,7 @@ namespace distortos
 namespace architecture
 {
 
-/// complete stack frame of thread for ARMv6-M and ARMv7-M
+/// complete stack frame of thread for ARMv6-M, ARMv7-M and ARMv8-M
 struct StackFrame
 {
 	/// stack frame created by software during context switch

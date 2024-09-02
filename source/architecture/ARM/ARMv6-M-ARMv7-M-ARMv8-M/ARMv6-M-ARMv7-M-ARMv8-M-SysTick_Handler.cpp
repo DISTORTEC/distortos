@@ -1,8 +1,8 @@
 /**
  * \file
- * \brief SysTick_Handler() for ARMv6-M and ARMv7-M
+ * \brief SysTick_Handler() for ARMv6-M, ARMv7-M and ARMv8-M
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2014-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -27,7 +27,7 @@
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief SysTick_Handler() for ARMv6-M and ARMv7-M
+ * \brief SysTick_Handler() for ARMv6-M, ARMv7-M and ARMv8-M
  *
  * Tick interrupt of scheduler. This function also checks stack pointer range when this functionality is enabled - if
  * the check fails, FATAL_ERROR() is called.

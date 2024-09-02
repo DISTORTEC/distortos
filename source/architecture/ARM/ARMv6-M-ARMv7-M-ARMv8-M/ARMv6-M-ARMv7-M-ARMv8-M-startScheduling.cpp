@@ -1,8 +1,8 @@
 /**
  * \file
- * \brief Start of scheduling for ARMv6-M and ARMv7-M
+ * \brief Start of scheduling for ARMv6-M, ARMv7-M and ARMv8-M
  *
- * \author Copyright (C) 2014-2019 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2014-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -28,7 +28,7 @@ namespace
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief Start of scheduling for ARMv6-M and ARMv7-M
+ * \brief Start of scheduling for ARMv6-M, ARMv7-M and ARMv8-M
  *
  * Initializes all required hardware/software to perform context switching and starts the scheduling. This function is
  * called before constructors for global and static objects via BIND_LOW_LEVEL_INITIALIZER().

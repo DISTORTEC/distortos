@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief initializeStack() implementation for ARMv6-M and ARMv7-M
+ * \brief initializeStack() implementation for ARMv6-M, ARMv7-M and ARMv8-M
  *
  * \author Copyright (C) 2014-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *

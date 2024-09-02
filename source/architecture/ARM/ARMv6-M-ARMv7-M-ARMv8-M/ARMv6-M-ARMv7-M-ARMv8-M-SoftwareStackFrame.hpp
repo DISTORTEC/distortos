@@ -20,7 +20,7 @@ namespace distortos
 namespace architecture
 {
 
-/// stack frame for ARMv6-M and ARMv7-M created by software during context switch
+/// stack frame for ARMv6-M, ARMv7-M and ARMv8-M created by software during context switch
 struct SoftwareStackFrame
 {
 #if __FPU_PRESENT == 1 && __FPU_USED == 1

@@ -20,7 +20,7 @@ namespace distortos
 namespace architecture
 {
 
-/// stack frame for ARMv6-M and ARMv7-M created by hardware on exception entry
+/// stack frame for ARMv6-M, ARMv7-M and ARMv8-M created by hardware on exception entry
 struct ExceptionStackFrame
 {
 	/// default value of xPSR register

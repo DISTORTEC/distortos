@@ -22,7 +22,7 @@ namespace distortos
 namespace architecture
 {
 
-/// stack frame for ARMv7-M created by hardware on exception entry when FPU context is active
+/// stack frame for ARMv7-M and ARMv8-M created by hardware on exception entry when FPU context is active
 struct ExceptionFpuStackFrame
 {
 	/// stack frame created by hardware on exception entry
