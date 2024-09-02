@@ -1,4 +1,5 @@
-{% if 'ARM,ARMv6-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+{% if 'ARM,ARMv6-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] or
+		'ARM,ARMv8-M' in dictionary['CPUs'][0]['compatible'] %}
 ('source/architecture/ARM/ARMv6-M-ARMv7-M-ARMv8-M/boardTemplates/ARMv6-M-ARMv7-M-ARMv8-M.ld.jinja',
 		{},
 		'{{ sanitizedBoard }}.ld'),
