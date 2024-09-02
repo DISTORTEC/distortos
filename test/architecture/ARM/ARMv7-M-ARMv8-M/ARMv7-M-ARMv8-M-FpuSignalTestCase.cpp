@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief FpuSignalTestCase class implementation for ARMv7-M
+ * \brief FpuSignalTestCase class implementation for ARMv7-M and ARMv8-M
  *
  * \author Copyright (C) 2015-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
@@ -14,10 +14,11 @@
 #include "distortos/chip/CMSIS-proxy.h"
 
 /// configuration required by FpuSignalTestCase
-#define ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED __FPU_PRESENT == 1 && __FPU_USED == 1 && DISTORTOS_SIGNALS_ENABLE == 1 && \
-		DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS > 0 && DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
+#define ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED __FPU_PRESENT == 1 && __FPU_USED == 1 && \
+		DISTORTOS_SIGNALS_ENABLE == 1 && DISTORTOS_MAIN_THREAD_SIGNAL_ACTIONS > 0 && \
+		DISTORTOS_MAIN_THREAD_QUEUED_SIGNALS > 0
 
-#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#if ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 #include "ARMv7-M-ARMv8-M-checkFpuRegisters.hpp"
 #include "ARMv7-M-ARMv8-M-setFpuRegisters.hpp"
@@ -31,7 +32,7 @@
 
 #include <cerrno>
 
-#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#endif	// ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 namespace distortos
 {
@@ -39,7 +40,7 @@ namespace distortos
 namespace test
 {
 
-#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#if ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 namespace
 {
@@ -258,7 +259,7 @@ const Stage stages[]
 
 }	// namespace
 
-#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#endif	// ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | protected functions
@@ -266,11 +267,11 @@ const Stage stages[]
 
 bool FpuSignalTestCase::finalize() const
 {
-#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#if ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	disableFpuContext();
 
-#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#endif	// ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	return SignalsTestCaseCommon::finalize();
 }
@@ -281,7 +282,7 @@ bool FpuSignalTestCase::finalize() const
 
 bool FpuSignalTestCase::run_() const
 {
-#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#if ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	const auto contextSwitchCount = statistics::getContextSwitchCount();
 	auto expectedContextSwitchCount = decltype(contextSwitchCount){};
@@ -324,7 +325,7 @@ bool FpuSignalTestCase::run_() const
 	if (statistics::getContextSwitchCount() - contextSwitchCount != expectedContextSwitchCount)
 		return false;
 
-#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#endif	// ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 	return true;
 }
@@ -333,14 +334,14 @@ bool FpuSignalTestCase::run_() const
 
 }	// namespace distortos
 
-#if ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#if ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
 
 /*---------------------------------------------------------------------------------------------------------------------+
 | global functions
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /**
- * \brief UsageFault_Handler() for ARMv7-M
+ * \brief UsageFault_Handler() for ARMv7-M and ARMv8-M
  */
 
 extern "C" void UsageFault_Handler()
@@ -353,4 +354,4 @@ extern "C" void UsageFault_Handler()
 	queueSignalWrapper(*context->thread, *context->stage, false, context->sharedRet);
 }
 
-#endif	// ARMV7_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
+#endif	// ARMV7_M_ARMV8_M_FPU_SIGNAL_TEST_CASE_ENABLED == 1
