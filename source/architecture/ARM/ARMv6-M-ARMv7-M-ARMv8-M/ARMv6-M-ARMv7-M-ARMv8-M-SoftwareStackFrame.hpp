@@ -30,7 +30,7 @@ struct SoftwareStackFrame
 
 #endif	// __FPU_PRESENT == 1 && __FPU_USED == 1
 
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
 
 	/// r4 register
 	void* r4;
@@ -41,7 +41,7 @@ struct SoftwareStackFrame
 	/// r7 register
 	void* r7;
 
-#endif	// defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+#endif	// defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
 
 	/// r8 register
 	void* r8;
@@ -52,7 +52,7 @@ struct SoftwareStackFrame
 	/// r11 register
 	void* r11;
 
-#if !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
+#if !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__) && !defined(__ARM_ARCH_8M_MAIN__)
 
 	/// r4 register
 	void* r4;
@@ -63,7 +63,7 @@ struct SoftwareStackFrame
 	/// r7 register
 	void* r7;
 
-#endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__)
+#endif	// !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__) && !defined(__ARM_ARCH_8M_MAIN__)
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
