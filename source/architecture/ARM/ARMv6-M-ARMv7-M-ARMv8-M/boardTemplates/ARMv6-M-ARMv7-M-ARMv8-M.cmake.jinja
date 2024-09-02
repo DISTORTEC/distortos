@@ -47,7 +47,7 @@ distortosSetConfiguration(INTEGER
 		MIN 8
 		HELP "Size (in bytes) of \"main\" stack used by core exceptions and interrupts in Handler mode."
 		OUTPUT_NAME DISTORTOS_ARCHITECTURE_MAIN_STACK_SIZE)
-{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv8-M' in dictionary['CPUs'][0]['compatible'] %}
 
 distortosSetConfiguration(INTEGER
 		distortos_Architecture_01_Interrupt_priority_disabled_in_critical_sections

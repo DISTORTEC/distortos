@@ -34,13 +34,13 @@ using ExceptionVector = void(*)();
 +---------------------------------------------------------------------------------------------------------------------*/
 
 /// priority of interrupts
-{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv8-M' in dictionary['CPUs'][0]['compatible'] %}
 #if defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 constexpr uint8_t interruptPriority {DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI};
 #else	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 {% endif %}
 constexpr uint8_t interruptPriority {};
-{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] %}
+{% if 'ARM,ARMv7-M' in dictionary['CPUs'][0]['compatible'] or 'ARM,ARMv8-M' in dictionary['CPUs'][0]['compatible'] %}
 #endif	// !defined(DISTORTOS_ARCHITECTURE_KERNEL_BASEPRI)
 {% endif %}
 
