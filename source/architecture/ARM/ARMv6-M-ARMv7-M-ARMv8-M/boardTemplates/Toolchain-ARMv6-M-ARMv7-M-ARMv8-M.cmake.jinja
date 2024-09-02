@@ -44,6 +44,8 @@ set(CMAKE_SIZE "${TARGET_TRIPLE}size")
 	{% set architectureFlags = architectureFlags + ['-mcpu=cortex-m4'] %}
 {% elif 'ARM,Cortex-M7' in dictionary['CPUs'][0]['compatible'] %}
 	{% set architectureFlags = architectureFlags + ['-mcpu=cortex-m7'] %}
+{% elif 'ARM,Cortex-M33' in dictionary['CPUs'][0]['compatible'] %}
+	{% set architectureFlags = architectureFlags + ['-mcpu=cortex-m33'] %}
 {% endif -%}
 
 {% if 'ARM,ARMv6-M' in dictionary['CPUs'][0]['compatible'] %}
