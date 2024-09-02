@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2024 Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2024 Arm Limited. Copyright (c) 2024 Arm Technology (China) Co., Ltd. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -17,7 +17,7 @@
  */
 
 /*
- * CMSIS Cortex-M55 Core Peripheral Access Layer Header File
+ * CMSIS Cortex-M52 Core Peripheral Access Layer Header File
  */
 
 #if   defined ( __ICCARM__ )
@@ -28,8 +28,8 @@
   #pragma GCC diagnostic ignored "-Wpedantic"   /* disable pedantic warning due to unnamed structs/unions */
 #endif
 
-#ifndef __CORE_CM55_H_GENERIC
-#define __CORE_CM55_H_GENERIC
+#ifndef __CORE_CM52_H_GENERIC
+#define __CORE_CM52_H_GENERIC
 
 #include <stdint.h>
 
@@ -56,15 +56,15 @@
  *                 CMSIS definitions
  ******************************************************************************/
 /**
-  \ingroup Cortex_M55
+  \ingroup Cortex_M52
   @{
  */
 
 #include "cmsis_version.h"
 
-/* CMSIS CM55 definitions */
+/* CMSIS CM52 definitions */
 
-#define __CORTEX_M                (55U)                               /*!< Cortex-M Core */
+#define __CORTEX_M                (52U)                               /*!< Cortex-M Core */
 
 #if defined ( __CC_ARM )
   #error Legacy Arm Compiler does not support Armv8.1-M target architecture.
@@ -205,12 +205,12 @@
 }
 #endif
 
-#endif /* __CORE_CM55_H_GENERIC */
+#endif /* __CORE_CM52_H_GENERIC */
 
 #ifndef __CMSIS_GENERIC
 
-#ifndef __CORE_CM55_H_DEPENDANT
-#define __CORE_CM55_H_DEPENDANT
+#ifndef __CORE_CM52_H_DEPENDANT
+#define __CORE_CM52_H_DEPENDANT
 
 #ifdef __cplusplus
  extern "C" {
@@ -218,9 +218,9 @@
 
 /* check device defines and use defaults */
 #if defined __CHECK_DEVICE_DEFINES
-  #ifndef __CM55_REV
-    #define __CM55_REV               0x0000U
-    #warning "__CM55_REV not defined in device header file; using default!"
+  #ifndef __CM52_REV
+    #define __CM52_REV               0x0002U
+    #warning "__CM52_REV not defined in device header file; using default!"
   #endif
 
   #ifndef __FPU_PRESENT
@@ -248,6 +248,11 @@
   #ifndef __DCACHE_PRESENT
     #define __DCACHE_PRESENT          0U
     #warning "__DCACHE_PRESENT not defined in device header file; using default!"
+  #endif
+
+  #ifndef __UCACHE_PRESENT
+    #define __UCACHE_PRESENT          0U
+    #warning "__UCACHE_PRESENT not defined in device header file; using default!"
   #endif
 
   #ifndef __VTOR_PRESENT
@@ -311,7 +316,7 @@
 #define     __OM     volatile            /*! Defines 'write only' structure member permissions */
 #define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
 
-/*@} end of group Cortex_M55 */
+/*@} end of group Cortex_M52 */
 
 
 
@@ -409,7 +414,9 @@ typedef union
     uint32_t ISR:9;                      /*!< bit:  0.. 8  Exception number */
     uint32_t _reserved0:7;               /*!< bit:  9..15  Reserved */
     uint32_t GE:4;                       /*!< bit: 16..19  Greater than or Equal flags */
-    uint32_t _reserved1:4;               /*!< bit: 20..23  Reserved */
+    uint32_t _reserved1:1;               /*!< bit:     20  Reserved */
+    uint32_t B:1;                        /*!< bit:     21  BTI active       (read 0) */
+    uint32_t _reserved2:2;               /*!< bit: 22..23  Reserved */
     uint32_t T:1;                        /*!< bit:     24  Thumb bit        (read 0) */
     uint32_t IT:2;                       /*!< bit: 25..26  saved IT state   (read 0) */
     uint32_t Q:1;                        /*!< bit:     27  Saturation condition flag */
@@ -443,6 +450,9 @@ typedef union
 #define xPSR_T_Pos                         24U                                            /*!< xPSR: T Position */
 #define xPSR_T_Msk                         (1UL << xPSR_T_Pos)                            /*!< xPSR: T Mask */
 
+#define xPSR_B_Pos                         21U                                            /*!< xPSR: B Position */
+#define xPSR_B_Msk                         (1UL << xPSR_B_Pos)                            /*!< xPSR: B Mask */
+
 #define xPSR_GE_Pos                        16U                                            /*!< xPSR: GE Position */
 #define xPSR_GE_Msk                        (0xFUL << xPSR_GE_Pos)                         /*!< xPSR: GE Mask */
 
@@ -461,12 +471,28 @@ typedef union
     uint32_t SPSEL:1;                    /*!< bit:      1  Stack-pointer select */
     uint32_t FPCA:1;                     /*!< bit:      2  Floating-point context active */
     uint32_t SFPA:1;                     /*!< bit:      3  Secure floating-point active */
-    uint32_t _reserved1:28;              /*!< bit:  4..31  Reserved */
+    uint32_t BTI_EN:1;                   /*!< bit:      4  Privileged branch target identification enable */
+    uint32_t UBTI_EN:1;                  /*!< bit:      5  Unprivileged branch target identification enable */
+    uint32_t PAC_EN:1;                   /*!< bit:      6  Privileged pointer authentication enable */
+    uint32_t UPAC_EN:1;                  /*!< bit:      7  Unprivileged pointer authentication enable */
+    uint32_t _reserved1:24;              /*!< bit:  8..31  Reserved */
   } b;                                   /*!< Structure used for bit  access */
   uint32_t w;                            /*!< Type      used for word access */
 } CONTROL_Type;
 
 /** \brief CONTROL Register Definitions */
+#define CONTROL_UPAC_EN_Pos                 7U                                            /*!< CONTROL: UPAC_EN Position */
+#define CONTROL_UPAC_EN_Msk                (1UL << CONTROL_UPAC_EN_Pos)                   /*!< CONTROL: UPAC_EN Mask */
+
+#define CONTROL_PAC_EN_Pos                  6U                                            /*!< CONTROL: PAC_EN Position */
+#define CONTROL_PAC_EN_Msk                 (1UL << CONTROL_PAC_EN_Pos)                    /*!< CONTROL: PAC_EN Mask */
+
+#define CONTROL_UBTI_EN_Pos                 5U                                            /*!< CONTROL: UBTI_EN Position */
+#define CONTROL_UBTI_EN_Msk                (1UL << CONTROL_UBTI_EN_Pos)                   /*!< CONTROL: UBTI_EN Mask */
+
+#define CONTROL_BTI_EN_Pos                  4U                                            /*!< CONTROL: BTI_EN Position */
+#define CONTROL_BTI_EN_Msk                 (1UL << CONTROL_BTI_EN_Pos)                    /*!< CONTROL: BTI_EN Mask */
+
 #define CONTROL_SFPA_Pos                    3U                                            /*!< CONTROL: SFPA Position */
 #define CONTROL_SFPA_Msk                   (1UL << CONTROL_SFPA_Pos)                      /*!< CONTROL: SFPA Mask */
 
@@ -555,19 +581,19 @@ typedef struct
   __IOM uint32_t CSSELR;                 /*!< Offset: 0x084 (R/W)  Cache Size Selection Register */
   __IOM uint32_t CPACR;                  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register */
   __IOM uint32_t NSACR;                  /*!< Offset: 0x08C (R/W)  Non-Secure Access Control Register */
-        uint32_t RESERVED7[21U];
+        uint32_t RESERVED0[21U];
   __IOM uint32_t SFSR;                   /*!< Offset: 0x0E4 (R/W)  Secure Fault Status Register */
   __IOM uint32_t SFAR;                   /*!< Offset: 0x0E8 (R/W)  Secure Fault Address Register */
-        uint32_t RESERVED3[69U];
+        uint32_t RESERVED1[69U];
   __OM  uint32_t STIR;                   /*!< Offset: 0x200 ( /W)  Software Triggered Interrupt Register */
   __IOM uint32_t RFSR;                   /*!< Offset: 0x204 (R/W)  RAS Fault Status Register */
-        uint32_t RESERVED4[14U];
+        uint32_t RESERVED2[14U];
   __IM  uint32_t MVFR0;                  /*!< Offset: 0x240 (R/ )  Media and VFP Feature Register 0 */
   __IM  uint32_t MVFR1;                  /*!< Offset: 0x244 (R/ )  Media and VFP Feature Register 1 */
   __IM  uint32_t MVFR2;                  /*!< Offset: 0x248 (R/ )  Media and VFP Feature Register 2 */
-        uint32_t RESERVED5[1U];
+        uint32_t RESERVED3[1U];
   __OM  uint32_t ICIALLU;                /*!< Offset: 0x250 ( /W)  I-Cache Invalidate All to PoU */
-        uint32_t RESERVED6[1U];
+        uint32_t RESERVED4[1U];
   __OM  uint32_t ICIMVAU;                /*!< Offset: 0x258 ( /W)  I-Cache Invalidate by MVA to PoU */
   __OM  uint32_t DCIMVAC;                /*!< Offset: 0x25C ( /W)  D-Cache Invalidate by MVA to PoC */
   __OM  uint32_t DCISW;                  /*!< Offset: 0x260 ( /W)  D-Cache Invalidate by Set-way */
@@ -922,6 +948,9 @@ typedef struct
 #define SCB_CLIDR_LOC_Pos                  24U                                            /*!< SCB CLIDR: LoC Position */
 #define SCB_CLIDR_LOC_Msk                  (7UL << SCB_CLIDR_LOC_Pos)                     /*!< SCB CLIDR: LoC Mask */
 
+#define SCB_CLIDR_CTYPE1_Pos               0U
+#define SCB_CLIDR_CTYPE1_Msk               (7UL << SCB_CLIDR_CTYPE1_Pos)
+
 /** \brief SCB Cache Type Register Definitions */
 #define SCB_CTR_FORMAT_Pos                 29U                                            /*!< SCB CTR: Format Position */
 #define SCB_CTR_FORMAT_Msk                 (7UL << SCB_CTR_FORMAT_Pos)                    /*!< SCB CTR: Format Mask */
@@ -1001,6 +1030,29 @@ typedef struct
 
 #define SCB_DCCISW_SET_Pos                  5U                                            /*!< SCB DCCISW: Set Position */
 #define SCB_DCCISW_SET_Msk                 (0x1FFUL << SCB_DCCISW_SET_Pos)                /*!< SCB DCCISW: Set Mask */
+
+
+/** \brief SCB U-Cache Invalidate by Set-way Register Definitions */
+#define SCB_DCISW_UC_WAY_Pos               31U                                            /*!< SCB DCISW: Way Position */
+#define SCB_DCISW_UC_WAY_Msk               (1UL << SCB_DCISW_UC_WAY_Pos)                  /*!< SCB DCISW: Way Mask */
+
+#define SCB_DCISW_UC_SET_Pos               5U                                             /*!< SCB DCISW: Set Position */
+#define SCB_DCISW_UC_SET_Msk               (0x3FFUL << SCB_DCISW_UC_SET_Pos)              /*!< SCB DCISW: Set Mask */
+
+/** \brief SCB U-Cache Clean by Set-way Register Definitions */
+#define SCB_DCCSW_UC_WAY_Pos               31U                                            /*!< SCB DCCSW: Way Position */
+#define SCB_DCCSW_UC_WAY_Msk               (1UL << SCB_DCCSW_UC_WAY_Pos)                  /*!< SCB DCCSW: Way Mask */
+
+#define SCB_DCCSW_UC_SET_Pos               5U                                             /*!< SCB DCCSW: Set Position */
+#define SCB_DCCSW_UC_SET_Msk               (0x3FFUL << SCB_DCCSW_UC_SET_Pos)              /*!< SCB DCCSW: Set Mask */
+
+/** \brief SCB U-Cache Clean and Invalidate by Set-way Register Definitions */
+#define SCB_DCCISW_UC_WAY_Pos              31U                                            /*!< SCB DCCISW: Way Position */
+#define SCB_DCCISW_UC_WAY_Msk              (1UL << SCB_DCCISW_UC_WAY_Pos)                 /*!< SCB DCCISW: Way Mask */
+
+#define SCB_DCCISW_UC_SET_Pos              5U                                             /*!< SCB DCCISW: Set Position */
+#define SCB_DCCISW_UC_SET_Msk              (0x3FFUL << SCB_DCCISW_UC_SET_Pos)             /*!< SCB DCCISW: Set Mask */
+
 
 /*@} end of group CMSIS_SCB */
 
@@ -1391,8 +1443,7 @@ typedef struct
 typedef struct
 {
   __IOM uint32_t MSCR;                   /*!< Offset: 0x000 (R/W)  Memory System Control Register */
-  __IOM uint32_t PFCR;                   /*!< Offset: 0x004 (R/W)  Prefetcher Control Register */
-        uint32_t RESERVED1[2U];
+        uint32_t RESERVED1[3U];
   __IOM uint32_t ITCMCR;                 /*!< Offset: 0x010 (R/W)  ITCM Control Register */
   __IOM uint32_t DTCMCR;                 /*!< Offset: 0x014 (R/W)  DTCM Control Register */
   __IOM uint32_t PAHBCR;                 /*!< Offset: 0x018 (R/W)  P-AHB Control Register */
@@ -1432,19 +1483,6 @@ typedef struct
 
 #define MEMSYSCTL_MSCR_ECCEN_Pos            1U                                         /*!< MEMSYSCTL MSCR: ECCEN Position */
 #define MEMSYSCTL_MSCR_ECCEN_Msk           (1UL << MEMSYSCTL_MSCR_ECCEN_Pos)           /*!< MEMSYSCTL MSCR: ECCEN Mask */
-
-/** \brief MemSysCtl Prefetcher Control Register Definitions */
-#define MEMSYSCTL_PFCR_MAX_OS_Pos           7U                                         /*!< MEMSYSCTL PFCR: MAX_OS Position */
-#define MEMSYSCTL_PFCR_MAX_OS_Msk          (0x7UL << MEMSYSCTL_PFCR_MAX_OS_Pos)        /*!< MEMSYSCTL PFCR: MAX_OS Mask */
-
-#define MEMSYSCTL_PFCR_MAX_LA_Pos           4U                                         /*!< MEMSYSCTL PFCR: MAX_LA Position */
-#define MEMSYSCTL_PFCR_MAX_LA_Msk          (0x7UL << MEMSYSCTL_PFCR_MAX_LA_Pos)        /*!< MEMSYSCTL PFCR: MAX_LA Mask */
-
-#define MEMSYSCTL_PFCR_MIN_LA_Pos           1U                                         /*!< MEMSYSCTL PFCR: MIN_LA Position */
-#define MEMSYSCTL_PFCR_MIN_LA_Msk          (0x7UL << MEMSYSCTL_PFCR_MIN_LA_Pos)        /*!< MEMSYSCTL PFCR: MIN_LA Mask */
-
-#define MEMSYSCTL_PFCR_ENABLE_Pos           0U                                         /*!< MEMSYSCTL PFCR: ENABLE Position */
-#define MEMSYSCTL_PFCR_ENABLE_Msk          (1UL /*<< MEMSYSCTL_PFCR_ENABLE_Pos*/)      /*!< MEMSYSCTL PFCR: ENABLE Mask */
 
 /** \brief MemSysCtl ITCM Control Register Definitions */
 #define MEMSYSCTL_ITCMCR_SZ_Pos             3U                                         /*!< MEMSYSCTL ITCMCR: SZ Position */
@@ -1506,6 +1544,28 @@ typedef struct
 
 /**
   \ingroup  CMSIS_core_register
+  \defgroup DCAR_Type     Direct Cache Access Registers
+  \brief    Type definitions for the Direct Cache Access Registers (DCAR)
+  @{
+ */
+
+/**
+  \brief  Structure type to access the Direct Cache Access Registers (DCAR).
+ */
+typedef struct
+{
+  __IM  uint32_t DCADCRR;               /*!< Offset: 0x000 (R/W)  Direct Cache Access Data Cache Read Register */
+  __IM  uint32_t DCAICRR;               /*!< Offset: 0x004 (R/W)  Direct Cache Access Instruction Cache Read Register */
+        uint32_t RESERVED1[2];          
+  __IOM uint32_t DCADCLR;               /*!< Offset: 0x010 (R/W)  Direct Cache Access Data Cache Location Registers */
+  __IOM uint32_t DCAICLR;               /*!< Offset: 0x014 (R/W)  Direct Cache Access Instruction Cache Location Registers */
+} DCAR_Type;
+
+/*@}*/ /* end of group DCAR_Type */
+
+
+/**
+  \ingroup  CMSIS_core_register
   \defgroup PwrModCtl_Type     Power Mode Control Registers
   \brief    Type definitions for the Power Mode Control Registers (PWRMODCTL)
   @{
@@ -1523,9 +1583,6 @@ typedef struct
 /** \brief PwrModCtl Core Power Domain Low Power State Register Definitions */
 #define PWRMODCTL_CPDLPSTATE_RLPSTATE_Pos   8U                                              /*!< PWRMODCTL CPDLPSTATE: RLPSTATE Position */
 #define PWRMODCTL_CPDLPSTATE_RLPSTATE_Msk  (0x3UL << PWRMODCTL_CPDLPSTATE_RLPSTATE_Pos)     /*!< PWRMODCTL CPDLPSTATE: RLPSTATE Mask */
-
-#define PWRMODCTL_CPDLPSTATE_ELPSTATE_Pos   4U                                              /*!< PWRMODCTL CPDLPSTATE: ELPSTATE Position */
-#define PWRMODCTL_CPDLPSTATE_ELPSTATE_Msk  (0x3UL << PWRMODCTL_CPDLPSTATE_ELPSTATE_Pos)     /*!< PWRMODCTL CPDLPSTATE: ELPSTATE Mask */
 
 #define PWRMODCTL_CPDLPSTATE_CLPSTATE_Pos   0U                                              /*!< PWRMODCTL CPDLPSTATE: CLPSTATE Position */
 #define PWRMODCTL_CPDLPSTATE_CLPSTATE_Msk  (0x3UL /*<< PWRMODCTL_CPDLPSTATE_CLPSTATE_Pos*/) /*!< PWRMODCTL CPDLPSTATE: CLPSTATE Mask */
@@ -1680,8 +1737,9 @@ typedef struct
   __IOM uint32_t DEBR1;                  /*!< Offset: 0x014 (R/W)  Data Cache Error Bank Register 1 */
         uint32_t RESERVED1[2U];
   __IOM uint32_t TEBR0;                  /*!< Offset: 0x020 (R/W)  TCM Error Bank Register 0 */
-        uint32_t RESERVED2[1U];
+  __IM  uint32_t TEBRDATA0;              /*!< Offset: 0x024 (RO)   Storage for corrected data that is associated with an error.*/        
   __IOM uint32_t TEBR1;                  /*!< Offset: 0x028 (R/W)  TCM Error Bank Register 1 */
+  __IM  uint32_t TEBRDATA1;              /*!< Offset: 0x02c (RO)   Storage for corrected data that is associated with an error.*/
 } ErrBnk_Type;
 
 /** \brief ErrBnk Instruction Cache Error Bank Register 0 Definitions */
@@ -1758,14 +1816,14 @@ typedef struct
 #define ERRBNK_TEBR0_SWDEF_Pos             30U                                         /*!< ERRBNK TEBR0: SWDEF Position */
 #define ERRBNK_TEBR0_SWDEF_Msk             (0x3UL << ERRBNK_TEBR0_SWDEF_Pos)           /*!< ERRBNK TEBR0: SWDEF Mask */
 
-#define ERRBNK_TEBR0_POISON_Pos            28U                                         /*!< ERRBNK TEBR0: POISON Position */
+#define ERRBNK_TEBR0_POISON_Pos            27U                                         /*!< ERRBNK TEBR0: POISON Position */
 #define ERRBNK_TEBR0_POISON_Msk            (1UL << ERRBNK_TEBR0_POISON_Pos)            /*!< ERRBNK TEBR0: POISON Mask */
 
-#define ERRBNK_TEBR0_TYPE_Pos              27U                                         /*!< ERRBNK TEBR0: TYPE Position */
+#define ERRBNK_TEBR0_TYPE_Pos              26U                                         /*!< ERRBNK TEBR0: TYPE Position */
 #define ERRBNK_TEBR0_TYPE_Msk              (1UL << ERRBNK_TEBR0_TYPE_Pos)              /*!< ERRBNK TEBR0: TYPE Mask */
 
 #define ERRBNK_TEBR0_BANK_Pos              24U                                         /*!< ERRBNK TEBR0: BANK Position */
-#define ERRBNK_TEBR0_BANK_Msk              (0x7UL << ERRBNK_TEBR0_BANK_Pos)            /*!< ERRBNK TEBR0: BANK Mask */
+#define ERRBNK_TEBR0_BANK_Msk              (0x3UL << ERRBNK_TEBR0_BANK_Pos)            /*!< ERRBNK TEBR0: BANK Mask */
 
 #define ERRBNK_TEBR0_LOCATION_Pos           2U                                         /*!< ERRBNK TEBR0: LOCATION Position */
 #define ERRBNK_TEBR0_LOCATION_Msk          (0x3FFFFFUL << ERRBNK_TEBR0_LOCATION_Pos)   /*!< ERRBNK TEBR0: LOCATION Mask */
@@ -1780,14 +1838,14 @@ typedef struct
 #define ERRBNK_TEBR1_SWDEF_Pos             30U                                         /*!< ERRBNK TEBR1: SWDEF Position */
 #define ERRBNK_TEBR1_SWDEF_Msk             (0x3UL << ERRBNK_TEBR1_SWDEF_Pos)           /*!< ERRBNK TEBR1: SWDEF Mask */
 
-#define ERRBNK_TEBR1_POISON_Pos            28U                                         /*!< ERRBNK TEBR1: POISON Position */
+#define ERRBNK_TEBR1_POISON_Pos            27U                                         /*!< ERRBNK TEBR1: POISON Position */
 #define ERRBNK_TEBR1_POISON_Msk            (1UL << ERRBNK_TEBR1_POISON_Pos)            /*!< ERRBNK TEBR1: POISON Mask */
 
-#define ERRBNK_TEBR1_TYPE_Pos              27U                                         /*!< ERRBNK TEBR1: TYPE Position */
+#define ERRBNK_TEBR1_TYPE_Pos              26U                                         /*!< ERRBNK TEBR1: TYPE Position */
 #define ERRBNK_TEBR1_TYPE_Msk              (1UL << ERRBNK_TEBR1_TYPE_Pos)              /*!< ERRBNK TEBR1: TYPE Mask */
 
 #define ERRBNK_TEBR1_BANK_Pos              24U                                         /*!< ERRBNK TEBR1: BANK Position */
-#define ERRBNK_TEBR1_BANK_Msk              (0x7UL << ERRBNK_TEBR1_BANK_Pos)            /*!< ERRBNK TEBR1: BANK Mask */
+#define ERRBNK_TEBR1_BANK_Msk              (0x3UL << ERRBNK_TEBR1_BANK_Pos)            /*!< ERRBNK TEBR1: BANK Mask */
 
 #define ERRBNK_TEBR1_LOCATION_Pos           2U                                         /*!< ERRBNK TEBR1: LOCATION Position */
 #define ERRBNK_TEBR1_LOCATION_Msk          (0x3FFFFFUL << ERRBNK_TEBR1_LOCATION_Pos)   /*!< ERRBNK TEBR1: LOCATION Mask */
@@ -1841,9 +1899,8 @@ typedef struct
         uint32_t RESERVED0[2U];
   __IOM uint32_t STLIDMPUSR;             /*!< Offset: 0x010 ( /W)  MPU Sample Register */
   __IM  uint32_t STLIMPUOR;              /*!< Offset: 0x014 (R/ )  MPU Region Hit Register */
-  __IM  uint32_t STLD0MPUOR;             /*!< Offset: 0x018 (R/ )  MPU Memory Attributes Register 0 */
-  __IM  uint32_t STLD1MPUOR;             /*!< Offset: 0x01C (R/ )  MPU Memory Attributes Register 1 */
-
+  __IM  uint32_t STLDMPUOR;              /*!< Offset: 0x018 (R/ )  MPU Memory Attributes Register */
+ 
 } STL_Type;
 
 /** \brief STL NVIC Pending Priority Tree Register Definitions */
@@ -1885,24 +1942,17 @@ typedef struct
 /** \brief STL MPU Region Hit Register Definitions */
 #define STL_STLIMPUOR_HITREGION_Pos         9U                                         /*!< STL STLIMPUOR: HITREGION Position */
 #define STL_STLIMPUOR_HITREGION_Msk        (0xFFUL << STL_STLIMPUOR_HITREGION_Pos)     /*!< STL STLIMPUOR: HITREGION Mask */
-
+ 
 #define STL_STLIMPUOR_ATTR_Pos              0U                                         /*!< STL STLIMPUOR: ATTR Position */
 #define STL_STLIMPUOR_ATTR_Msk             (0x1FFUL /*<< STL_STLIMPUOR_ATTR_Pos*/)     /*!< STL STLIMPUOR: ATTR Mask */
-
-/** \brief STL MPU Memory Attributes Register 0 Definitions */
-#define STL_STLD0MPUOR_HITREGION_Pos        9U                                         /*!< STL STLD0MPUOR: HITREGION Position */
-#define STL_STLD0MPUOR_HITREGION_Msk       (0xFFUL << STL_STLD0MPUOR_HITREGION_Pos)    /*!< STL STLD0MPUOR: HITREGION Mask */
-
-#define STL_STLD0MPUOR_ATTR_Pos             0U                                         /*!< STL STLD0MPUOR: ATTR Position */
-#define STL_STLD0MPUOR_ATTR_Msk            (0x1FFUL /*<< STL_STLD0MPUOR_ATTR_Pos*/)    /*!< STL STLD0MPUOR: ATTR Mask */
-
-/** \brief STL MPU Memory Attributes Register 1 Definitions */
-#define STL_STLD1MPUOR_HITREGION_Pos        9U                                         /*!< STL STLD1MPUOR: HITREGION Position */
-#define STL_STLD1MPUOR_HITREGION_Msk       (0xFFUL << STL_STLD1MPUOR_HITREGION_Pos)    /*!< STL STLD1MPUOR: HITREGION Mask */
-
-#define STL_STLD1MPUOR_ATTR_Pos             0U                                         /*!< STL STLD1MPUOR: ATTR Position */
-#define STL_STLD1MPUOR_ATTR_Msk            (0x1FFUL /*<< STL_STLD1MPUOR_ATTR_Pos*/)    /*!< STL STLD1MPUOR: ATTR Mask */
-
+ 
+/** \brief STL MPU Memory Attributes Register Definitions */
+#define STL_STLDMPUOR_HITREGION_Pos        9U                                         /*!< STL STLDMPUOR: HITREGION Position */
+#define STL_STLDMPUOR_HITREGION_Msk       (0xFFUL << STL_STLDMPUOR_HITREGION_Pos)     /*!< STL STLDMPUOR: HITREGION Mask */
+ 
+#define STL_STLDMPUOR_ATTR_Pos             0U                                         /*!< STL STLDMPUOR: ATTR Position */
+#define STL_STLDMPUOR_ATTR_Msk            (0x1FFUL /*<< STL_STLDMPUOR_ATTR_Pos*/)     /*!< STL STLDMPUOR: ATTR Mask */
+ 
 /*@}*/ /* end of group STL_Type */
 
 
@@ -3530,6 +3580,7 @@ typedef struct
   #define DWT_BASE            (0xE0001000UL)                             /*!< DWT Base Address */
   #define MEMSYSCTL_BASE      (0xE001E000UL)                             /*!< Memory System Control Base Address */
   #define ERRBNK_BASE         (0xE001E100UL)                             /*!< Error Banking Base Address */
+  #define DCAR_BASE           (0xE001E200UL)                             /*!< Direct Cache Access Registers */
   #define PWRMODCTL_BASE      (0xE001E300UL)                             /*!< Power Mode Control Base Address */
   #define EWIC_ISA_BASE       (0xE001E400UL)                             /*!< External Wakeup Interrupt Controller interrupt status access Base Address */
   #define PRCCFGINF_BASE      (0xE001E700UL)                             /*!< Processor Configuration Information Base Address */
@@ -3551,6 +3602,7 @@ typedef struct
   #define TPIU                ((TPIU_Type      *)     TPIU_BASE        ) /*!< TPIU configuration struct */
   #define MEMSYSCTL           ((MemSysCtl_Type *)     MEMSYSCTL_BASE   ) /*!< Memory System Control configuration struct */
   #define ERRBNK              ((ErrBnk_Type    *)     ERRBNK_BASE      ) /*!< Error Banking configuration struct */
+  #define DCAR                ((DCAR_Type      *)     DCAR_BASE        ) /*!< Direct Read Access to the embedded RAM associated with the L1 instruction and data cache */
   #define PWRMODCTL           ((PwrModCtl_Type *)     PWRMODCTL_BASE   ) /*!< Power Mode Control configuration struct */
   #define EWIC_ISA            ((EWIC_ISA_Type  *)     EWIC_ISA_BASE    ) /*!< EWIC interrupt status access struct */
   #define EWIC                ((EWIC_Type      *)     EWIC_BASE        ) /*!< EWIC configuration struct */
@@ -3609,176 +3661,11 @@ typedef struct
   \brief      Alias definitions present for backwards compatibility for deprecated symbols.
   @{
  */
- 
+
 #ifndef CMSIS_DISABLE_DEPRECATED
 
 #define SCB_AIRCR_ENDIANESS_Pos            SCB_AIRCR_ENDIANNESS_Pos
 #define SCB_AIRCR_ENDIANESS_Msk            SCB_AIRCR_ENDIANNESS_Msk
-
-/* deprecated, CMSIS_5 backward compatibility */
-typedef struct
-{
-  __IOM uint32_t DHCSR;
-  __OM  uint32_t DCRSR;
-  __IOM uint32_t DCRDR;
-  __IOM uint32_t DEMCR;
-  __OM  uint32_t DSCEMCR;
-  __IOM uint32_t DAUTHCTRL;
-  __IOM uint32_t DSCSR;
-} CoreDebug_Type;
-
-/* Debug Halting Control and Status Register Definitions */
-#define CoreDebug_DHCSR_DBGKEY_Pos         DCB_DHCSR_DBGKEY_Pos
-#define CoreDebug_DHCSR_DBGKEY_Msk         DCB_DHCSR_DBGKEY_Msk
-
-#define CoreDebug_DHCSR_S_RESTART_ST_Pos   DCB_DHCSR_S_RESTART_ST_Pos
-#define CoreDebug_DHCSR_S_RESTART_ST_Msk   DCB_DHCSR_S_RESTART_ST_Msk
-
-#define CoreDebug_DHCSR_S_RESET_ST_Pos     DCB_DHCSR_S_RESET_ST_Pos
-#define CoreDebug_DHCSR_S_RESET_ST_Msk     DCB_DHCSR_S_RESET_ST_Msk
-
-#define CoreDebug_DHCSR_S_RETIRE_ST_Pos    DCB_DHCSR_S_RETIRE_ST_Pos
-#define CoreDebug_DHCSR_S_RETIRE_ST_Msk    DCB_DHCSR_S_RETIRE_ST_Msk
-
-#define CoreDebug_DHCSR_S_FPD_Pos          DCB_DHCSR_S_FPD_Pos
-#define CoreDebug_DHCSR_S_FPD_Msk          DCB_DHCSR_S_FPD_Msk
-
-#define CoreDebug_DHCSR_S_SUIDE_Pos        DCB_DHCSR_S_SUIDE_Pos
-#define CoreDebug_DHCSR_S_SUIDE_Msk        DCB_DHCSR_S_SUIDE_Msk
-
-#define CoreDebug_DHCSR_S_NSUIDE_Pos       DCB_DHCSR_S_NSUIDE_Pos
-#define CoreDebug_DHCSR_S_NSUIDE_Msk       DCB_DHCSR_S_NSUIDE_Msk
-
-#define CoreDebug_DHCSR_S_SDE_Pos          DCB_DHCSR_S_SDE_Pos
-#define CoreDebug_DHCSR_S_SDE_Msk          DCB_DHCSR_S_SDE_Msk
-
-#define CoreDebug_DHCSR_S_LOCKUP_Pos       DCB_DHCSR_S_LOCKUP_Pos
-#define CoreDebug_DHCSR_S_LOCKUP_Msk       DCB_DHCSR_S_LOCKUP_Msk
-
-#define CoreDebug_DHCSR_S_SLEEP_Pos        DCB_DHCSR_S_SLEEP_Pos
-#define CoreDebug_DHCSR_S_SLEEP_Msk        DCB_DHCSR_S_SLEEP_Msk
-
-#define CoreDebug_DHCSR_S_HALT_Pos         DCB_DHCSR_S_HALT_Pos
-#define CoreDebug_DHCSR_S_HALT_Msk         DCB_DHCSR_S_HALT_Msk
-
-#define CoreDebug_DHCSR_S_REGRDY_Pos       DCB_DHCSR_S_REGRDY_Pos
-#define CoreDebug_DHCSR_S_REGRDY_Msk       DCB_DHCSR_S_REGRDY_Msk
-
-#define CoreDebug_DHCSR_C_PMOV_Pos         DCB_DHCSR_C_PMOV_Pos
-#define CoreDebug_DHCSR_C_PMOV_Msk         DCB_DHCSR_C_PMOV_Msk
-
-#define CoreDebug_DHCSR_C_SNAPSTALL_Pos    DCB_DHCSR_C_SNAPSTALL_Pos
-#define CoreDebug_DHCSR_C_SNAPSTALL_Msk    DCB_DHCSR_C_SNAPSTALL_Msk
-
-#define CoreDebug_DHCSR_C_MASKINTS_Pos     DCB_DHCSR_C_MASKINTS_Pos
-#define CoreDebug_DHCSR_C_MASKINTS_Msk     DCB_DHCSR_C_MASKINTS_Msk
-
-#define CoreDebug_DHCSR_C_STEP_Pos         DCB_DHCSR_C_STEP_Pos
-#define CoreDebug_DHCSR_C_STEP_Msk         DCB_DHCSR_C_STEP_Msk
-
-#define CoreDebug_DHCSR_C_HALT_Pos         DCB_DHCSR_C_HALT_Pos
-#define CoreDebug_DHCSR_C_HALT_Msk         DCB_DHCSR_C_HALT_Msk
-
-#define CoreDebug_DHCSR_C_DEBUGEN_Pos      DCB_DHCSR_C_DEBUGEN_Pos
-#define CoreDebug_DHCSR_C_DEBUGEN_Msk      DCB_DHCSR_C_DEBUGEN_Msk
-
-/* Debug Core Register Selector Register Definitions */
-#define CoreDebug_DCRSR_REGWnR_Pos         DCB_DCRSR_REGWnR_Pos
-#define CoreDebug_DCRSR_REGWnR_Msk         DCB_DCRSR_REGWnR_Msk
-
-#define CoreDebug_DCRSR_REGSEL_Pos         DCB_DCRSR_REGSEL_Pos
-#define CoreDebug_DCRSR_REGSEL_Msk         DCB_DCRSR_REGSEL_Msk
-
-/* Debug Exception and Monitor Control Register Definitions */
-#define CoreDebug_DEMCR_TRCENA_Pos         DCB_DEMCR_TRCENA_Pos
-#define CoreDebug_DEMCR_TRCENA_Msk         DCB_DEMCR_TRCENA_Msk
-
-#define CoreDebug_DEMCR_MON_REQ_Pos        DCB_DEMCR_MON_REQ_Pos
-#define CoreDebug_DEMCR_MON_REQ_Msk        DCB_DEMCR_MON_REQ_Msk
-
-#define CoreDebug_DEMCR_MON_STEP_Pos       DCB_DEMCR_MON_STEP_Pos
-#define CoreDebug_DEMCR_MON_STEP_Msk       DCB_DEMCR_MON_STEP_Msk
-
-#define CoreDebug_DEMCR_MON_PEND_Pos       DCB_DEMCR_MON_PEND_Pos
-#define CoreDebug_DEMCR_MON_PEND_Msk       DCB_DEMCR_MON_PEND_Msk
-
-#define CoreDebug_DEMCR_MON_EN_Pos         DCB_DEMCR_MON_EN_Pos
-#define CoreDebug_DEMCR_MON_EN_Msk         DCB_DEMCR_MON_EN_Msk
-
-#define CoreDebug_DEMCR_VC_HARDERR_Pos     DCB_DEMCR_VC_HARDERR_Pos
-#define CoreDebug_DEMCR_VC_HARDERR_Msk     DCB_DEMCR_VC_HARDERR_Msk
-
-#define CoreDebug_DEMCR_VC_INTERR_Pos      DCB_DEMCR_VC_INTERR_Pos
-#define CoreDebug_DEMCR_VC_INTERR_Msk      DCB_DEMCR_VC_INTERR_Msk
-
-#define CoreDebug_DEMCR_VC_BUSERR_Pos      DCB_DEMCR_VC_BUSERR_Pos
-#define CoreDebug_DEMCR_VC_BUSERR_Msk      DCB_DEMCR_VC_BUSERR_Msk
-
-#define CoreDebug_DEMCR_VC_STATERR_Pos     DCB_DEMCR_VC_STATERR_Pos
-#define CoreDebug_DEMCR_VC_STATERR_Msk     DCB_DEMCR_VC_STATERR_Msk
-
-#define CoreDebug_DEMCR_VC_CHKERR_Pos      DCB_DEMCR_VC_CHKERR_Pos
-#define CoreDebug_DEMCR_VC_CHKERR_Msk      DCB_DEMCR_VC_CHKERR_Msk
-
-#define CoreDebug_DEMCR_VC_NOCPERR_Pos     DCB_DEMCR_VC_NOCPERR_Pos
-#define CoreDebug_DEMCR_VC_NOCPERR_Msk     DCB_DEMCR_VC_NOCPERR_Msk
-
-#define CoreDebug_DEMCR_VC_MMERR_Pos       DCB_DEMCR_VC_MMERR_Pos
-#define CoreDebug_DEMCR_VC_MMERR_Msk       DCB_DEMCR_VC_MMERR_Msk
-
-#define CoreDebug_DEMCR_VC_CORERESET_Pos   DCB_DEMCR_VC_CORERESET_Pos
-#define CoreDebug_DEMCR_VC_CORERESET_Msk   DCB_DEMCR_VC_CORERESET_Msk
-
-/* Debug Set Clear Exception and Monitor Control Register Definitions */
-#define CoreDebug_DSCEMCR_CLR_MON_REQ_Pos  DCB_DSCEMCR_CLR_MON_REQ_Pos
-#define CoreDebug_DSCEMCR_CLR_MON_REQ_Msk  DCB_DSCEMCR_CLR_MON_REQ_Msk
-
-#define CoreDebug_DSCEMCR_CLR_MON_PEND_Pos DCB_DSCEMCR_CLR_MON_PEND_Pos
-#define CoreDebug_DSCEMCR_CLR_MON_PEND_Msk DCB_DSCEMCR_CLR_MON_PEND_Msk
-
-#define CoreDebug_DSCEMCR_SET_MON_REQ_Pos  DCB_DSCEMCR_SET_MON_REQ_Pos
-#define CoreDebug_DSCEMCR_SET_MON_REQ_Msk  DCB_DSCEMCR_SET_MON_REQ_Msk
-
-#define CoreDebug_DSCEMCR_SET_MON_PEND_Pos DCB_DSCEMCR_SET_MON_PEND_Pos
-#define CoreDebug_DSCEMCR_SET_MON_PEND_Msk DCB_DSCEMCR_SET_MON_PEND_Msk
-
-/* Debug Authentication Control Register Definitions */
-#define CoreDebug_DAUTHCTRL_UIDEN_Pos      DCB_DAUTHCTRL_UIDEN_Pos
-#define CoreDebug_DAUTHCTRL_UIDEN_Msk      DCB_DAUTHCTRL_UIDEN_Msk
-
-#define CoreDebug_DAUTHCTRL_UIDAPEN_Pos    DCB_DAUTHCTRL_UIDAPEN_Pos
-#define CoreDebug_DAUTHCTRL_UIDAPEN_Msk    DCB_DAUTHCTRL_UIDAPEN_Msk
-
-#define CoreDebug_DAUTHCTRL_FSDMA_Pos      DCB_DAUTHCTRL_FSDMA_Pos
-#define CoreDebug_DAUTHCTRL_FSDMA_Msk      DCB_DAUTHCTRL_FSDMA_Msk
-
-#define CoreDebug_DAUTHCTRL_INTSPNIDEN_Pos DCB_DAUTHCTRL_INTSPNIDEN_Pos
-#define CoreDebug_DAUTHCTRL_INTSPNIDEN_Msk DCB_DAUTHCTRL_INTSPNIDEN_Msk
-
-#define CoreDebug_DAUTHCTRL_SPNIDENSEL_Pos DCB_DAUTHCTRL_SPNIDENSEL_Pos
-#define CoreDebug_DAUTHCTRL_SPNIDENSEL_Msk DCB_DAUTHCTRL_SPNIDENSEL_Msk
-
-#define CoreDebug_DAUTHCTRL_INTSPIDEN_Pos  DCB_DAUTHCTRL_INTSPIDEN_Pos
-#define CoreDebug_DAUTHCTRL_INTSPIDEN_Msk  DCB_DAUTHCTRL_INTSPIDEN_Msk
-
-#define CoreDebug_DAUTHCTRL_SPIDENSEL_Pos  DCB_DAUTHCTRL_SPIDENSEL_Pos
-#define CoreDebug_DAUTHCTRL_SPIDENSEL_Msk  DCB_DAUTHCTRL_SPIDENSEL_Msk
-
-/* Debug Security Control and Status Register Definitions */
-#define CoreDebug_DSCSR_CDS_Pos            DCB_DSCSR_CDS_Pos
-#define CoreDebug_DSCSR_CDS_Msk            DCB_DSCSR_CDS_Msk
-
-#define CoreDebug_DSCSR_SBRSEL_Pos         DCB_DSCSR_SBRSEL_Pos
-#define CoreDebug_DSCSR_SBRSEL_Msk         DCB_DSCSR_SBRSEL_Msk
-
-#define CoreDebug_DSCSR_SBRSELEN_Pos       DCB_DSCSR_SBRSELEN_Pos
-#define CoreDebug_DSCSR_SBRSELEN_Msk       DCB_DSCSR_SBRSELEN_Msk
-
-#define CoreDebug           ((CoreDebug_Type *)     DCB_BASE)
-
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define CoreDebug_NS        ((CoreDebug_Type *)     DCB_BASE_NS)
-#endif
 
 #endif // CMSIS_DISABLE_DEPRECATED
 
@@ -4457,56 +4344,46 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn)
 #include "m-profile/armv8m_pmu.h"
 
 /**
-  \brief   Cortex-M55 PMU events
+  \brief   Cortex-M52 PMU events
   \note    Architectural PMU events can be found in armv8m_pmu.h
 */
 
-#define ARMCM55_PMU_ECC_ERR                          0xC000             /*!< Any ECC error */
-#define ARMCM55_PMU_ECC_ERR_FATAL                    0xC001             /*!< Any fatal ECC error */
-#define ARMCM55_PMU_ECC_ERR_DCACHE                   0xC010             /*!< Any ECC error in the data cache */
-#define ARMCM55_PMU_ECC_ERR_ICACHE                   0xC011             /*!< Any ECC error in the instruction cache */
-#define ARMCM55_PMU_ECC_ERR_FATAL_DCACHE             0xC012             /*!< Any fatal ECC error in the data cache */
-#define ARMCM55_PMU_ECC_ERR_FATAL_ICACHE             0xC013             /*!< Any fatal ECC error in the instruction cache*/
-#define ARMCM55_PMU_ECC_ERR_DTCM                     0xC020             /*!< Any ECC error in the DTCM */
-#define ARMCM55_PMU_ECC_ERR_ITCM                     0xC021             /*!< Any ECC error in the ITCM */
-#define ARMCM55_PMU_ECC_ERR_FATAL_DTCM               0xC022             /*!< Any fatal ECC error in the DTCM */
-#define ARMCM55_PMU_ECC_ERR_FATAL_ITCM               0xC023             /*!< Any fatal ECC error in the ITCM */
-#define ARMCM55_PMU_PF_LINEFILL                      0xC100             /*!< A prefetcher starts a line-fill */
-#define ARMCM55_PMU_PF_CANCEL                        0xC101             /*!< A prefetcher stops prefetching */
-#define ARMCM55_PMU_PF_DROP_LINEFILL                 0xC102             /*!< A linefill triggered by a prefetcher has been dropped because of lack of buffering */
-#define ARMCM55_PMU_NWAMODE_ENTER                    0xC200             /*!< No write-allocate mode entry */
-#define ARMCM55_PMU_NWAMODE                          0xC201             /*!< Write-allocate store is not allocated into the data cache due to no-write-allocate mode */
-#define ARMCM55_PMU_SAHB_ACCESS                      0xC300             /*!< Read or write access on the S-AHB interface to the TCM */
-#define ARMCM55_PMU_PAHB_ACCESS                      0xC301             /*!< Read or write access to the P-AHB write interface */
-#define ARMCM55_PMU_AXI_WRITE_ACCESS                 0xC302             /*!< Any beat access to M-AXI write interface */
-#define ARMCM55_PMU_AXI_READ_ACCESS                  0xC303             /*!< Any beat access to M-AXI read interface */
-#define ARMCM55_PMU_DOSTIMEOUT_DOUBLE                0xC400             /*!< Denial of Service timeout has fired twice and caused buffers to drain to allow forward progress */
-#define ARMCM55_PMU_DOSTIMEOUT_TRIPLE                0xC401             /*!< Denial of Service timeout has fired three times and blocked the LSU to force forward progress */
-#define ARMCM55_PMU_CDE_INST_RETIRED                 0xC402             /*!< CDE instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_CX1_INST_RETIRED             0xC404             /*!< CDE CX1 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_CX2_INST_RETIRED             0xC406             /*!< CDE CX2 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_CX3_INST_RETIRED             0xC408             /*!< CDE CX3 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX1_INST_RETIRED            0xC40A             /*!< CDE VCX1 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX2_INST_RETIRED            0xC40C             /*!< CDE VCX2 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX3_INST_RETIRED            0xC40E             /*!< CDE VCX3 instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX1_VEC_INST_RETIRED        0xC410             /*!< CDE VCX1 Vector instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX2_VEC_INST_RETIRED        0xC412             /*!< CDE VCX2 Vector instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_VCX3_VEC_INST_RETIRED        0xC414             /*!< CDE VCX3 Vector instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_PRED                         0xC416             /*!< Cycles where one or more predicated beats of a CDE instruction architecturally executed. */
-#define ARMCM55_PMU_CDE_STALL                        0xC417             /*!< Stall cycles caused by a CDE instruction. */
-#define ARMCM55_PMU_CDE_STALL_RESOURCE               0xC418             /*!< Stall cycles caused by a CDE instruction because of resource conflicts */
-#define ARMCM55_PMU_CDE_STALL_DEPENDENCY             0xC419             /*!< Stall cycles caused by a CDE register dependency. */
-#define ARMCM55_PMU_CDE_STALL_CUSTOM                 0xC41A             /*!< Stall cycles caused by a CDE instruction are generated by the custom hardware. */
-#define ARMCM55_PMU_CDE_STALL_OTHER                  0xC41B             /*!< Stall cycles caused by a CDE instruction are not covered by the other counters. */
-#define ARMCM55_PMU_PF_LF_LA_1                       0xC41C             /*!< A data prefetcher line-fill request is made while the lookahead distance is 1. */
-#define ARMCM55_PMU_PF_LF_LA_2                       0xC41D             /*!< A data prefetcher line-fill request is made while the lookahead distance is 2. */
-#define ARMCM55_PMU_PF_LF_LA_3                       0xC41E             /*!< A data prefetcher line-fill request is made while the lookahead distance is 3. */
-#define ARMCM55_PMU_PF_LF_LA_4                       0xC41F             /*!< A data prefetcher line-fill request is made while the lookahead distance is 4. */
-#define ARMCM55_PMU_PF_LF_LA_5                       0xC420             /*!< A data prefetcher line-fill request is made while the lookahead distance is 5. */
-#define ARMCM55_PMU_PF_LF_LA_6                       0xC421             /*!< A data prefetcher line-fill request is made while the lookahead distance is 6. */
-#define ARMCM55_PMU_PF_BUFFER_FULL                   0xC422             /*!< A data prefetcher request is made while the buffer is full. */
-#define ARMCM55_PMU_PF_BUFFER_MISS                   0xC423             /*!< A load requires a line-fill which misses in the data prefetcher buffer. */
-#define ARMCM55_PMU_PF_BUFFER_HIT                    0xC424             /*!< A load access hits in the data prefetcher buffer. */
+#define ARMCM52_PMU_ECC_ERR                          0xC000             /*!< One or more Error Correcting Code (ECC) errors detected */
+#define ARMCM52_PMU_ECC_ERR_MBIT                     0xC001             /*!< One or more multi-bit ECC errors detected */
+#define ARMCM52_PMU_ECC_ERR_DCACHE                   0xC010             /*!< One or more ECC errors in the data cache */
+#define ARMCM52_PMU_ECC_ERR_ICACHE                   0xC011             /*!< One or more ECC errors in the instruction cache */
+#define ARMCM52_PMU_ECC_ERR_MBIT_DCACHE              0xC012             /*!< One or more multi-bit ECC errors in the data cache */
+#define ARMCM52_PMU_ECC_ERR_MBIT_ICACHE              0xC013             /*!< One or more multi-bit ECC errors in the instruction cache */
+#define ARMCM52_PMU_ECC_ERR_DTCM                     0xC020             /*!< Any ECC error in the DTCM */
+#define ARMCM52_PMU_ECC_ERR_ITCM                     0xC021             /*!< Any ECC error in the ITCM */
+#define ARMCM52_PMU_ECC_ERR_MBIT_DTCM                0xC022             /*!< One or more multi-bit ECC errors in the DTCM */
+#define ARMCM52_PMU_ECC_ERR_MBIT_ITCM                0xC023             /*!< One or more multi-bit ECC errors in the ITCM */
+#define ARMCM52_PMU_NWAMODE_ENTER                    0xC200             /*!< No write-allocate mode entry */
+#define ARMCM52_PMU_NWAMODE                          0xC201             /*!< Write-allocate store is not allocated into the data cache due to no-write-allocate mode */
+#define ARMCM52_PMU_SAHB_ACCESS                      0xC300             /*!< Read or write access on the S-AHB interface to the TCM */
+#define ARMCM52_PMU_PAHB_ACCESS                      0xC301             /*!< Read or write access to the P-AHB write interface */
+#define ARMCM52_PMU_AXI_SAHB_WRITE_ACCESS            0xC302             /*!< M-AXI configuration: Any beat access to the M-AXI write interface.M-AHB configuration: Any write beat access to the SYS-AHB interface */
+#define ARMCM52_PMU_AXI_SAHB_READ_ACCESS             0xC303             /*!< M-AXI configuration: Any beat access to the M-AXI read interface.M-AHB configuration: Any read beat access to the SYS-AHB interface */
+#define ARMCM52_PMU_DOSTIMEOUT_DOUBLE                0xC400             /*!< Denial of Service timeout has fired twice and caused buffers to drain to allow forward progress */
+#define ARMCM52_PMU_DOSTIMEOUT_TRIPLE                0xC401             /*!< Denial of Service timeout has fired three times and blocked the LSU to force forward progress */
+#define ARMCM52_PMU_CDE_INST_RETIRED                 0xC402             /*!< CDE instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_CX1_INST_RETIRED             0xC404             /*!< CDE CX1 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_CX2_INST_RETIRED             0xC406             /*!< CDE CX2 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_CX3_INST_RETIRED             0xC408             /*!< CDE CX3 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX1_INST_RETIRED            0xC40A             /*!< CDE VCX1 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX2_INST_RETIRED            0xC40C             /*!< CDE VCX2 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX3_INST_RETIRED            0xC40E             /*!< CDE VCX3 instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX1_VEC_INST_RETIRED        0xC410             /*!< CDE VCX1 Vector instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX2_VEC_INST_RETIRED        0xC412             /*!< CDE VCX2 Vector instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_VCX3_VEC_INST_RETIRED        0xC414             /*!< CDE VCX3 Vector instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_PRED                         0xC416             /*!< Cycles where one or more predicated beats of a CDE instruction architecturally executed. */
+#define ARMCM52_PMU_CDE_STALL                        0xC417             /*!< Stall cycles caused by a CDE instruction. */
+#define ARMCM52_PMU_CDE_STALL_RESOURCE               0xC418             /*!< Stall cycles caused by a CDE instruction because of resource conflicts */
+#define ARMCM52_PMU_CDE_STALL_DEPENDENCY             0xC419             /*!< Stall cycles caused by a CDE register dependency. */
+#define ARMCM52_PMU_CDE_STALL_CUSTOM                 0xC41A             /*!< Stall cycles caused by a CDE instruction are generated by the custom hardware. */
+#define ARMCM52_PMU_CDE_STALL_OTHER                  0xC41B             /*!< Stall cycles caused by a CDE instruction are not covered by the other counters. */
+#define ARMCM52_PMU_CAHB_WRITE_ACCESS                0xC420             /*!< M-AHB configuration: A Write beat transfer on Code-AHB */
+#define ARMCM52_PMU_CAHB_READ_ACCESS                 0xC421             /*!< M-AHB configuration: A Read beat transfer on Code-AHB. */
 
 #endif
 
@@ -4628,6 +4505,12 @@ __STATIC_INLINE void TZ_SAU_Disable(void)
 /*@} end of CMSIS_Core_SAUFunctions */
 
 
+
+/* ###################  PAC Key functions  ########################### */
+
+#if (defined (__ARM_FEATURE_PAUTH) && (__ARM_FEATURE_PAUTH == 1))
+#include "m-profile/armv81m_pac.h"
+#endif
 
 
 /* ##################################    Debug Control function  ############################################ */
@@ -4890,6 +4773,11 @@ __STATIC_INLINE int32_t ITM_CheckChar (void)
 }
 #endif
 
-#endif /* __CORE_CM55_H_DEPENDANT */
+#endif /* __CORE_CM52_H_DEPENDANT */
 
 #endif /* __CMSIS_GENERIC */
+
+
+
+
+

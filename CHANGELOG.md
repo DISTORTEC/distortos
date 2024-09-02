@@ -110,7 +110,7 @@ debug behaviour, where the `.data` section in RAM would not be initilized at all
 `__data_end` symbols for part of flash memory would collide with identically named symbols for the `.data` section.
 - Changed *CI* platform from Travis CI (which is shutting down its free service) to
 [Github Actions](https://github.com/DISTORTEC/distortos/actions).
-- Update *CMSIS* to version 5.7.0.
+- Update *CMSIS* to version 6.1.0.
 - Update *CMSIS-STM32F0* to version 1.11.2.
 - Update *CMSIS-STM32F1* to version 1.8.3.
 - Update *CMSIS-STM32F4* to version 1.25.2.

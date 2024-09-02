@@ -1,6 +1,6 @@
 /**************************************************************************//**
- * @file     cmsis_armclang.h
- * @brief    CMSIS compiler armclang (Arm Compiler 6) header file
+ * @file     cmsis_clang.h
+ * @brief    CMSIS compiler LLVM/Clang header file
  * @version  V6.0.0
  * @date     27. July 2024
  ******************************************************************************/
@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#ifndef __CMSIS_ARMCLANG_H
-#define __CMSIS_ARMCLANG_H
+#ifndef __CMSIS_CLANG_H
+#define __CMSIS_CLANG_H
 
 #pragma clang system_header   /* treat file as system include file */
 
@@ -32,6 +32,11 @@
 #else
   #error Compiler must support ACLE V2.0
 #endif /* (__ARM_ACLE >= 200) */
+
+/* Fallback for __has_builtin */
+#ifndef __has_builtin
+  #define __has_builtin(x) (0)
+#endif
 
 /* CMSIS compiler specific defines */
 #ifndef   __ASM
@@ -105,7 +110,7 @@
   #define __COMPILER_BARRIER()                   __ASM volatile("":::"memory")
 #endif
 #ifndef __NO_INIT
-  #define __NO_INIT                              __attribute__ ((section (".bss.noinit")))
+  #define __NO_INIT                              __attribute__ ((section (".noinit")))
 #endif
 #ifndef __ALIAS
   #define __ALIAS(x)                             __attribute__ ((alias(x)))
@@ -617,12 +622,10 @@ __STATIC_FORCEINLINE void __STL(uint32_t value, volatile uint32_t *ptr)
   \details Enables IRQ interrupts by clearing special-purpose register PRIMASK.
            Can only be executed in Privileged modes.
  */
-#ifndef __ARM_COMPAT_H
 __STATIC_FORCEINLINE void __enable_irq(void)
 {
   __ASM volatile ("cpsie i" : : : "memory");
 }
-#endif
 
 
 /**
@@ -630,12 +633,10 @@ __STATIC_FORCEINLINE void __enable_irq(void)
   \details Disables IRQ interrupts by setting special-purpose register PRIMASK.
            Can only be executed in Privileged modes.
  */
-#ifndef __ARM_COMPAT_H
 __STATIC_FORCEINLINE void __disable_irq(void)
 {
   __ASM volatile ("cpsid i" : : : "memory");
 }
-#endif
 
 #if (__ARM_ARCH_ISA_THUMB >= 2)
 /**
@@ -695,13 +696,13 @@ __STATIC_FORCEINLINE void __set_FPSCR(uint32_t fpscr)
 
 // Include the profile specific settings:
 #if __ARM_ARCH_PROFILE == 'A'
-  #include "./a-profile/cmsis_armclang_a.h"
+  #include "./a-profile/cmsis_clang_a.h"
 #elif __ARM_ARCH_PROFILE == 'R'
-  #include "./r-profile/cmsis_armclang_r.h"
+  #include "./r-profile/cmsis_clang_r.h"
 #elif __ARM_ARCH_PROFILE == 'M'
-  #include "./m-profile/cmsis_armclang_m.h"
+  #include "./m-profile/cmsis_clang_m.h"
 #else
   #error "Unknown Arm architecture profile"
 #endif
 
-#endif /* __CMSIS_ARMCLANG_H */
+#endif /* __CMSIS_CLANG_H */
