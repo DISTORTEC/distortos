@@ -3,8 +3,8 @@ ARM,Cortex-M
 
 - `compatible`, required, list of strings:
   - [0], required, string, type of CPU, one of: `ARM,Cortex-M0`, `ARM,Cortex-M0+`, `ARM,Cortex-M1`, `ARM,Cortex-M3`,
-  `ARM,Cortex-M4`, `ARM,Cortex-M7`;
-  - [1], required, string, architecture of CPU, one of: `ARM,ARMv6-M`, `ARM,ARMv7-M`;
+  `ARM,Cortex-M4`, `ARM,Cortex-M7`, `ARM,Cortex-M33`;
+  - [1], required, string, architecture of CPU, one of: `ARM,ARMv6-M`, `ARM,ARMv7-M`, `ARM,ARMv8-M`;
 - `revision`, required, string, revision of CPU, e.g. `r0p1`;
 - `FPU`, optional, mapping:
   - `compatible`, required, list of strings:
