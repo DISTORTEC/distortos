@@ -2,7 +2,7 @@
  * \file
  * \brief architectureTestCases object definition for ARMv7-M
  *
- * \author Copyright (C) 2015 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2015-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -11,8 +11,8 @@
 
 #include "architecture/architectureTestCases.hpp"
 
-#include "ARMv7-M-FpuThreadTestCase.hpp"
-#include "ARMv7-M-FpuSignalTestCase.hpp"
+#include "ARMv7-M-ARMv8-M-FpuThreadTestCase.hpp"
+#include "ARMv7-M-ARMv8-M-FpuSignalTestCase.hpp"
 
 #include "TestCaseGroup.hpp"
 

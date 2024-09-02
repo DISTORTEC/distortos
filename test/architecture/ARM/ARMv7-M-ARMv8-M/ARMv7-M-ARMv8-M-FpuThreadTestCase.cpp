@@ -2,21 +2,21 @@
  * \file
  * \brief FpuThreadTestCase class implementation for ARMv7-M
  *
- * \author Copyright (C) 2015-2017 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2015-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#include "ARMv7-M-FpuThreadTestCase.hpp"
+#include "ARMv7-M-ARMv8-M-FpuThreadTestCase.hpp"
 
 #include "distortos/chip/CMSIS-proxy.h"
 
 #if __FPU_PRESENT == 1 && __FPU_USED == 1
 
-#include "ARMv7-M-checkFpuRegisters.hpp"
-#include "ARMv7-M-setFpuRegisters.hpp"
+#include "ARMv7-M-ARMv8-M-checkFpuRegisters.hpp"
+#include "ARMv7-M-ARMv8-M-setFpuRegisters.hpp"
 
 #include "distortos/DynamicThread.hpp"
 #include "distortos/statistics.hpp"
