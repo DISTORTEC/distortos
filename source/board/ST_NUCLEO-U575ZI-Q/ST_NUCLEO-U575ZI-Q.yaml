@@ -1,0 +1,59 @@
+#
+# file: ST_NUCLEO-U575ZI-Q.yaml
+#
+# author: Copyright (C) 2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+# distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+
+$extends:
+- 'source/chip/STM32/STM32U5/chipYaml/ST_STM32U575ZI.yaml'
+board:
+  compatible:
+  - ST,NUCLEO-U575ZI-Q
+  model: STMicroelectronics NUCLEO-U575ZI-Q
+buttons:
+  compatible:
+  - GPIO-inputs
+  B1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 13
+    alternative-names:
+    - User
+leds:
+  compatible:
+  - GPIO-outputs
+  Ld1:
+    GPIO:
+      port: !Reference {label: GPIOC}
+      pin: 7
+    alternative-names:
+    - Green
+  Ld2:
+    GPIO:
+      port: !Reference {label: GPIOB}
+      pin: 7
+    alternative-names:
+    - Blue
+  Ld3:
+    GPIO:
+      port: !Reference {label: GPIOG}
+      pin: 2
+    alternative-names:
+    - Red
+!Reference {label: USART1}:
+  RX:
+    port: !Reference {label: GPIOA}
+    pin: 10
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
+    pull: up
+  TX:
+    port: !Reference {label: GPIOA}
+    pin: 9
+    mode: alternate-function
+    alternate-function: 7
+    output-speed: very-high
