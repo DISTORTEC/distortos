@@ -35,7 +35,10 @@ enabled:
     - components such as `..` or `.` inside the paths are not supported and will most likely cause errors;
     - most of the functions will fail to operate at the root of file system (e.g. currently it is not possible to do
     `opendir("/")` or `stat("/someMountPoint", &status)`);
-    - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled automatically;
+    - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled
+    automatically;
+- Basic support for *ARMv8-M* (*ARM Cortex-M33*) architecture, for a configuration with *TrustZone* disabled (single
+non-secure application).
 - Basic support for whole [STM32G0](https://www.st.com/stm32g0) chip family.
 - Support and test configuration for [NUCLEO-G0B1RE](https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html) board
 with *STM32G0* chip.
