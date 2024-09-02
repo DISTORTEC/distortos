@@ -3,7 +3,7 @@
 #
 # file: generateBoard.py
 #
-# author: Copyright (C) 2017-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2017-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -87,7 +87,7 @@ def isFullMatch(string, pattern, flags = 0):
 	* `flags` are flags passed to `re.match()`, default - `0`
 	"""
 	# equivalent of re.fullmatch() which works in Python versions prior to 3.4
-	return re.match('(?:' + pattern + ')\Z', str(string), flags)
+	return re.match(r'(?:' + pattern + r')\Z', str(string), flags)
 
 def mergeDictionaries(a, b):
 	"""Merge two dictionaries into one and return merged dictionary.

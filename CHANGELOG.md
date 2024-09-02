@@ -35,7 +35,10 @@ enabled:
     - components such as `..` or `.` inside the paths are not supported and will most likely cause errors;
     - most of the functions will fail to operate at the root of file system (e.g. currently it is not possible to do
     `opendir("/")` or `stat("/someMountPoint", &status)`);
-    - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled automatically;
+    - 3 standard streams (`stdin`, `stdout` and `stderr`), as well as 3 standard file descriptors (0-2), are not handled
+    automatically;
+- Basic support for *ARMv8-M* (*ARM Cortex-M33*) architecture, for a configuration with *TrustZone* disabled (single
+non-secure application).
 - Basic support for whole [STM32G0](https://www.st.com/stm32g0) chip family.
 - Support and test configuration for [NUCLEO-G0B1RE](https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html) board
 with *STM32G0* chip.
@@ -110,7 +113,7 @@ debug behaviour, where the `.data` section in RAM would not be initilized at all
 `__data_end` symbols for part of flash memory would collide with identically named symbols for the `.data` section.
 - Changed *CI* platform from Travis CI (which is shutting down its free service) to
 [Github Actions](https://github.com/DISTORTEC/distortos/actions).
-- Update *CMSIS* to version 5.7.0.
+- Update *CMSIS* to version 6.1.0.
 - Update *CMSIS-STM32F0* to version 1.11.2.
 - Update *CMSIS-STM32F1* to version 1.8.3.
 - Update *CMSIS-STM32F4* to version 1.25.2.
