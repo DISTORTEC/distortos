@@ -19,7 +19,7 @@ To configure & build *distortos* you need:
 - [CMake](https://cmake.org/) (version 3.8 or later);
 - [a build tool supported by CMake](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#manual:cmake-generators(7)) -
 it is highly recommended to use [Ninja](https://ninja-build.org/);
-- [arm-none-eabi bleeding-edge-toolchain](https://github.com/FreddieChopin/bleeding-edge-toolchain) (*GCC* version 5 or
+- [arm-none-eabi bleeding-edge-toolchain](https://github.com/FreddieChopin/bleeding-edge-toolchain) (*GCC* version 10 or
 later);
 
 *distortos* tries to follow typical *CMake* cross-compiling workflow, which means that you always have to use a
