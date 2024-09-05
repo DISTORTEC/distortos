@@ -40,10 +40,14 @@ enabled:
 - Basic support for *ARMv8-M* (*ARM Cortex-M33*) architecture, for a configuration with *TrustZone* disabled (single
 non-secure application).
 - Basic support for whole [STM32G0](https://www.st.com/stm32g0) chip family.
+- Basic support for [STM32U5](https://www.st.com/stm32u5) chip family, currently with just one chip - *STM32U575ZI* -
+available in YAML files.
 - Support and test configuration for [NUCLEO-G0B1RE](https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html) board
 with *STM32G0* chip.
 - Added support and test configuration for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html)
 board with *STM32F7* chip.
+- Support and build configuration for [NUCLEO-U575ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-u575zi-q.html)
+board with *STM32U5* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
 - Added `distortos::devices::BufferingBlockDevice` class. This class tries to minimize amount of block device operations
