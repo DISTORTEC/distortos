@@ -1,4 +1,4 @@
-{% if 'ST,STM32-USARTs-v2-group' in dictionary['UARTs']['compatible'] %}
+{% if 'UARTs' in dictionary and 'ST,STM32-USARTs-v2-group' in dictionary['UARTs']['compatible'] %}
 {% set gpioVersion = dictionary['pin-controller']['compatible'][0].split(',')[1].split('-')[2] %}
 ('source/chip/STM32/peripherals/USARTv2/boardTemplates/STM32-USARTv2-uarts.cpp.jinja',
 		{'pinInitializerImport':
