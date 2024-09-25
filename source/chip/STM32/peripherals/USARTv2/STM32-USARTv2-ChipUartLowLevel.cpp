@@ -345,6 +345,9 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE
 #if defined(RCC_APB1ENR_LPUART1EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_LPUART1EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_LPUART1RST};
+#elif defined(RCC_APB3ENR_LPUART1EN)
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APB3ENR),
+		RCC_APB3ENR_LPUART1EN, offsetof(RCC_TypeDef, APB3RSTR), RCC_APB3RSTR_LPUART1RST};
 #elif defined(RCC_APBENR1_LPUART1EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APBENR1),
 		RCC_APBENR1_LPUART1EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_LPUART1RST};
@@ -374,6 +377,9 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BA
 #if defined(RCC_APB1ENR_USART2EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
+#elif defined(RCC_APB1ENR1_USART2EN)
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR1),
+		RCC_APB1ENR1_USART2EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_USART2RST};
 #elif defined(RCC_APBENR1_USART2EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APBENR1),
 		RCC_APBENR1_USART2EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART2RST};
@@ -386,6 +392,9 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BA
 #if defined(RCC_APB1ENR_USART3EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
+#elif defined(RCC_APB1ENR1_USART3EN)
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR1),
+		RCC_APB1ENR1_USART3EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_USART3RST};
 #elif defined(RCC_APBENR1_USART3EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APBENR1),
 		RCC_APBENR1_USART3EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART3RST};
@@ -395,8 +404,15 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BA
 #endif	// def DISTORTOS_CHIP_USART3_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART4_ENABLE
+#if defined(RCC_APB1ENR_UART4EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
+#elif defined(RCC_APB1ENR1_UART4EN)
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR1),
+		RCC_APB1ENR1_UART4EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_UART4RST};
+#else
+	#error "Unsupported UART4 variant!"
+#endif
 #endif	// def DISTORTOS_CHIP_UART4_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART4_ENABLE
@@ -412,8 +428,15 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BA
 #endif	// def DISTORTOS_CHIP_USART4_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART5_ENABLE
+#if defined(RCC_APB1ENR_UART5EN)
 const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
 		RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
+#elif defined(RCC_APB1ENR1_UART5EN)
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR1),
+		RCC_APB1ENR1_UART5EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_UART5RST};
+#else
+	#error "Unsupported UART5 variant!"
+#endif
 #endif	// def DISTORTOS_CHIP_UART5_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART5_ENABLE
