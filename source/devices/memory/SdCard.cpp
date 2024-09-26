@@ -2,7 +2,7 @@
  * \file
  * \brief SdCard class implementation
  *
- * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -13,6 +13,7 @@
 
 #include "distortos/ThisThread.hpp"
 
+#include "estd/durationCastCeil.hpp"
 #include "estd/EnumClassFlags.hpp"
 #include "estd/extractBitField.hpp"
 #include "estd/ScopeGuard.hpp"
@@ -1428,8 +1429,10 @@ int SdCard::erase(const uint64_t address, const uint64_t size)
 
 		const auto beginPartial = beginAddress % auSize_ != 0;
 		const auto endPartial = endAddress % auSize_ != 0;
-		busyDeadline_ = TickClock::now() + std::chrono::milliseconds{eraseTimeoutMs_} +
-				std::chrono::milliseconds{250} * (beginPartial + endPartial);
+		const auto eraseTimeout =
+				estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{eraseTimeoutMs_} +
+				std::chrono::milliseconds{250} * (beginPartial + endPartial));
+		busyDeadline_ = TickClock::now() + eraseTimeout;
 	}
 
 	return {};
@@ -1536,7 +1539,8 @@ int SdCard::read(const uint64_t address, void* const buffer, const size_t size)
 		}
 	}
 
-	busyDeadline_ = TickClock::now() + std::chrono::milliseconds{readTimeoutMs_};
+	const auto readTimeout = estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{readTimeoutMs_});
+	busyDeadline_ = TickClock::now() + readTimeout;
 
 	return ret;
 }
@@ -1613,7 +1617,8 @@ int SdCard::write(const uint64_t address, const void* const buffer, const size_t
 		}
 	}
 
-	busyDeadline_ = TickClock::now() + std::chrono::milliseconds{writeTimeoutMs_};
+	const auto writeTimeout = estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{writeTimeoutMs_});
+	busyDeadline_ = TickClock::now() + writeTimeout;
 
 	return ret;
 }
