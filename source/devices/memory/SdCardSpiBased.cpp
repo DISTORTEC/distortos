@@ -2,7 +2,7 @@
  * \file
  * \brief SdCardSpiBased class implementation
  *
- * \author Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,7 @@
 
 #include "distortos/ThisThread.hpp"
 
+#include "estd/durationCastCeil.hpp"
 #include "estd/ScopeGuard.hpp"
 
 #include <mutex>
@@ -807,8 +808,8 @@ std::tuple<int, uint8_t, std::array<uint8_t, 16>> executeCmd9(const SpiMasterHan
 	}
 	std::array<uint8_t, 16> csdBuffer;
 	// "7.2.6 Read CID/CSD Registers" of Physical Layer Simplified Specification Version 6.00 - use fixed read timeout
-	const auto ret =
-			readDataBlock(spiMasterHandle, csdBuffer.begin(), csdBuffer.size(), std::chrono::milliseconds{100});
+	const auto ret = readDataBlock(spiMasterHandle, csdBuffer.begin(), csdBuffer.size(),
+			estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{100}));
 	return decltype(executeCmd9(spiMasterHandle)){ret, {}, csdBuffer};
 }
 
@@ -1225,8 +1226,9 @@ int SdCardSpiBased::erase(const uint64_t address, const uint64_t size)
 
 			const auto beginPartial = beginAddress % auSize_ != 0;
 			const auto endPartial = endAddress % auSize_ != 0;
-			const auto ret = executeCmd38(spiMasterHandle, std::chrono::milliseconds{eraseTimeoutMs_} +
-					std::chrono::milliseconds{250} * (beginPartial + endPartial));
+			const auto eraseTimeout = std::chrono::milliseconds{eraseTimeoutMs_} +
+					std::chrono::milliseconds{250} * (beginPartial + endPartial);
+			const auto ret = executeCmd38(spiMasterHandle, estd::durationCastCeil<TickClock::duration>(eraseTimeout));
 			if (ret.first != 0)
 				return ret.first;
 			if (ret.second != 0)
@@ -1307,6 +1309,8 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	if (size == 0)
 		return {};
 
+	const auto readTimeout = estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{readTimeoutMs_});
+
 	const SpiMasterHandle spiMasterHandle {spiMaster_};
 	spiMasterHandle.configure(SpiMode::_0, clockFrequency_, 8, false, UINT32_MAX);
 
@@ -1326,8 +1330,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 		const auto bufferUint8 = static_cast<uint8_t*>(buffer);
 		for (size_t block {}; block < blocks; ++block)
 		{
-			const auto ret = readDataBlock(spiMasterHandle, bufferUint8 + block * blockSize, blockSize,
-					std::chrono::milliseconds{readTimeoutMs_});
+			const auto ret = readDataBlock(spiMasterHandle, bufferUint8 + block * blockSize, blockSize, readTimeout);
 			if (ret != 0)
 				return ret;
 		}
@@ -1337,7 +1340,7 @@ int SdCardSpiBased::read(const uint64_t address, void* const buffer, const size_
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
-		const auto ret = executeCmd12(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
+		const auto ret = executeCmd12(spiMasterHandle, readTimeout);
 		if (ret.first != 0)
 			return ret.first;
 		if (ret.second != 0)
@@ -1400,11 +1403,13 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 			return EIO;
 	}
 
+	const auto writeTimeout = estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{writeTimeoutMs_});
+
 	const auto bufferUint8 = static_cast<const uint8_t*>(buffer);
 	for (size_t block {}; block < blocks; ++block)
 	{
 		const auto ret = writeDataBlock(spiMasterHandle, blocks == 1 ? startBlockToken : startBlockWriteToken,
-				bufferUint8 + block * blockSize, blockSize, std::chrono::milliseconds{writeTimeoutMs_});
+				bufferUint8 + block * blockSize, blockSize, writeTimeout);
 		if (ret != 0)
 			return ret;
 	}
@@ -1423,7 +1428,7 @@ int SdCardSpiBased::write(const uint64_t address, const void* const buffer, cons
 				return ret;
 		}
 		{
-			const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{writeTimeoutMs_});
+			const auto ret = waitWhileBusy(spiMasterHandle, writeTimeout);
 			if (ret != 0)
 				return ret;
 		}
@@ -1461,7 +1466,8 @@ int SdCardSpiBased::initialize()
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
 		// 3500 milliseconds - max time of single AU partial erase
-		const auto ret = waitWhileBusy(spiMasterHandle, std::chrono::milliseconds{3500});
+		const auto ret = waitWhileBusy(spiMasterHandle,
+				estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{3500}));
 		if (ret != 0)
 			return ret;
 	}
@@ -1565,7 +1571,8 @@ int SdCardSpiBased::initialize()
 	{
 		const SelectGuard selectGuard {slaveSelectPin_ ,spiMasterHandle};
 
-		const auto ret = executeAcmd13(spiMasterHandle, std::chrono::milliseconds{readTimeoutMs_});
+		const auto ret = executeAcmd13(spiMasterHandle,
+				estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{readTimeoutMs_}));
 		if (std::get<0>(ret) != 0)
 			return std::get<0>(ret);
 		if (std::get<1>(ret).r1 != 0 || std::get<1>(ret).r2 != 0)
