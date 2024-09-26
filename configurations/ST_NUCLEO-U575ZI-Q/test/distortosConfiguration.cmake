@@ -23,7 +23,7 @@ set("distortos_Build_00_Static_destructors"
 		"BOOL"
 		"Enable static destructors.\n\nEnable destructors for objects with static storage duration. As embedded applications almost never \"exit\", these destructors are usually never executed, wasting ROM.")
 set("distortos_Scheduler_00_Tick_frequency"
-		"1000"
+		"100"
 		CACHE
 		"STRING"
 		"System's tick frequency, Hz.\n\nAllowed range: [1; 2147483647]")
@@ -31,7 +31,7 @@ set("distortos_Scheduler_01_Round_robin_frequency"
 		"10"
 		CACHE
 		"STRING"
-		"Round-robin frequency, Hz.\n\nAllowed range: [1; 1000]")
+		"Round-robin frequency, Hz.\n\nAllowed range: [1; 100]")
 set("distortos_Scheduler_02_Support_for_signals"
 		"ON"
 		CACHE

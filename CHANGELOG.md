@@ -46,7 +46,7 @@ available in YAML files.
 with *STM32G0* chip.
 - Added support and test configuration for [NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html)
 board with *STM32F7* chip.
-- Support and build configuration for [NUCLEO-U575ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-u575zi-q.html)
+- Support and test configuration for [NUCLEO-U575ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-u575zi-q.html)
 board with *STM32U5* chip.
 - Added boolean `#define` in `distortosConfiguration.h` which specifies selected board, e.g.
 `#define DISTORTOS_BOARD_ST_NUCLEO_F767ZI 1` for *NUCLEO-F767ZI* board.
