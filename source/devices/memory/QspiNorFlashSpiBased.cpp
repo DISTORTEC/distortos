@@ -2,7 +2,7 @@
  * \file
  * \brief QspiNorFlashSpiBased class implementation
  *
- * \author Copyright (C) 2020-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2020-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -17,6 +17,7 @@
 
 #include "distortos/ThisThread.hpp"
 
+#include "estd/durationCastCeil.hpp"
 #include "estd/EnumClassFlags.hpp"
 #include "estd/extractBitField.hpp"
 #include "estd/ScopeGuard.hpp"
@@ -1147,8 +1148,9 @@ int QspiNorFlashSpiBased::erase(const uint64_t address, const uint64_t size)
 		return {};
 
 	const auto eraseInstruction = basicFlashParameters_.eraseInstructions[commonEraseIndex_];
+	const auto& maximumEraseTimesMs = basicFlashParameters_.maximumEraseTimesMs[commonEraseIndex_];
 	const auto maximumEraseTime =
-			std::chrono::milliseconds{basicFlashParameters_.maximumEraseTimesMs[commonEraseIndex_]};
+			estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{maximumEraseTimesMs});
 	uint64_t erased {};
 	while (erased < size)
 	{
@@ -1284,7 +1286,7 @@ int QspiNorFlashSpiBased::program(const uint64_t address, const void* const buff
 		}
 
 		// ~66 ms is the absolute maximum page program time which can be represented in SFDP
-		busyDeadline_ = TickClock::now() + std::chrono::milliseconds{66};
+		busyDeadline_ = TickClock::now() + estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{66});
 		bytesWritten += chunk;
 	}
 
@@ -1409,7 +1411,8 @@ int QspiNorFlashSpiBased::handleFixups()
 			}
 
 			{
-				const auto ret = waitWhileWriteInProgress(TickClock::now() + std::chrono::milliseconds{800});
+				const auto ret = waitWhileWriteInProgress(TickClock::now() +
+						estd::durationCastCeil<TickClock::duration>(std::chrono::milliseconds{800}));
 				if (ret != 0)
 					return ret;
 			}
