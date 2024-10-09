@@ -1,7 +1,7 @@
 #
 # file: cmake/50-STM32-USARTv2.cmake
 #
-# author: Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,6 +19,10 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART1 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART1_ENABLE)
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART1_HAS_FIFO
+		OFF)
+
 if(distortos_Peripherals_USART1)
 
 	set(ARCHITECTURE_NVIC_USART1_ENABLE ON)
@@ -30,6 +34,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable USART2 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART2_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART2_HAS_FIFO
+		OFF)
 
 if(distortos_Peripherals_USART2)
 
@@ -46,6 +54,10 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART3 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART3_ENABLE)
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART3_HAS_FIFO
+		OFF)
+
 if(distortos_Peripherals_USART3)
 
 	set(ARCHITECTURE_NVIC_USART3_ENABLE ON)
@@ -57,6 +69,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable USART4 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART4_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART4_HAS_FIFO
+		OFF)
 
 if(distortos_Peripherals_USART4)
 
@@ -70,6 +86,10 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART5 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART5_ENABLE)
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART5_HAS_FIFO
+		OFF)
+
 if(distortos_Peripherals_USART5)
 
 	set(ARCHITECTURE_NVIC_USART5_ENABLE ON)
@@ -81,6 +101,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable USART6 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART6_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART6_HAS_FIFO
+		OFF)
 
 if(distortos_Peripherals_USART6)
 
@@ -94,6 +118,10 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART7 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART7_ENABLE)
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART7_HAS_FIFO
+		OFF)
+
 if(distortos_Peripherals_USART7)
 
 	set(ARCHITECTURE_NVIC_USART7_ENABLE ON)
@@ -105,6 +133,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable USART8 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART8_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART8_HAS_FIFO
+		OFF)
 
 if(distortos_Peripherals_USART8)
 
