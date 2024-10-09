@@ -154,6 +154,7 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: true
     interrupt:
       controller: !Reference
         label: NVIC
@@ -163,6 +164,7 @@ UARTs:
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: true
     interrupt:
       controller: !Reference
         label: NVIC
@@ -172,6 +174,7 @@ UARTs:
   USART3:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -181,6 +184,7 @@ UARTs:
   USART4:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC

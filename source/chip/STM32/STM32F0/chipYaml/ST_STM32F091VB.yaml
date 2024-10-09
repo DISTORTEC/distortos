@@ -1,7 +1,7 @@
 #
 # file: ST_STM32F091VB.yaml
 #
-# author: Copyright (C) 2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -258,6 +258,7 @@ UARTs:
   USART1:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -267,6 +268,7 @@ UARTs:
   USART2:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -276,6 +278,7 @@ UARTs:
   USART3:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -285,6 +288,7 @@ UARTs:
   USART4:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -294,6 +298,7 @@ UARTs:
   USART5:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -303,6 +308,7 @@ UARTs:
   USART6:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -312,6 +318,7 @@ UARTs:
   USART7:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
@@ -321,6 +328,7 @@ UARTs:
   USART8:
     compatible:
     - ST,STM32-USART-v2
+    has-FIFO: false
     interrupt:
       controller: !Reference
         label: NVIC
