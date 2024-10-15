@@ -760,6 +760,9 @@ std::pair<int, uint32_t> ChipUartLowLevel::start(devices::UartBase& uartBase, co
 #ifdef DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
 			(realCharacterLength == minCharacterLength + 1) << USART_CR1_M1_Pos |
 #endif	// def DISTORTOS_CHIP_USART_HAS_CR1_M1_BIT
+#ifdef USART_CR1_FIFOEN_Pos
+			(parameters_.hasFifo() << USART_CR1_FIFOEN_Pos) |
+#endif	// def USART_CR1_FIFOEN_Pos
 			(parity != devices::UartParity::none) << USART_CR1_PCE_Pos |
 			(parity == devices::UartParity::odd) << USART_CR1_PS_Pos;
 	return {{}, realBaudRate};
