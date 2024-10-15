@@ -143,32 +143,62 @@ set("distortos_leds_Ld6"
 		"BOOL"
 		"Enable Ld6 (Blue)")
 set("distortos_Peripherals_SPI1"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable SPI1 low-level driver.")
+set("distortos_Peripherals_SPI1_00_Use_DMA"
+		"ON"
+		CACHE
+		"BOOL"
+		"Select whether SPI1 low-level driver uses DMA (true) or interrupts (false) for transfers.")
+set("distortos_Peripherals_SPI1_01_RX_DMA"
+		"DMA1 channel 2 (request 0)"
+		CACHE
+		"STRING"
+		"Select RX DMA channel used by SPI1 low-level driver.")
+set("distortos_Peripherals_SPI1_02_TX_DMA"
+		"DMA1 channel 3 (request 0)"
+		CACHE
+		"STRING"
+		"Select TX DMA channel used by SPI1 low-level driver.")
 set("distortos_Peripherals_SPI2"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable SPI2 low-level driver.")
+set("distortos_Peripherals_SPI2_00_Use_DMA"
+		"ON"
+		CACHE
+		"BOOL"
+		"Select whether SPI2 low-level driver uses DMA (true) or interrupts (false) for transfers.")
+set("distortos_Peripherals_SPI2_01_RX_DMA"
+		"DMA1 channel 4 (request 0)"
+		CACHE
+		"STRING"
+		"Select RX DMA channel used by SPI2 low-level driver.")
+set("distortos_Peripherals_SPI2_02_TX_DMA"
+		"DMA1 channel 5 (request 0)"
+		CACHE
+		"STRING"
+		"Select TX DMA channel used by SPI2 low-level driver.")
 set("distortos_Peripherals_USART1"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART1 low-level driver.")
 set("distortos_Peripherals_USART2"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART2 low-level driver.")
 set("distortos_Peripherals_USART3"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART3 low-level driver.")
 set("distortos_Peripherals_USART4"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART4 low-level driver.")
@@ -178,7 +208,7 @@ set("distortos_Peripherals_GPIOA"
 		"BOOL"
 		"Enable GPIOA.")
 set("distortos_Peripherals_GPIOB"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOB.")
@@ -188,20 +218,55 @@ set("distortos_Peripherals_GPIOC"
 		"BOOL"
 		"Enable GPIOC.")
 set("distortos_Peripherals_GPIOD"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOD.")
 set("distortos_Peripherals_GPIOF"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOF.")
 set("distortos_Peripherals_DMA1"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable DMA1 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_1"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 1 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_2"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 2 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_3"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 3 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_4"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 4 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_5"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 5 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_6"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 6 low-level driver.")
+set("distortos_Peripherals_DMA1_channel_7"
+		"ON"
+		CACHE
+		"BOOL"
+		"Enable DMA1 channel 7 low-level driver.")
 set("distortos_Clocks_00_Standard_configuration_of_clocks"
 		"ON"
 		CACHE

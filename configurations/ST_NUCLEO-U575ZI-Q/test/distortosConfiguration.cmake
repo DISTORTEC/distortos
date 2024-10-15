@@ -143,37 +143,37 @@ set("distortos_leds_Ld3"
 		"BOOL"
 		"Enable Ld3 (Red)")
 set("distortos_Peripherals_LPUART1"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable LPUART1 low-level driver.")
 set("distortos_Peripherals_USART1"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART1 low-level driver.")
 set("distortos_Peripherals_USART2"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART2 low-level driver.")
 set("distortos_Peripherals_USART3"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable USART3 low-level driver.")
 set("distortos_Peripherals_UART4"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable UART4 low-level driver.")
 set("distortos_Peripherals_UART5"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable UART5 low-level driver.")
 set("distortos_Peripherals_GPIOA"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOA.")
@@ -188,17 +188,17 @@ set("distortos_Peripherals_GPIOC"
 		"BOOL"
 		"Enable GPIOC.")
 set("distortos_Peripherals_GPIOD"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOD.")
 set("distortos_Peripherals_GPIOE"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOE.")
 set("distortos_Peripherals_GPIOF"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOF.")
@@ -208,12 +208,12 @@ set("distortos_Peripherals_GPIOG"
 		"BOOL"
 		"Enable GPIOG.")
 set("distortos_Peripherals_GPIOH"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOH.")
 set("distortos_Peripherals_GPIOI"
-		"OFF"
+		"ON"
 		CACHE
 		"BOOL"
 		"Enable GPIOI.")
