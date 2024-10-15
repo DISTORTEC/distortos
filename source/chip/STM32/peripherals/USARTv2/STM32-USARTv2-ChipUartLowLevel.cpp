@@ -383,6 +383,15 @@ public:
 	}
 
 	/**
+	 * \return true if this UART peripheral has RX/TX FIFO, false otherwise
+	 */
+
+	bool hasFifo() const
+	{
+		return hasFifo_;
+	}
+
+	/**
 	 * \brief Resets all peripheral's registers via RCC
 	 *
 	 * \note Peripheral clock must be enabled in RCC for this operation to work.
