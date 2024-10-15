@@ -86,6 +86,136 @@ devices::UartBase::ErrorSet decodeErrors(const uint32_t isr)
 	return errorSet;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------+
+| local objects
++---------------------------------------------------------------------------------------------------------------------*/
+
+#ifdef DISTORTOS_CHIP_LPUART1_ENABLE
+/// true if LPUART1 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_LPUART1_HAS_FIFO
+constexpr bool lpuart1HasFifo {true};
+#else	// !def DISTORTOS_CHIP_LPUART1_HAS_FIFO
+constexpr bool lpuart1HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_LPUART1_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
+
+#ifdef DISTORTOS_CHIP_LPUART2_ENABLE
+/// true if LPUART2 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_LPUART2_HAS_FIFO
+constexpr bool lpuart2HasFifo {true};
+#else	// !def DISTORTOS_CHIP_LPUART2_HAS_FIFO
+constexpr bool lpuart2HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_LPUART2_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_LPUART2_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART1_ENABLE
+/// true if USART1 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART1_HAS_FIFO
+constexpr bool usart1HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART1_HAS_FIFO
+constexpr bool usart1HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART1_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART1_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART2_ENABLE
+/// true if USART2 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART2_HAS_FIFO
+constexpr bool usart2HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART2_HAS_FIFO
+constexpr bool usart2HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART2_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART2_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART3_ENABLE
+/// true if USART3 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART3_HAS_FIFO
+constexpr bool usart3HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART3_HAS_FIFO
+constexpr bool usart3HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART3_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART3_ENABLE
+
+#ifdef DISTORTOS_CHIP_UART4_ENABLE
+/// true if UART4 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_UART4_HAS_FIFO
+constexpr bool uart4HasFifo {true};
+#else	// !def DISTORTOS_CHIP_UART4_HAS_FIFO
+constexpr bool uart4HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_UART4_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_UART4_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART4_ENABLE
+/// true if USART4 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART4_HAS_FIFO
+constexpr bool usart4HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART4_HAS_FIFO
+constexpr bool usart4HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART4_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART4_ENABLE
+
+#ifdef DISTORTOS_CHIP_UART5_ENABLE
+/// true if UART5 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_UART5_HAS_FIFO
+constexpr bool uart5HasFifo {true};
+#else	// !def DISTORTOS_CHIP_UART5_HAS_FIFO
+constexpr bool uart5HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_UART5_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_UART5_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART5_ENABLE
+/// true if USART5 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART5_HAS_FIFO
+constexpr bool usart5HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART5_HAS_FIFO
+constexpr bool usart5HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART5_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART5_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART6_ENABLE
+/// true if USART6 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART6_HAS_FIFO
+constexpr bool usart6HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART6_HAS_FIFO
+constexpr bool usart6HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART6_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART6_ENABLE
+
+#ifdef DISTORTOS_CHIP_UART7_ENABLE
+/// true if UART7 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_UART7_HAS_FIFO
+constexpr bool uart7HasFifo {true};
+#else	// !def DISTORTOS_CHIP_UART7_HAS_FIFO
+constexpr bool uart7HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_UART7_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_UART7_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART7_ENABLE
+/// true if USART7 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART7_HAS_FIFO
+constexpr bool usart7HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART7_HAS_FIFO
+constexpr bool usart7HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART7_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART7_ENABLE
+
+#ifdef DISTORTOS_CHIP_UART8_ENABLE
+/// true if UART8 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_UART8_HAS_FIFO
+constexpr bool uart8HasFifo {true};
+#else	// !def DISTORTOS_CHIP_UART8_HAS_FIFO
+constexpr bool uart8HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_UART8_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_UART8_ENABLE
+
+#ifdef DISTORTOS_CHIP_USART8_ENABLE
+/// true if USART8 has RX/TX FIFO, false otherwise
+#ifdef DISTORTOS_CHIP_USART8_HAS_FIFO
+constexpr bool usart8HasFifo {true};
+#else	// !def DISTORTOS_CHIP_USART8_HAS_FIFO
+constexpr bool usart8HasFifo {false};
+#endif	// !def DISTORTOS_CHIP_USART8_HAS_FIFO
+#endif	// def DISTORTOS_CHIP_USART8_ENABLE
+
 }	// namespace
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -103,18 +233,21 @@ public:
 	 * \brief Parameters's constructor
 	 *
 	 * \param [in] uartBase is a base address of UART peripheral
+	 * \param [in] hasFifo selects whether this UART peripheral has RX/TX FIFO (true) or not (false)
 	 * \param [in] rccEnBb is an address of bitband alias of appropriate U[S]ARTxEN bit in RCC register
 	 * \param [in] rccRstBb is an address of bitband alias of appropriate U[S]ARTxRST bit in RCC register
 	 */
 
-	constexpr Parameters(const uintptr_t uartBase, const uintptr_t rccEnBbAddress, const uintptr_t rccRstBbAddress) :
-			uartBase_{uartBase},
-			peripheralFrequency_{getBusFrequency(uartBase)},
-			rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_RXNEIE)},
-			tcieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TCIE)},
-			txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TXEIE)},
-			rccEnBbAddress_{rccEnBbAddress},
-			rccRstBbAddress_{rccRstBbAddress}
+	constexpr Parameters(const uintptr_t uartBase, const bool hasFifo, const uintptr_t rccEnBbAddress,
+			const uintptr_t rccRstBbAddress) :
+					uartBase_{uartBase},
+					peripheralFrequency_{getBusFrequency(uartBase)},
+					rxneieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_RXNEIE)},
+					tcieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TCIE)},
+					txeieBbAddress_{STM32_BITBAND_IMPLEMENTATION(uartBase, USART_TypeDef, CR1, USART_CR1_TXEIE)},
+					rccEnBbAddress_{rccEnBbAddress},
+					rccRstBbAddress_{rccRstBbAddress},
+					hasFifo_{hasFifo}
 	{
 
 	}
@@ -125,20 +258,22 @@ public:
 	 * \brief Parameters's constructor
 	 *
 	 * \param [in] uartBase is a base address of UART peripheral
+	 * \param [in] hasFifo selects whether this UART peripheral has RX/TX FIFO (true) or not (false)
 	 * \param [in] rccEnOffset is the offset of RCC register with appropriate U[S]ARTxEN bit, bytes
 	 * \param [in] rccEnBitmask is the bitmask of appropriate U[S]ARTxEN bit in RCC register at \a rccEnOffset offset
 	 * \param [in] rccRstOffset is the offset of RCC register with appropriate U[S]ARTxRST bit, bytes
 	 * \param [in] rccRstBitmask is the bitmask of appropriate U[S]ARTxRST bit in RCC register at \a rccRstOffset offset
 	 */
 
-	constexpr Parameters(const uintptr_t uartBase, const size_t rccEnOffset, const uint32_t rccEnBitmask,
-			const size_t rccRstOffset, const uint32_t rccRstBitmask) :
+	constexpr Parameters(const uintptr_t uartBase, const bool hasFifo, const size_t rccEnOffset,
+			const uint32_t rccEnBitmask, const size_t rccRstOffset, const uint32_t rccRstBitmask) :
 					uartBase_{uartBase},
 					peripheralFrequency_{getBusFrequency(uartBase)},
 					rccEnBitmask_{rccEnBitmask},
 					rccEnOffset_{rccEnOffset},
 					rccRstBitmask_{rccRstBitmask},
-					rccRstOffset_{rccRstOffset}
+					rccRstOffset_{rccRstOffset},
+					hasFifo_{hasFifo}
 	{
 
 	}
@@ -306,6 +441,9 @@ private:
 	size_t rccRstOffset_;
 
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
+
+	/// selects whether this UART peripheral has RX/TX FIFO (true) or not (false)
+	bool hasFifo_;
 };
 
 /*---------------------------------------------------------------------------------------------------------------------+
@@ -315,27 +453,27 @@ private:
 #ifdef DISTORTOS_BITBANDING_SUPPORTED
 
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, usart1HasFifo,
 		STM32_BITBAND_ADDRESS(RCC, APB2ENR, USART1EN), STM32_BITBAND_ADDRESS(RCC, APB2RSTR, USART1RST)};
 #endif	// def DISTORTOS_CHIP_USART1_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART2_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, usart2HasFifo,
 		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, USART2EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, USART2RST)};
 #endif	// def DISTORTOS_CHIP_USART2_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART3_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, usart3HasFifo,
 		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, USART3EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, USART3RST)};
 #endif	// def DISTORTOS_CHIP_USART3_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART4_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, uart4HasFifo,
 		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, UART4EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, UART4RST)};
 #endif	// def DISTORTOS_CHIP_UART4_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART5_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE,
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, uart5HasFifo,
 		STM32_BITBAND_ADDRESS(RCC, APB1ENR1, UART5EN), STM32_BITBAND_ADDRESS(RCC, APB1RSTR1, UART5RST)};
 #endif	// def DISTORTOS_CHIP_UART5_ENABLE
 
@@ -343,31 +481,36 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE
 
 #ifdef DISTORTOS_CHIP_LPUART1_ENABLE
 #if defined(RCC_APB1ENR_LPUART1EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_LPUART1EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_LPUART1RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, lpuart1HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_LPUART1EN, offsetof(RCC_TypeDef, APB1RSTR),
+		RCC_APB1RSTR_LPUART1RST};
 #elif defined(RCC_APB3ENR_LPUART1EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APB3ENR),
-		RCC_APB3ENR_LPUART1EN, offsetof(RCC_TypeDef, APB3RSTR), RCC_APB3RSTR_LPUART1RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, lpuart1HasFifo,
+		offsetof(RCC_TypeDef, APB3ENR), RCC_APB3ENR_LPUART1EN, offsetof(RCC_TypeDef, APB3RSTR),
+		RCC_APB3RSTR_LPUART1RST};
 #elif defined(RCC_APBENR1_LPUART1EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_LPUART1EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_LPUART1RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart1Parameters {LPUART1_BASE, lpuart1HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_LPUART1EN, offsetof(RCC_TypeDef, APBRSTR1),
+		RCC_APBRSTR1_LPUART1RST};
 #else
 	#error "Unsupported LPUART1 variant!"
 #endif
 #endif	// def DISTORTOS_CHIP_LPUART1_ENABLE
 
 #ifdef DISTORTOS_CHIP_LPUART2_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart2Parameters {LPUART2_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_LPUART2EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_LPUART2RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::lpuart2Parameters {LPUART2_BASE, lpuart2HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_LPUART2EN, offsetof(RCC_TypeDef, APBRSTR1),
+		RCC_APBRSTR1_LPUART2RST};
 #endif	// def DISTORTOS_CHIP_LPUART2_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART1_ENABLE
 #if defined(RCC_APB2ENR_USART1EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APB2ENR),
-		RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, usart1HasFifo,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_USART1EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART1RST};
 #elif defined(RCC_APBENR2_USART1EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, offsetof(RCC_TypeDef, APBENR2),
-		RCC_APBENR2_USART1EN, offsetof(RCC_TypeDef, APBRSTR2), RCC_APBRSTR2_USART1RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BASE, usart1HasFifo,
+		offsetof(RCC_TypeDef, APBENR2), RCC_APBENR2_USART1EN, offsetof(RCC_TypeDef, APBRSTR2),
+		RCC_APBRSTR2_USART1RST};
 #else
 	#error "Unsupported USART1 variant!"
 #endif
@@ -375,14 +518,15 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart1Parameters {USART1_BA
 
 #ifdef DISTORTOS_CHIP_USART2_ENABLE
 #if defined(RCC_APB1ENR_USART2EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, usart2HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_USART2EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART2RST};
 #elif defined(RCC_APB1ENR1_USART2EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APB1ENR1),
-		RCC_APB1ENR1_USART2EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_USART2RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, usart2HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR1), RCC_APB1ENR1_USART2EN, offsetof(RCC_TypeDef, APB1RSTR1),
+		RCC_APB1RSTR1_USART2RST};
 #elif defined(RCC_APBENR1_USART2EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_USART2EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART2RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BASE, usart2HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_USART2EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART2RST};
 #else
 	#error "Unsupported USART2 variant!"
 #endif
@@ -390,14 +534,15 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart2Parameters {USART2_BA
 
 #ifdef DISTORTOS_CHIP_USART3_ENABLE
 #if defined(RCC_APB1ENR_USART3EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, usart3HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_USART3EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART3RST};
 #elif defined(RCC_APB1ENR1_USART3EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APB1ENR1),
-		RCC_APB1ENR1_USART3EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_USART3RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, usart3HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR1), RCC_APB1ENR1_USART3EN, offsetof(RCC_TypeDef, APB1RSTR1),
+		RCC_APB1RSTR1_USART3RST};
 #elif defined(RCC_APBENR1_USART3EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_USART3EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART3RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BASE, usart3HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_USART3EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART3RST};
 #else
 	#error "Unsupported USART3 variant!"
 #endif
@@ -405,11 +550,12 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart3Parameters {USART3_BA
 
 #ifdef DISTORTOS_CHIP_UART4_ENABLE
 #if defined(RCC_APB1ENR_UART4EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, uart4HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_UART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART4RST};
 #elif defined(RCC_APB1ENR1_UART4EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, offsetof(RCC_TypeDef, APB1ENR1),
-		RCC_APB1ENR1_UART4EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_UART4RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE, uart4HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR1), RCC_APB1ENR1_UART4EN, offsetof(RCC_TypeDef, APB1RSTR1),
+		RCC_APB1RSTR1_UART4RST};
 #else
 	#error "Unsupported UART4 variant!"
 #endif
@@ -417,11 +563,11 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart4Parameters {UART4_BASE
 
 #ifdef DISTORTOS_CHIP_USART4_ENABLE
 #if defined(RCC_APB1ENR_USART4EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART4RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, usart4HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_USART4EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART4RST};
 #elif defined(RCC_APBENR1_USART4EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_USART4EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART4RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BASE, usart4HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_USART4EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART4RST};
 #else
 	#error "Unsupported USART4 variant!"
 #endif
@@ -429,11 +575,12 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart4Parameters {USART4_BA
 
 #ifdef DISTORTOS_CHIP_UART5_ENABLE
 #if defined(RCC_APB1ENR_UART5EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, uart5HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_UART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART5RST};
 #elif defined(RCC_APB1ENR1_UART5EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, offsetof(RCC_TypeDef, APB1ENR1),
-		RCC_APB1ENR1_UART5EN, offsetof(RCC_TypeDef, APB1RSTR1), RCC_APB1RSTR1_UART5RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE, uart5HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR1), RCC_APB1ENR1_UART5EN, offsetof(RCC_TypeDef, APB1RSTR1),
+		RCC_APB1RSTR1_UART5RST};
 #else
 	#error "Unsupported UART5 variant!"
 #endif
@@ -441,11 +588,11 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::uart5Parameters {UART5_BASE
 
 #ifdef DISTORTOS_CHIP_USART5_ENABLE
 #if defined(RCC_APB1ENR_USART5EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_USART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART5RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, usart5HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_USART5EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_USART5RST};
 #elif defined(RCC_APBENR1_USART5EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_USART5EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART5RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BASE, usart5HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_USART5EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART5RST};
 #else
 	#error "Unsupported USART5 variant!"
 #endif
@@ -453,34 +600,34 @@ const ChipUartLowLevel::Parameters ChipUartLowLevel::usart5Parameters {USART5_BA
 
 #ifdef DISTORTOS_CHIP_USART6_ENABLE
 #if defined(RCC_APB2ENR_USART6EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, offsetof(RCC_TypeDef, APB2ENR),
-		RCC_APB2ENR_USART6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART6RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, usart6HasFifo,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_USART6EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART6RST};
 #elif defined(RCC_APBENR1_USART6EN)
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, offsetof(RCC_TypeDef, APBENR1),
-		RCC_APBENR1_USART6EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART6RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart6Parameters {USART6_BASE, usart6HasFifo,
+		offsetof(RCC_TypeDef, APBENR1), RCC_APBENR1_USART6EN, offsetof(RCC_TypeDef, APBRSTR1), RCC_APBRSTR1_USART6RST};
 #else
 	#error "Unsupported USART6 variant!"
 #endif
 #endif	// def DISTORTOS_CHIP_USART6_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART7_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_UART7EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART7RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart7Parameters {UART7_BASE, uart7HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_UART7EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART7RST};
 #endif	// def DISTORTOS_CHIP_UART7_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART7_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart7Parameters {USART7_BASE, offsetof(RCC_TypeDef, APB2ENR),
-		RCC_APB2ENR_USART7EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART7RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart7Parameters {USART7_BASE, usart7HasFifo,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_USART7EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART7RST};
 #endif	// def DISTORTOS_CHIP_USART7_ENABLE
 
 #ifdef DISTORTOS_CHIP_UART8_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE, offsetof(RCC_TypeDef, APB1ENR),
-		RCC_APB1ENR_UART8EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART8RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::uart8Parameters {UART8_BASE, uart8HasFifo,
+		offsetof(RCC_TypeDef, APB1ENR), RCC_APB1ENR_UART8EN, offsetof(RCC_TypeDef, APB1RSTR), RCC_APB1RSTR_UART8RST};
 #endif	// def DISTORTOS_CHIP_UART8_ENABLE
 
 #ifdef DISTORTOS_CHIP_USART8_ENABLE
-const ChipUartLowLevel::Parameters ChipUartLowLevel::usart8Parameters {USART8_BASE, offsetof(RCC_TypeDef, APB2ENR),
-		RCC_APB2ENR_USART8EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART8RST};
+const ChipUartLowLevel::Parameters ChipUartLowLevel::usart8Parameters {USART8_BASE, usart8HasFifo,
+		offsetof(RCC_TypeDef, APB2ENR), RCC_APB2ENR_USART8EN, offsetof(RCC_TypeDef, APB2RSTR), RCC_APB2RSTR_USART8RST};
 #endif	// def DISTORTOS_CHIP_USART8_ENABLE
 
 #endif	// !def DISTORTOS_BITBANDING_SUPPORTED
