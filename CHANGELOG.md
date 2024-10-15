@@ -82,6 +82,8 @@ was tested only with *Cypress* *S25FL127S*.
 buffer suitable for use with objects (i.e. types that have non-trivial constructors and destructors). These classes are
 thread-safe and lock-free for a single-producer and single-consumer scenario.
 - Extended *STM32's* *USARTv2* with support for *LPUART*, currently available only for *STM32L0* chip family.
+- Extended *STM32's* *USARTv2* with support for *RX/TX FIFO*, which is a feature present in *STM32G0* and *STM32U5* chip
+families.
 - Added support for "half transfer" event and "circular mode" to *STM32's* *DMAv1* and *DMAv2*.
 - Added two *CMake* options to reduce size of executable: `distortos_Checks_07_Lightweight_assert` and
 `distortos_Checks_08_Lightweight_FATAL_ERROR`. Lightweight versions of these macros don't pass any parameters about

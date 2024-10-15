@@ -1,7 +1,7 @@
 #
 # file: cmake/50-STM32-USARTv2.cmake
 #
-# author: Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,6 +19,10 @@ distortosSetConfiguration(BOOLEAN
 		HELP "Enable USART1 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART1_ENABLE)
 
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART1_HAS_FIFO
+		OFF)
+
 if(distortos_Peripherals_USART1)
 
 	set(ARCHITECTURE_NVIC_USART1_ENABLE ON)
@@ -30,6 +34,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable USART2 low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_USART2_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_USART2_HAS_FIFO
+		OFF)
 
 if(distortos_Peripherals_USART2)
 

@@ -1,7 +1,7 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,6 +19,10 @@ distortosSetConfiguration(BOOLEAN
 		OFF
 		HELP "Enable {{ key | upper }} low-level driver."
 		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
+
+distortosSetFixedConfiguration(BOOLEAN
+		DISTORTOS_CHIP_{{ key | upper }}_HAS_FIFO
+{{ '\t\t' }}{% if uart['has-FIFO'] == True %}ON{% else %}OFF{% endif %})
 
 if(distortos_Peripherals_{{ key }})
 
