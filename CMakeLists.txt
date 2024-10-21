@@ -3,7 +3,7 @@
 #
 # This is the main CMakeLists.txt for distortos
 #
-# author: Copyright (C) 2018-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -228,7 +228,7 @@ if(distortos_Checks_06_Asserts)
 	distortosSetConfiguration(BOOLEAN
 			distortos_Checks_07_Lightweight_assert
 			OFF
-			HELP "Use lightweigth assert instead of the regular one.
+			HELP "Use lightweight assert instead of the regular one.
 
 			If assertion fails, regular assert does the following:
 			- calls optional assertHook(), passing the information about error location (strings with file and function
@@ -237,7 +237,7 @@ if(distortos_Checks_06_Asserts)
 			- calls abort();
 
 			Lightweight assert doesn't pass any arguments to assertHook() (declaration of this function is different
-			with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is
+			with this option enabled) and replaces abort() with a simple infinite loop. The lightweight version is
 			probably only usable with a debugger or as a method to just reset/halt the chip."
 			OUTPUT_NAME DISTORTOS_LIGHTWEIGHT_ASSERT)
 
@@ -246,7 +246,7 @@ endif()
 distortosSetConfiguration(BOOLEAN
 		distortos_Checks_08_Lightweight_FATAL_ERROR
 		OFF
-		HELP "Use lightweigth FATAL_ERROR instead of the regular one.
+		HELP "Use lightweight FATAL_ERROR instead of the regular one.
 
 		In case of fatal error, regular FATAL_ERROR does the following:
 		- calls optional fatalErrorHook(), passing the information about error location (strings with file and function
@@ -255,7 +255,7 @@ distortosSetConfiguration(BOOLEAN
 		- calls abort();
 
 		Lightweight FATAL_ERROR doesn't pass any arguments to fatalErrorHook() (declaration of this function is
-		different with this option enabled) and replaces abort() with a simple infinite loop. The lightweigth version is
+		different with this option enabled) and replaces abort() with a simple infinite loop. The lightweight version is
 		probably only usable with a debugger or as a method to just reset/halt the chip."
 		OUTPUT_NAME DISTORTOS_LIGHTWEIGHT_FATAL_ERROR)
 
