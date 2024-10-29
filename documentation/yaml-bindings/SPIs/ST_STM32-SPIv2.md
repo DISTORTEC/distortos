@@ -9,8 +9,8 @@ ST,STM32-SPIv2
   - `interrupt`, required, mapping:
     - `controller`, required, reference, reference to interrupt controller;
     - `vector`, required, string, name of interrupt (sub)vector used by this peripheral;
-  - `RX-DMA`, required, list;
-  - `TX-DMA`, required, list;
+  - `RX-DMA`, optional, list;
+  - `TX-DMA`, optional, list;
   - `MISO`, `MOSI`, `SCK`, optional, mapping, all key-value pairs are specific to particular GPIO implementation;
   selects configuration of pins; allowed combinations are: none, {`MISO`, `SCK`}, {`MOSI`, `SCK`} or
   {`MISO`, `MOSI`, `SCK`};

@@ -1,7 +1,7 @@
 #
 # file: cmake/50-STM32-SPIv2.cmake
 #
-# author: Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -146,5 +146,7 @@ if(distortos_Peripherals_SPI3)
 	endif(distortos_Peripherals_SPI3_00_Use_DMA)
 
 endif(distortos_Peripherals_SPI3)
+
+set(DISTORTOS_CHIP_DMA_CAPABLE_SPI_PRESENT ON)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")

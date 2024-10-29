@@ -1,13 +1,14 @@
 #
 # file: {{ metadata[metadataIndex][2] }}
 #
-# author: Copyright (C) 2018-2020 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2018-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 #
 # Automatically generated file - do not edit!
 #
+{% set context = namespace(dmaCapableSpiPresent = False) %}
 {% for key, spi in dictionary['SPIs'].items() if spi is mapping and 'ST,STM32-SPI-v2' in spi['compatible'] %}
 
 distortosSetConfiguration(BOOLEAN
@@ -17,6 +18,8 @@ distortosSetConfiguration(BOOLEAN
 		OUTPUT_NAME DISTORTOS_CHIP_{{ key | upper }}_ENABLE)
 
 if(distortos_Peripherals_{{ key }})
+{% if 'RX-DMA' in spi %}
+{% set context.dmaCapableSpiPresent = True %}
 
 	distortosSetConfiguration(BOOLEAN
 			distortos_Peripherals_{{ key }}_00_Use_DMA
@@ -75,10 +78,13 @@ if(distortos_Peripherals_{{ key }})
 		list(APPEND DISTORTOS_CHIP_DMA${CMAKE_MATCH_1}_CHANNEL${CMAKE_MATCH_2}_DEPENDENTS "{{ key }} TX")
 
 	else(distortos_Peripherals_{{ key }}_00_Use_DMA)
+{% endif %}
 
-		set(ARCHITECTURE_NVIC_{{ spi['interrupt']['vector'] | upper }}_ENABLE ON)
+{% if 'RX-DMA' in spi %}	{% endif %}	set(ARCHITECTURE_NVIC_{{ spi['interrupt']['vector'] | upper }}_ENABLE ON)
+{% if 'RX-DMA' in spi %}
 
 	endif(distortos_Peripherals_{{ key }}_00_Use_DMA)
+{% endif %}
 {% for pinKey in ['MISO', 'MOSI', 'SCK'] if pinKey in spi %}
 {% if loop.first == True %}
 
@@ -88,5 +94,7 @@ if(distortos_Peripherals_{{ key }})
 
 endif(distortos_Peripherals_{{ key }})
 {% endfor %}
+
+set(DISTORTOS_CHIP_DMA_CAPABLE_SPI_PRESENT {% if context.dmaCapableSpiPresent == True %}ON{% else %}OFF{% endif %})
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/source/chip/STM32/peripherals/SPIv2/distortos-sources.cmake")
