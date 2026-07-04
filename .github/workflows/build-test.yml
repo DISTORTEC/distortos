@@ -1,7 +1,7 @@
 #
 # file: build-test.yml
 #
-# author: Copyright (C) 2021-2024 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+# author: Copyright (C) 2021-2026 Kamil Szczygiel https://distortec.com https://freddiechopin.info
 #
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 # distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -30,7 +30,7 @@ jobs:
         - 14.2.0-241006
       fail-fast: false
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install bleeding-edge-toolchain
       shell: bash
       working-directory: /tmp
