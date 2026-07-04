@@ -91,6 +91,8 @@ error location, failed expression or message (3 strings + 1 number) and replace 
 
 ### Changed
 
+- Changed minimum required CMake version to 3.10, as compatibility with older version will soon be removed from this
+build tool.
 - Simplified generated linker scripts. This change causes the build to fail at link stage with
 `ld: invalid data statement` when using *binutils* version 2.27 or earlier. There is no error when using *binutils*
 version 2.28 (released on 2nd March 2017) or later, so in case of problems please update your toolchain.
