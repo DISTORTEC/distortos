@@ -2,7 +2,7 @@
  * \file
  * \brief Declarations of fileDescriptions, fileDescriptionsCount and fileDescriptionsMutex objects
  *
- * \author Copyright (C) 2020-2022 Kamil Szczygiel https://distortec.com https://freddiechopin.info
+ * \author Copyright (C) 2020-2026 Kamil Szczygiel https://distortec.com https://freddiechopin.info
  *
  * \par License
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
@@ -18,6 +18,8 @@
 
 #include <array>
 #include <memory>
+
+#include <cstdint>
 
 namespace distortos
 {
