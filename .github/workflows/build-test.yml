@@ -28,6 +28,7 @@ jobs:
         - 12.3.0-240408
         - 13.3.0-240530
         - 14.3.0-260715
+        - 15.1.0-260716
       fail-fast: false
     steps:
     - uses: actions/checkout@v6
